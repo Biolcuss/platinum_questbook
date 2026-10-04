@@ -82,7 +82,9 @@ function calcolaCompletamento(guida, progressi) {
   let storiaTot = 0, storiaFatti = 0, tutti = 0, tuttiFatti = 0;
   for (const capitolo of guida.capitoli || []) {
     for (const passo of capitolo.passi || []) {
-      const fatto = Boolean(progressi.completati[passo.id]);
+      // Un passo di tipo "trofeo" usa come chiave l'id del trofeo (vedi docs/FORMATO-GUIDA.md)
+      const chiave = passo.tipo === 'trofeo' ? passo.trofeo : passo.id;
+      const fatto = Boolean(progressi.completati[chiave]);
       tutti++;
       if (fatto) tuttiFatti++;
       if (passo.tipo === 'storia') {
