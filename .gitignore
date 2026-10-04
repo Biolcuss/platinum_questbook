@@ -1,0 +1,7 @@
+# File temporanei creati durante il salvataggio
+*.tmp
+
+# File di sistema
+Thumbs.db
+desktop.ini
+.DS_Store
