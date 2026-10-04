@@ -374,34 +374,33 @@ const SCHEDE = [
   ['info', 'Info'],
 ];
 
-// Costruisce la struttura della pagina del gioco: barra + titolo + scheda attiva
+// Costruisce la struttura della pagina del gioco: barra (titolo, schede, contatori) + scheda attiva
 function disegnaGioco() {
   contenitoreRiepilogo = el('div', { class: 'moduli' });
 
+  // Barra a tutta larghezza su due sezioni:
+  //   in alto  → a sinistra "torna ai giochi", al centro titolo + versione e le schede
+  //   sotto    → i contatori (storia, collezionabili, trofei…)
   const barra = el('header', { class: 'barra' },
-    el('div', { class: 'barra-in' },
+    el('div', { class: 'barra-riga barra-alto' },
       el('a', { href: '#/', class: 'btn indietro', 'aria-label': 'Torna all\'elenco dei giochi' }, icona('sinistra'), 'Giochi'),
-      el('nav', { class: 'spazi', 'aria-label': 'Sezioni della guida' },
-        SCHEDE.map(([nome, etichetta]) =>
-          el('a', {
-            class: 'spazio',
-            href: `#/gioco/${guida.id}/${nome}`,
-            'aria-current': nome === scheda ? 'page' : false,
-          }, etichetta))),
-      contenitoreRiepilogo));
+      el('div', { class: 'barra-centro' },
+        el('h1', {}, guida.titolo, el('span', { class: 'versione' }, guida.piattaforma)),
+        el('nav', { class: 'spazi', 'aria-label': 'Sezioni della guida' },
+          SCHEDE.map(([nome, etichetta]) =>
+            el('a', {
+              class: 'spazio',
+              href: `#/gioco/${guida.id}/${nome}`,
+              'aria-current': nome === scheda ? 'page' : false,
+            }, etichetta))))),
+    el('div', { class: 'barra-riga barra-sotto' }, contenitoreRiepilogo));
 
   let corpo;
   if (scheda === 'guida') corpo = costruisciTimeline();
   else if (scheda === 'trofei') corpo = costruisciTrofei();
   else corpo = costruisciInfo();
 
-  radice.replaceChildren(el('div', { class: 'pagina' },
-    barra,
-    el('main', { id: 'contenuto' },
-      el('div', { class: 'titolo-gioco' },
-        el('h1', {}, guida.titolo),
-        el('p', {}, guida.piattaforma)),
-      corpo)));
+  radice.replaceChildren(barra, el('div', { class: 'pagina' }, el('main', { id: 'contenuto' }, corpo)));
   aggiornaVista();
 }
 

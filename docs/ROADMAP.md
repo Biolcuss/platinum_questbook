@@ -39,6 +39,10 @@ Stato del progetto. Aggiornare a ogni sessione di lavoro.
 - [x] Progressi: `scelte` e `contatori` (compatibili con i file vecchi)
 - [x] Font Jersey 10 al posto di Pixelify Sans (leggibilità)
 
+## Fase 3d — Barra e palette ✅
+- [x] Barra a tutta larghezza su due sezioni: in alto indietro / titolo + versione + schede, sotto i contatori
+- [x] Palette grigio caldo scuro + ambra (icone invariate)
+
 ## Fase 4 — Validatore ✅
 - [x] `tools/valida-guida.js`: id unici, campi obbligatori, totali coerenti, riferimenti ai trofei validi
 
@@ -69,7 +73,6 @@ Stato del progetto. Aggiornare a ogni sessione di lavoro.
 - **Barre di progressione** dentro la pagina del gioco: una per gli obiettivi principali (storia) e una per il completismo (tutto). *(richiesta dell'utente: da ignorare per ora; nella fase 3 si mostrano solo i contatori numerici)*
 - **HowLongToBeat**: controllare o integrare i dati per sapere quante ore servono per finire un gioco (storia, storia + extra, completismo). *(richiesta dell'utente: da ignorare per ora; da verificare se esiste un'API ufficiale o un modo lecito di leggere i dati)*
 - Filtri nell'indirizzo (oggi restano in memoria) e filtro per categoria
-- Barra in alto più compatta quando ci sono molti contatori (oggi occupa 2-3 righe con Hogwarts Legacy)
 - Più partite per lo stesso gioco
 - Note personali su ogni passo
 - Immagini o link a video per le posizioni dei collezionabili
