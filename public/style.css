@@ -1,0 +1,227 @@
+/* =============================================================================
+   Game Tracker — stile
+   Le "variabili" qui sotto (--nome) sono i colori: cambiandole qui cambiano ovunque.
+   ============================================================================= */
+
+:root {
+  --sfondo: #14161c;
+  --pannello: #1d2029;
+  --pannello-2: #262a35;
+  --bordo: #343948;
+  --testo: #e8eaf0;
+  --testo-tenue: #9aa1b4;
+  --accento: #5b9cff;
+
+  --storia: #5b9cff;
+  --collezionabile: #f2b84b;
+  --trofeo: #c58bff;
+  --secondaria: #52d1a0;
+  --avviso: #ff9b54;
+  --ok: #52d17a;
+
+  --raggio: 10px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--sfondo);
+  color: var(--testo);
+  font: 16px/1.5 system-ui, "Segoe UI", Roboto, sans-serif;
+}
+
+a { color: var(--accento); }
+.nascosto { display: none !important; }
+
+button {
+  font: inherit;
+  color: var(--testo);
+  background: var(--pannello-2);
+  border: 1px solid var(--bordo);
+  border-radius: 8px;
+  padding: 6px 12px;
+  cursor: pointer;
+}
+button:hover { border-color: var(--accento); }
+button:focus-visible, input:focus-visible, summary:focus-visible {
+  outline: 2px solid var(--accento);
+  outline-offset: 2px;
+}
+
+.contenitore { max-width: 860px; margin: 0 auto; padding: 0 16px 80px; }
+
+/* ------------------------------------------------------------------ Home */
+.titolo-app { padding: 32px 0 8px; margin: 0; font-size: 1.8rem; }
+.sottotitolo { margin: 0 0 24px; color: var(--testo-tenue); }
+
+.elenco-giochi { display: grid; gap: 12px; }
+.scheda-gioco {
+  display: block;
+  padding: 16px 18px;
+  background: var(--pannello);
+  border: 1px solid var(--bordo);
+  border-radius: var(--raggio);
+  color: inherit;
+  text-decoration: none;
+}
+.scheda-gioco:hover { border-color: var(--accento); }
+.scheda-gioco h2 { margin: 0 0 4px; font-size: 1.15rem; }
+.scheda-gioco p { margin: 0; color: var(--testo-tenue); font-size: .92rem; }
+
+/* ----------------------------------------------------- Intestazione gioco */
+.intestazione {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--sfondo);
+  border-bottom: 1px solid var(--bordo);
+  padding: 12px 0 0;
+}
+.riga-titolo { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.riga-titolo h1 { margin: 0; font-size: 1.3rem; }
+.riga-titolo .piattaforma { color: var(--testo-tenue); font-size: .9rem; }
+.indietro { margin-right: auto; padding: 2px 10px; }
+
+.riepilogo { display: flex; flex-wrap: wrap; gap: 6px 14px; margin: 10px 0; font-size: .9rem; }
+.contatore { color: var(--testo-tenue); }
+.contatore strong { color: var(--testo); }
+.contatore.completo strong { color: var(--ok); }
+
+.schede { display: flex; gap: 4px; }
+.scheda {
+  background: none;
+  border: none;
+  border-bottom: 3px solid transparent;
+  border-radius: 0;
+  padding: 8px 14px;
+  color: var(--testo-tenue);
+}
+.scheda.attiva { color: var(--testo); border-bottom-color: var(--accento); }
+
+/* ------------------------------------------------------------------ Filtri */
+.filtri { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 16px 0; }
+.filtri .gruppo { display: inline-flex; border: 1px solid var(--bordo); border-radius: 8px; overflow: hidden; }
+.filtri .gruppo button { border: none; border-radius: 0; background: var(--pannello); }
+.filtri .gruppo button.attivo { background: var(--accento); color: #0b1020; font-weight: 600; }
+.filtri label { display: inline-flex; gap: 6px; align-items: center; color: var(--testo-tenue); cursor: pointer; }
+.filtri .spazio { margin-left: auto; display: flex; gap: 6px; }
+
+/* ------------------------------------------------------------- Avvisi box */
+.box-avviso {
+  background: rgba(255, 155, 84, .1);
+  border: 1px solid var(--avviso);
+  border-radius: var(--raggio);
+  padding: 10px 14px;
+  margin: 0 0 16px;
+  font-size: .92rem;
+}
+.box-avviso h3 { margin: 0 0 6px; font-size: .98rem; color: var(--avviso); }
+.box-avviso ul { margin: 4px 0 8px; padding-left: 20px; }
+.box-avviso p { margin: 4px 0; }
+
+/* ---------------------------------------------------------------- Capitoli */
+.capitolo {
+  background: var(--pannello);
+  border: 1px solid var(--bordo);
+  border-radius: var(--raggio);
+  margin-bottom: 12px;
+  overflow: hidden;
+}
+.capitolo.corrente { border-color: var(--accento); }
+
+.testata-capitolo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  border-radius: 0;
+  padding: 12px 16px;
+}
+.testata-capitolo .freccia { transition: transform .15s; color: var(--testo-tenue); }
+.capitolo.aperto .freccia { transform: rotate(90deg); }
+.testata-capitolo .numero { color: var(--testo-tenue); min-width: 1.6em; }
+.testata-capitolo .nome { font-weight: 600; flex: 1; }
+.testata-capitolo .stato { color: var(--testo-tenue); font-size: .82rem; text-align: right; }
+.capitolo.finito .testata-capitolo .nome::after { content: " ✓"; color: var(--ok); }
+
+.corpo-capitolo { display: none; border-top: 1px solid var(--bordo); }
+.capitolo.aperto .corpo-capitolo { display: block; }
+.riepilogo-capitolo { margin: 0; padding: 10px 16px; color: var(--testo-tenue); font-size: .9rem; border-bottom: 1px solid var(--bordo); }
+
+/* -------------------------------------------------------------------- Passi */
+.passo {
+  display: flex;
+  gap: 12px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--bordo);
+  border-left: 4px solid var(--colore, var(--storia));
+}
+.passo:last-child { border-bottom: none; }
+.passo.t-collezionabile { --colore: var(--collezionabile); background: rgba(242, 184, 75, .04); }
+.passo.t-trofeo { --colore: var(--trofeo); background: rgba(197, 139, 255, .04); }
+.passo.t-secondaria { --colore: var(--secondaria); background: rgba(82, 209, 160, .04); }
+.passo.fatto .contenuto { opacity: .5; }
+.passo.fatto .titolo-passo { text-decoration: line-through; }
+.passo.qui { box-shadow: inset 0 0 0 2px var(--accento); background: rgba(91, 156, 255, .1); }
+
+.passo input[type="checkbox"], .trofeo-riga input[type="checkbox"] {
+  width: 22px; height: 22px; margin-top: 2px; flex: none; cursor: pointer; accent-color: var(--ok);
+}
+.contenuto { flex: 1; min-width: 0; }
+.titolo-passo { font-weight: 600; margin: 0; }
+.passo.t-storia .titolo-passo { font-size: 1.02rem; }
+.passo:not(.t-storia) .titolo-passo { font-weight: 500; }
+.etichetta { font-size: .78rem; color: var(--colore); text-transform: uppercase; letter-spacing: .04em; font-weight: 700; }
+
+.contenuto p { margin: 6px 0 0; }
+.dove { color: var(--testo); }
+.dove b, .nota b { color: var(--testo-tenue); font-weight: 600; }
+.nota, .nota-mancabile, .nota-verifica { font-size: .9rem; color: var(--testo-tenue); }
+.nota-mancabile { color: var(--avviso); }
+.nota-verifica { color: var(--avviso); }
+
+details.soluzione { margin-top: 8px; background: var(--pannello-2); border-radius: 8px; padding: 6px 12px; }
+details.soluzione summary { cursor: pointer; color: var(--accento); }
+details.soluzione p { margin: 6px 0 2px; }
+
+.azioni-passo { margin-top: 8px; }
+.azioni-passo button { font-size: .85rem; padding: 3px 10px; }
+.passo.qui .azioni-passo button { background: var(--accento); color: #0b1020; border-color: var(--accento); font-weight: 600; }
+
+/* ------------------------------------------------------------------ Trofei */
+.trofeo-riga {
+  display: flex; gap: 12px; padding: 12px 16px; margin-bottom: 8px;
+  background: var(--pannello); border: 1px solid var(--bordo); border-radius: var(--raggio);
+}
+.trofeo-riga.fatto .contenuto { opacity: .5; }
+.trofeo-riga.pronto { border-color: var(--ok); }
+.grado { font-size: .75rem; font-weight: 700; text-transform: uppercase; padding: 1px 8px; border-radius: 999px; color: #14161c; margin-left: 6px; }
+.grado.platino { background: #bfe3ff; }
+.grado.oro { background: #f2c94c; }
+.grado.argento { background: #cfd4de; }
+.grado.bronzo { background: #d99062; }
+.grado.obiettivo { background: #9ad1ff; }
+.avanzamento { font-size: .88rem; color: var(--testo-tenue); margin-top: 6px; }
+.avanzamento.pronto { color: var(--ok); font-weight: 600; }
+
+/* -------------------------------------------------------------------- Info */
+.info h2 { font-size: 1.1rem; margin: 24px 0 8px; }
+.info ul, .info ol { padding-left: 22px; }
+.info li { margin-bottom: 6px; }
+
+/* ------------------------------------------------------------ Messaggi vari */
+.avviso {
+  position: fixed; left: 50%; bottom: 20px; transform: translateX(-50%);
+  background: #5a2430; border: 1px solid #ff6b81; color: #fff;
+  padding: 10px 16px; border-radius: 8px; z-index: 50; max-width: 90vw;
+}
+.vuoto { color: var(--testo-tenue); padding: 24px 0; }
+
+@media (max-width: 560px) {
+  .testata-capitolo .stato { display: none; }
+  .passo, .trofeo-riga { padding: 12px; }
+}

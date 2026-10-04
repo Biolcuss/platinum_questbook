@@ -44,7 +44,7 @@ docs/ROADMAP.md         fasi del progetto, stato, idee future
 docs/FORMATO-GUIDA.md   schema JSON delle guide + procedura di ricerca dettagliata
 server.js               server Node: serve public/ e le API
 avvia.bat               avvio con doppio clic
-public/                 interfaccia (index.html, style.css, app.js)
+public/                 interfaccia: index.html (guscio vuoto), style.css, app.js (costruisce tutta la pagina)
 data/guides/            una guida per gioco (scritte da Claude)
 data/progress/          progressi dell'utente (scritti dall'app)
 tools/valida-guida.js   controllo automatico delle guide
@@ -57,6 +57,12 @@ tools/valida-guida.js   controllo automatico delle guide
 - `PUT /api/progressi/:id` → salva i progressi (scrittura sicura: file temporaneo + rinomina)
 
 Guide e progressi sono **separati**: i progressi fanno riferimento agli `id` dei passi.
+Un passo `tipo: "trofeo"` è salvato con l'id del **trofeo** (`passo.trofeo`), non con l'id del passo: così spuntarlo nella timeline o nella scheda Trofei è la stessa cosa.
+
+**Interfaccia (public/app.js)**: pagina tramite hash (`#/` elenco, `#/gioco/<id>` guida). Tre schede: Guida (timeline), Trofei, Info.
+Dopo ogni spunta si aggiornano solo classi e testi (`aggiornaVista()`), senza ricostruire la pagina. Il testo delle guide si inserisce sempre come testo semplice, mai come HTML.
+"Sono qui" su un passo di storia propone di spuntare i passi di storia precedenti (solo storia, mai gli opzionali).
+Banner "mancabili": mostra i collezionabili `mancabile` non spuntati prima del punto "Sono qui" o nel capitolo corrente.
 
 ## Procedura "crea la guida per un gioco"
 Dettagli completi in `docs/FORMATO-GUIDA.md`. In breve:
