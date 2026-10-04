@@ -35,7 +35,7 @@ App web **locale** per seguire i progressi nei videogiochi:
 - Avvio: `node server.js` oppure doppio clic su `avvia.bat` → http://localhost:3000
 - Validare una guida: `node tools/valida-guida.js <id-gioco>`
 
-*(server, avvia.bat e validatore vanno ancora creati: vedi `docs/ROADMAP.md`)*
+*(il validatore va ancora creato: vedi `docs/ROADMAP.md`)*
 
 ## Architettura
 ```

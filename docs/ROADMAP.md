@@ -9,11 +9,12 @@ Stato del progetto. Aggiornare a ogni sessione di lavoro.
 - [x] `docs/FORMATO-GUIDA.md`
 - [x] `.gitignore`
 
-## Fase 2 — Server
-- [ ] `server.js`: serve i file di `public/`
-- [ ] API `GET /api/giochi`, `GET /api/giochi/:id`
-- [ ] API `GET` / `PUT /api/progressi/:id` con scrittura sicura
-- [ ] `avvia.bat` (avvia il server e apre il browser)
+## Fase 2 — Server ✅
+- [x] `server.js`: serve i file di `public/`
+- [x] API `GET /api/giochi`, `GET /api/giochi/:id`
+- [x] API `GET` / `PUT /api/progressi/:id` con scrittura sicura
+- [x] `avvia.bat` (avvia il server e apre il browser)
+- [x] Pagina provvisoria `public/index.html` (elenco guide) in attesa della fase 3
 
 ## Fase 3 — Interfaccia
 - [ ] Guida finta di prova (2 capitoli) in `data/guides/`

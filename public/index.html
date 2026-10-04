@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Game Tracker</title>
+</head>
+<body>
+  <!-- Pagina provvisoria: l'interfaccia vera arriva nella fase 3 -->
+  <h1>Game Tracker</h1>
+  <p>Il server funziona. L'interfaccia è in costruzione.</p>
+  <h2>Guide disponibili</h2>
+  <ul id="giochi"></ul>
+
+  <script>
+    // Chiede al server l'elenco dei giochi e li mostra come link alla guida (in formato JSON)
+    fetch('/api/giochi')
+      .then((risposta) => risposta.json())
+      .then((giochi) => {
+        const lista = document.getElementById('giochi');
+        if (giochi.length === 0) lista.innerHTML = '<li>Nessuna guida presente</li>';
+        for (const gioco of giochi) {
+          const voce = document.createElement('li');
+          voce.innerHTML = `<a href="/api/giochi/${gioco.id}">${gioco.titolo}</a> (${gioco.piattaforma}) — storia ${gioco.completamento.storia}%, totale ${gioco.completamento.totale}%`;
+          lista.appendChild(voce);
+        }
+      });
+  </script>
+</body>
+</html>
