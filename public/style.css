@@ -41,8 +41,7 @@
 
   /* Colori delle icone (invariati) */
   --ciano: #33ccff;
-  --ok: #5af78e;
-  --oro: #ffcb6b;
+  --ok: var(--ambra);          /* le spunte completate usano il colore principale */
   --magenta: #ff79c6;
   --viola: #b794f6;
   --arancio: #ff9e64;
@@ -180,7 +179,7 @@ h1, h2, h3 { font-family: var(--font-pixel); font-weight: 400; text-wrap: balanc
 .modulo.completo b { color: var(--ok); }
 .modulo .icona { color: var(--colore-modulo, var(--tenue)); }
 .m-storia { --colore-modulo: var(--ciano); }
-.m-oro { --colore-modulo: var(--oro); }
+.m-oro { --colore-modulo: var(--magenta); }
 .m-trofeo { --colore-modulo: var(--magenta); }
 
 
@@ -252,7 +251,7 @@ h1, h2, h3 { font-family: var(--font-pixel); font-weight: 400; text-wrap: balanc
   scroll-margin-top: 190px;
 }
 .passo:last-child { border-bottom: 0; }
-.passo.t-collezionabile { --colore: var(--oro); }
+.passo.t-collezionabile, .passo.t-raccolta { --colore: var(--magenta); }
 .passo.t-trofeo { --colore: var(--magenta); }
 .passo.t-secondaria { --colore: var(--viola); }
 .passo.fatto .contenuto { opacity: .55; }
@@ -291,12 +290,25 @@ details.soluzione { margin-top: 10px; max-width: 74ch; background: var(--superfi
 details.soluzione summary { cursor: pointer; font: 400 18px/1.4 var(--font-pixel); color: var(--viola); }
 details.soluzione p { margin: 8px 0 2px; }
 
-.azioni-passo { margin-top: 10px; }
-.azioni-passo .btn { font-size: 17px; padding: 6px 12px; }
-.passo.qui .azioni-passo .btn { background: var(--gradiente); color: var(--inchiostro); }
-.passo.qui .azioni-passo .btn::after {
-  content: ""; width: 8px; height: 14px; background: currentColor; display: inline-block;
-}
+/* Pulsante "Sono qui": a destra del passo di storia */
+.passo.con-azione { grid-template-columns: 22px minmax(0, 1fr) auto; }
+.azione-passo { align-self: start; font-size: 17px; padding: 6px 12px; white-space: nowrap; }
+.passo.fatto .azione-passo { opacity: .55; }
+
+/* ------------------------------------------------------- Menu (finestrella) */
+dialog.menu { border: 0; padding: 0; background: transparent; color: var(--testo); width: min(92vw, 560px); max-width: none; overflow: visible; }
+dialog.menu::backdrop { background: rgba(14, 12, 11, .72); }
+.involucro-menu { filter: var(--ombra); }
+.corpo-menu { padding: 18px 20px; display: grid; gap: 14px; }
+.corpo-menu h2 { font-size: 30px; }
+.corpo-menu p { margin: 0; }
+.voce-menu { display: flex; gap: 16px; align-items: center; justify-content: space-between; padding-top: 12px; border-top: 2px dotted var(--bordo); }
+.voce-menu .titolo-voce { font: 400 22px/1.2 var(--font-pixel); }
+.voce-menu .nota { margin-top: 2px; }
+.btn[disabled] { opacity: .4; cursor: not-allowed; }
+.btn[disabled]:hover { background: var(--superficie-2); color: var(--testo); }
+.btn.pericolo { color: var(--arancio); }
+.azioni-menu { display: flex; justify-content: flex-end; }
 
 /* ------------------------------------------------------------ Filtri e avvisi */
 .strumenti { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 18px; }
@@ -366,8 +378,6 @@ details.soluzione p { margin: 8px 0 2px; }
 /* Movimento: solo se l'utente non ha chiesto di ridurlo */
 @media (prefers-reduced-motion: no-preference) {
   .capitolo .freccia { transition: transform .12s steps(3); }
-  .passo.qui .azioni-passo .btn::after { animation: lampeggia 1.1s steps(1) infinite; }
-  @keyframes lampeggia { 50% { opacity: 0; } }
 }
 
 /* Schermi stretti: la sezione in alto della barra passa su una colonna sola */
@@ -385,4 +395,7 @@ details.soluzione p { margin: 8px 0 2px; }
   .moduli { margin-left: 0; }
   .testata .mini { width: 100%; padding-left: 30px; }
   .passo, .riga-trofeo { padding-left: 12px; padding-right: 12px; gap: 10px; }
+  .passo.con-azione { grid-template-columns: 22px minmax(0, 1fr); }
+  .azione-passo { grid-column: 2; justify-self: start; }
+  .voce-menu { flex-direction: column; align-items: stretch; }
 }

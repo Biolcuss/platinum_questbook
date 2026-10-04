@@ -169,12 +169,12 @@ async function chiediAlServer(indirizzo) {
 // Stato della pagina del gioco (le variabili che cambiano mentre usi l'app)
 // -----------------------------------------------------------------------------
 let guida = null;        // la guida completa del gioco
-let progressi = null;    // { completati: { idPasso: data }, sonoQui: idPasso | null }
+let progressi = null;    // { completati: { idPasso: data }, scelte: {...}, contatori: {...} } (sonoQui non si usa più)
 let scheda = 'guida';    // scheda aperta: 'guida' | 'trofei' | 'info'
 const filtri = { tipo: 'tutto', nascondiCompletati: false }; // tipo: 'tutto' | 'storia' | 'opzionali'
 
 // Riferimenti agli elementi creati, così possiamo aggiornarli senza ricostruire tutta la pagina
-let righePassi = [];     // { passo, riga, casella, bottoneQui }
+let righePassi = [];     // { passo, capitolo, riga, casella, campo }
 let capitoliVista = [];  // { capitolo, sezione, stato }
 let righeTrofei = [];    // { trofeo, riga, casella, avanzamento }
 let barreScelte = [];    // { scelta, bottoni, aiuto }
@@ -287,26 +287,106 @@ function impostaScelta(idScelta, idOpzione) {
   salva();
 }
 
-// "Sono qui" su un passo di storia
-function impostaSonoQui(passo) {
-  progressi.sonoQui = passo.id;
+// Il passo di storia "a cui sei arrivato": il primo non ancora completato (null se hai finito tutta la storia)
+function passoCorrente() {
+  for (const { passo, capitolo } of ordine) {
+    if (passo.tipo === 'storia' && applicabile(capitolo) && applicabile(passo) && !fatto(chiave(passo))) return passo;
+  }
+  return null;
+}
 
-  // Se prima di questo punto ci sono passi di storia non spuntati, chiedo se segnarli come fatti
+// Pulsante "Sono qui": segna come completati TUTTI i passi di storia fino a questo (compreso).
+// È un'azione una tantum, non un interruttore. Collezionabili e trofei non vengono toccati.
+function completaStoriaFinoA(passo) {
   const indice = posizione[passo.id];
   const daSegnare = ordine.filter(({ passo: p, capitolo: c }, i) =>
-    i < indice && p.tipo === 'storia' && !fatto(chiave(p)) && applicabile(c) && applicabile(p));
-  if (daSegnare.length > 0) {
+    i <= indice && p.tipo === 'storia' && !fatto(chiave(p)) && applicabile(c) && applicabile(p));
+  if (daSegnare.length === 0) return;
+  if (daSegnare.length > 1) {
     const conferma = window.confirm(
-      `Vuoi segnare come completati i ${daSegnare.length} passi di storia precedenti?\n\n` +
-      'Verranno spuntati solo i passi della storia. Collezionabili e trofei restano come sono.'
+      `Vuoi segnare come completati ${daSegnare.length} passi di storia, fino a "${passo.titolo}"?\n\n` +
+      'Collezionabili e trofei restano come sono. Per annullare dovrai togliere le spunte a mano.'
     );
-    if (conferma) {
-      const adesso = new Date().toISOString();
-      for (const { passo: p } of daSegnare) progressi.completati[chiave(p)] = adesso;
-    }
+    if (!conferma) return;
   }
+  const adesso = new Date().toISOString();
+  for (const { passo: p } of daSegnare) progressi.completati[chiave(p)] = adesso;
   aggiornaVista();
   salva();
+}
+
+// -----------------------------------------------------------------------------
+// Menu: azzera i progressi (storia, collezionabili, trofei, tutto)
+// -----------------------------------------------------------------------------
+const AZZERAMENTI = [
+  {
+    id: 'storia', nome: 'Azzera la storia',
+    descrizione: 'Toglie le spunte dai passi della storia.',
+    elementi: () => ordine.filter(({ passo }) => passo.tipo === 'storia' && fatto(chiave(passo))).length,
+    azzera: () => { for (const { passo } of ordine) if (passo.tipo === 'storia') delete progressi.completati[chiave(passo)]; },
+  },
+  {
+    id: 'collezionabili', nome: 'Azzera i collezionabili',
+    descrizione: 'Toglie le spunte dai collezionabili e azzera i contatori.',
+    elementi: () => ordine.filter(({ passo }) =>
+      (passo.tipo === 'collezionabile' && fatto(chiave(passo))) || (passo.tipo === 'raccolta' && quantiTrovati(passo) > 0)).length,
+    azzera: () => {
+      for (const { passo } of ordine) {
+        if (passo.tipo === 'collezionabile') delete progressi.completati[chiave(passo)];
+        if (passo.tipo === 'raccolta') delete progressi.contatori[passo.id];
+      }
+    },
+  },
+  {
+    id: 'trofei', nome: 'Azzera i trofei',
+    descrizione: 'Toglie la spunta da tutti i trofei e obiettivi.',
+    elementi: () => (guida.trofei || []).filter((t) => fatto(t.id)).length,
+    azzera: () => { for (const t of guida.trofei || []) delete progressi.completati[t.id]; },
+  },
+  {
+    id: 'tutto', nome: 'Azzera tutto', pericolo: true,
+    descrizione: 'Cancella ogni progresso di questo gioco, comprese le missioni secondarie. La scelta (es. la casa) resta.',
+    elementi: () => Object.keys(progressi.completati).length + Object.keys(progressi.contatori).length,
+    azzera: () => { progressi.completati = {}; progressi.contatori = {}; progressi.sonoQui = null; },
+  },
+];
+
+function apriMenu() {
+  const dialogo = el('dialog', { class: 'menu', 'aria-labelledby': 'titolo-menu' });
+  const chiudi = () => dialogo.close();
+
+  const righe = AZZERAMENTI.map((voce) => {
+    const quanti = voce.elementi();
+    return el('div', { class: 'voce-menu' },
+      el('div', {},
+        el('p', { class: 'titolo-voce' }, voce.nome),
+        el('p', { class: 'nota' }, voce.descrizione + (quanti === 0 ? ' Non c\'è niente da azzerare.' : ' Hai ' + quanti + ' elementi con progressi.'))),
+      el('button', {
+        class: 'btn' + (voce.pericolo ? ' pericolo' : ''),
+        disabled: quanti === 0,
+        onclick: () => {
+          const conferma = window.confirm(`${voce.nome}? Hai ${quanti} elementi con progressi.\n\nL'operazione non si può annullare.`);
+          if (!conferma) return;
+          voce.azzera();
+          aggiornaVista();
+          salva();
+          chiudi();
+        },
+      }, 'Azzera'));
+  });
+
+  dialogo.append(el('div', { class: 'involucro-menu' }, finestra(
+    el('div', { class: 'corpo-menu' },
+      el('h2', { id: 'titolo-menu' }, 'Menu'),
+      el('p', {}, 'Azzera i progressi di questa guida. Le altre guide non vengono toccate.'),
+      righe,
+      el('div', { class: 'azioni-menu' }, el('button', { class: 'btn', onclick: chiudi }, 'Chiudi'))))));
+
+  // Cliccando fuori dalla finestra (sullo sfondo scuro) il menu si chiude
+  dialogo.addEventListener('click', (e) => { if (e.target === dialogo) chiudi(); });
+  dialogo.addEventListener('close', () => dialogo.remove());
+  document.body.append(dialogo);
+  dialogo.showModal();
 }
 
 // -----------------------------------------------------------------------------
@@ -363,9 +443,12 @@ async function mostraGioco(id, nuovaScheda) {
   progressi.contatori = progressi.contatori || {};
   preparaOrdine();
   disegnaGioco();
-  // All'apertura vado al punto in cui ero rimasto
-  const qui = righePassi.find((r) => r.passo.id === progressi.sonoQui);
-  if (qui) qui.riga.scrollIntoView({ block: 'center' });
+  // All'apertura vado al prossimo passo da fare (solo se hai già completato qualcosa)
+  const prossimo = passoCorrente();
+  if (prossimo && Object.keys(progressi.completati).length > 0) {
+    const voce = righePassi.find((r) => r.passo.id === prossimo.id);
+    if (voce) voce.riga.scrollIntoView({ block: 'center' });
+  }
 }
 
 const SCHEDE = [
@@ -476,13 +559,12 @@ function costruisciTimeline() {
     el('label', {}, casellaNascondi, 'Nascondi completati'),
     el('div', { class: 'spazio-flex' },
       el('button', { class: 'btn', onclick: () => impostaCapitoliAperti(true) }, 'Apri tutti'),
-      el('button', { class: 'btn', onclick: () => impostaCapitoliAperti(false) }, 'Chiudi tutti')));
+      el('button', { class: 'btn', onclick: () => impostaCapitoliAperti(false) }, 'Chiudi tutti'),
+      el('button', { class: 'btn', onclick: apriMenu }, 'Menu')));
 
-  // Capitoli: apro quello del "Sono qui", altrimenti il primo (in ordine) non ancora finito
-  const idCapitoloQui = progressi.sonoQui ? ordine[posizione[progressi.sonoQui]]?.capitolo.id : null;
-  const primoIncompleto = guida.capitoli.find((c) =>
-    c.ordinato !== false && applicabile(c) && c.passi.some((p) => applicabile(p) && !passoFatto(p)));
-  const idDaAprire = idCapitoloQui || (primoIncompleto && primoIncompleto.id);
+  // Capitoli: apro quello del prossimo passo di storia da fare
+  const corrente = passoCorrente();
+  const idDaAprire = corrente ? ordine[posizione[corrente.id]].capitolo.id : null;
 
   const capitoli = guida.capitoli.map((capitolo) => costruisciCapitolo(capitolo, capitolo.id === idDaAprire));
   return el('div', {}, costruisciScelte(), barraStrumenti, contenitoreAvviso, capitoli);
@@ -562,8 +644,13 @@ function costruisciPasso(passo, capitolo) {
     onchange: (e) => (eRaccolta ? impostaContatore(passo, e.target.checked ? passo.quantita : 0) : impostaFatto(k, e.target.checked)),
   });
 
+  // "Sono qui": a destra del passo di storia. Segna come completata la storia fino a questo passo.
   const bottoneQui = passo.tipo === 'storia'
-    ? el('button', { class: 'btn', onclick: () => impostaSonoQui(passo) }, 'Sono qui')
+    ? el('button', {
+        class: 'btn azione-passo',
+        title: 'Segna come completata la storia fino a questo passo',
+        onclick: () => completaStoriaFinoA(passo),
+      }, 'Sono qui')
     : null;
   const contatore = eRaccolta ? costruisciContatore(passo) : null;
 
@@ -588,11 +675,11 @@ function costruisciPasso(passo, capitolo) {
       ? el('details', { class: 'soluzione' },
           el('summary', {}, 'Mostra la soluzione (spoiler)'),
           el('p', {}, passo.soluzione))
-      : null,
-    bottoneQui ? el('div', { class: 'azioni-passo' }, bottoneQui) : null);
+      : null);
 
-  const riga = el('div', { class: 'passo t-' + passo.tipo, id: 'passo-' + passo.id }, casella, contenuto);
-  righePassi.push({ passo, capitolo, riga, casella, bottoneQui, campo: contatore ? contatore.campo : null });
+  const riga = el('div', { class: 'passo t-' + passo.tipo + (bottoneQui ? ' con-azione' : ''), id: 'passo-' + passo.id },
+    casella, contenuto, bottoneQui);
+  righePassi.push({ passo, capitolo, riga, casella, campo: contatore ? contatore.campo : null });
   return riga;
 }
 
@@ -659,8 +746,9 @@ function costruisciInfo() {
 // (non ricostruisce la pagina: cambia solo classi e testi, così non perdi la posizione)
 // -----------------------------------------------------------------------------
 function aggiornaVista() {
-  const idQui = progressi.sonoQui;
-  const indiceQui = idQui !== null && posizione[idQui] !== undefined ? posizione[idQui] : -1;
+  const corrente = passoCorrente();           // prossimo passo di storia da fare
+  const idQui = corrente ? corrente.id : null;
+  const indiceQui = corrente ? posizione[corrente.id] : -1;
 
   // Scelte del giocatore (es. la casa)
   for (const { scelta, bottoni, aiuto } of barreScelte) {
@@ -670,13 +758,12 @@ function aggiornaVista() {
   }
 
   // Passi
-  for (const { passo, capitolo, riga, casella, bottoneQui, campo } of righePassi) {
+  for (const { passo, capitolo, riga, casella, campo } of righePassi) {
     const completato = passoFatto(passo);
     casella.checked = completato;
     if (campo) campo.value = quantiTrovati(passo);
     riga.classList.toggle('fatto', completato);
     riga.classList.toggle('qui', passo.id === idQui);
-    if (bottoneQui) bottoneQui.textContent = passo.id === idQui ? 'Sei qui' : 'Sono qui';
 
     const nascosto =
       !applicabile(passo) || !applicabile(capitolo) ||
@@ -752,14 +839,13 @@ function aggiornaRiepilogo() {
   contenitoreRiepilogo.replaceChildren(...voci);
 }
 
-// Avviso: collezionabili "mancabili" non ancora spuntati, rispetto al punto "Sono qui"
+// Avviso: collezionabili "mancabili" non ancora spuntati, rispetto al punto a cui sei arrivato
 function aggiornaAvvisoMancabili() {
   if (!contenitoreAvviso) return;
   contenitoreAvviso.replaceChildren();
-  const indiceQui = progressi.sonoQui !== null ? posizione[progressi.sonoQui] : undefined;
-  if (indiceQui === undefined) return;
-
-  const capitoloQui = ordine[indiceQui].capitolo.id;
+  const corrente = passoCorrente();
+  const indiceQui = corrente ? posizione[corrente.id] : ordine.length; // storia finita: tutto è "prima"
+  const capitoloQui = corrente ? ordine[indiceQui].capitolo.id : null;
   const mancanti = ordine
     .map((voce, indice) => ({ ...voce, indice }))
     .filter(({ passo, capitolo }) => passo.mancabile && applicabile(passo) && applicabile(capitolo) && !passoFatto(passo));

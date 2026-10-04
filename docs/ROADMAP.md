@@ -43,6 +43,12 @@ Stato del progetto. Aggiornare a ogni sessione di lavoro.
 - [x] Barra a tutta larghezza su due sezioni: in alto indietro / titolo + versione + schede, sotto i contatori
 - [x] Palette grigio caldo scuro + ambra (icone invariate)
 
+## Fase 3e — Pulsante "Sono qui" e Menu ✅
+- [x] "Sono qui" a destra del passo, azione una tantum che completa la storia fino a lì
+- [x] Posizione calcolata in automatico (primo passo di storia non completato)
+- [x] Menu con azzeramento di Storia, Collezionabili, Trofei e Tutto
+- [x] Spunta completata color ambra; collezionabili rosa come i trofei
+
 ## Fase 4 — Validatore ✅
 - [x] `tools/valida-guida.js`: id unici, campi obbligatori, totali coerenti, riferimenti ai trofei validi
 

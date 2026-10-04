@@ -6,7 +6,7 @@ Contiene tutto quello che serve per riprendere il lavoro sul progetto. **Tenerlo
 ## Scopo del progetto
 App web **locale** per seguire i progressi nei videogiochi:
 - si sceglie un gioco e si vede una **guida passo passo in ordine cronologico** (timeline);
-- si spuntano i progressi e si indica **a che punto si è** (pulsante "Sono qui");
+- si spuntano i progressi; il pulsante "Sono qui" accanto a un passo di storia segna come completata tutta la storia fino a lì;
 - i passi **obbligatori** (storia) sono distinti da quelli **opzionali** (collezionabili, trofei, missioni secondarie), ma tutti stanno nella **stessa timeline**, nel punto esatto del gioco in cui vanno fatti;
 - per gli opzionali la guida dice **dove trovarli**; le cose **mancabili** (che si perdono superato un certo punto) sono segnalate in anticipo.
 
@@ -53,18 +53,19 @@ tools/valida-guida.js   controllo automatico delle guide
 **API del server**
 - `GET /api/giochi` → elenco guide (id, titolo, piattaforma) + percentuali di completamento
 - `GET /api/giochi/:id` → guida completa
-- `GET /api/progressi/:id` → progressi `{ "completati": { "<idPasso>": "<data ISO>" }, "sonoQui": "<idPasso>" }`
+- `GET /api/progressi/:id` → progressi `{ "completati": { "<idPasso>": "<data ISO>" }, "scelte": { "<idScelta>": "<idOpzione>" }, "contatori": { "<idPasso>": <numero> }, "sonoQui": null }` (`sonoQui` non è più usato: la posizione è calcolata come primo passo di storia non completato)
 - `PUT /api/progressi/:id` → salva i progressi (scrittura sicura: file temporaneo + rinomina)
 
 Guide e progressi sono **separati**: i progressi fanno riferimento agli `id` dei passi.
 Un passo `tipo: "trofeo"` è salvato con l'id del **trofeo** (`passo.trofeo`), non con l'id del passo: così spuntarlo nella timeline o nella scheda Trofei è la stessa cosa.
 
-**Stile (richiesta dell'utente)**: estetica retrò/pixel ispirata a Hyprland (tiling window manager): barra in alto a tutta larghezza su due sezioni (sopra: "Giochi" a sinistra, titolo + versione e schede Guida/Trofei/Info al centro; sotto: i contatori), capitoli = finestre con angoli a gradini e ombre dure, bordo ambra sul capitolo dove sei. **Palette** (richiesta dell'utente): grigio caldo scuro di base + ambra come colore principale (selezione, link, focus); le icone restano colorate (stella ciano, gemma oro, coppa magenta, ecc.). Font Jersey 10 (titoli/interfaccia, un solo peso: niente grassetto) + JetBrains Mono (testo), scaricati in `public/fonts/` (funziona offline). Pixelify Sans è stato scartato perché la "c" si confondeva con la "o". Icone pixel art disegnate in codice (`ICONE` in app.js, niente emoji). Colori e dimensioni sono variabili all'inizio di `public/style.css`. Accessibilità: skip link, focus visibile, `prefers-reduced-motion` rispettato, etichette cliccabili, tab nell'indirizzo. Se cambi lo stile, rispetta questi punti.
+**Stile (richiesta dell'utente)**: estetica retrò/pixel ispirata a Hyprland (tiling window manager): barra in alto a tutta larghezza su due sezioni (sopra: "Giochi" a sinistra, titolo + versione e schede Guida/Trofei/Info al centro; sotto: i contatori), capitoli = finestre con angoli a gradini e ombre dure, bordo ambra sul capitolo dove sei. **Palette** (richiesta dell'utente): grigio caldo scuro di base + ambra come colore principale (selezione, link, focus); le icone restano colorate (stella ciano, gemma e coppa rosa/magenta, ecc.). La spunta dei passi completati e i collezionabili usano ambra e rosa: collezionabili = rosa come i trofei, spunta completata = ambra. Font Jersey 10 (titoli/interfaccia, un solo peso: niente grassetto) + JetBrains Mono (testo), scaricati in `public/fonts/` (funziona offline). Pixelify Sans è stato scartato perché la "c" si confondeva con la "o". Icone pixel art disegnate in codice (`ICONE` in app.js, niente emoji). Colori e dimensioni sono variabili all'inizio di `public/style.css`. Accessibilità: skip link, focus visibile, `prefers-reduced-motion` rispettato, etichette cliccabili, tab nell'indirizzo. Se cambi lo stile, rispetta questi punti.
 
 **Interfaccia (public/app.js)**: pagina tramite hash (`#/` elenco, `#/gioco/<id>` guida). Tre schede (nell'indirizzo: `#/gioco/<id>/guida|trofei|info`): Guida (timeline), Trofei, Info.
 Dopo ogni spunta si aggiornano solo classi e testi (`aggiornaVista()`), senza ricostruire la pagina. Il testo delle guide si inserisce sempre come testo semplice, mai come HTML.
-"Sono qui" su un passo di storia propone di spuntare i passi di storia precedenti (solo storia, mai gli opzionali).
-Banner "mancabili": mostra i collezionabili `mancabile` non spuntati prima del punto "Sono qui" o nel capitolo corrente.
+"Sono qui" (a destra del passo di storia) è un'azione una tantum, non un interruttore: spunta tutti i passi di storia fino a quel passo compreso (con conferma se sono più di uno), senza toccare collezionabili e trofei. Il "punto in cui sei" è calcolato (`passoCorrente()`): il primo passo di storia non completato; è evidenziato e il suo capitolo ha il bordo ambra.
+Il pulsante "Menu" (accanto ad "Apri tutti/Chiudi tutti") apre una finestra `<dialog>` per azzerare Storia, Collezionabili, Trofei o Tutto (con conferma; "Tutto" mantiene le scelte come la casa).
+Banner "mancabili": mostra i collezionabili `mancabile` non spuntati prima del punto a cui sei arrivato o nel capitolo corrente.
 
 ## Procedura "crea la guida per un gioco"
 Dettagli completi in `docs/FORMATO-GUIDA.md`. In breve:
