@@ -205,11 +205,15 @@ h1, h2, h3 { font-family: var(--font-pixel); font-weight: 400; text-wrap: balanc
 .testata .nome { flex: 1; min-width: 0; overflow-wrap: anywhere; }
 .testata .mini { display: flex; gap: 6px; }
 .mini .modulo { font-size: 17px; padding: 3px 8px; background: var(--superficie-3); }
-.capitolo.finito .nome::after {
-  content: ""; display: inline-block; width: 14px; height: 10px; margin-left: 10px;
-  background: var(--ok);
+/* Segni di completamento del capitolo (ambra = storia, rosa = collezionabili/trofei, viola = secondarie) */
+.tick {
+  display: none; width: 16px; height: 12px; margin-left: 10px; vertical-align: baseline;
+  background: var(--ambra);
   -webkit-mask: var(--spunta) center / contain no-repeat; mask: var(--spunta) center / contain no-repeat;
 }
+.tick.on { display: inline-block; }
+.tick-raccolta { background: var(--magenta); }
+.tick-secondaria { background: var(--viola); }
 
 .corpo { display: none; border-top: 2px solid var(--bordo); }
 .capitolo.aperto .corpo { display: block; }
@@ -308,7 +312,8 @@ dialog.menu::backdrop { background: rgba(14, 12, 11, .72); }
 .btn[disabled] { opacity: .4; cursor: not-allowed; }
 .btn[disabled]:hover { background: var(--superficie-2); color: var(--testo); }
 .btn.pericolo { color: var(--arancio); }
-.azioni-menu { display: flex; justify-content: flex-end; }
+.testata-menu { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.btn-icona { padding: 9px 11px; justify-content: center; }
 
 /* ------------------------------------------------------------ Filtri e avvisi */
 .strumenti { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 18px; }

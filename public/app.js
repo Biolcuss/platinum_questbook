@@ -76,6 +76,22 @@ const ICONE = {
     '.###.###.',
     '#########',
   ],
+  menu: [ // tre righe, per il pulsante Menu
+    '#######',
+    '.......',
+    '#######',
+    '.......',
+    '#######',
+  ],
+  chiudi: [ // X, per chiudere le finestre
+    '#.....#',
+    '##...##',
+    '.##.##.',
+    '..###..',
+    '.##.##.',
+    '##...##',
+    '#.....#',
+  ],
   destra: [
     '#....',
     '##...',
@@ -377,10 +393,11 @@ function apriMenu() {
 
   dialogo.append(el('div', { class: 'involucro-menu' }, finestra(
     el('div', { class: 'corpo-menu' },
-      el('h2', { id: 'titolo-menu' }, 'Menu'),
+      el('div', { class: 'testata-menu' },
+        el('h2', { id: 'titolo-menu' }, 'Menu'),
+        el('button', { class: 'btn btn-icona', 'aria-label': 'Chiudi il menu', title: 'Chiudi', onclick: chiudi }, icona('chiudi', 2))),
       el('p', {}, 'Azzera i progressi di questa guida. Le altre guide non vengono toccate.'),
-      righe,
-      el('div', { class: 'azioni-menu' }, el('button', { class: 'btn', onclick: chiudi }, 'Chiudi'))))));
+      righe))));
 
   // Cliccando fuori dalla finestra (sullo sfondo scuro) il menu si chiude
   dialogo.addEventListener('click', (e) => { if (e.target === dialogo) chiudi(); });
@@ -560,7 +577,7 @@ function costruisciTimeline() {
     el('div', { class: 'spazio-flex' },
       el('button', { class: 'btn', onclick: () => impostaCapitoliAperti(true) }, 'Apri tutti'),
       el('button', { class: 'btn', onclick: () => impostaCapitoliAperti(false) }, 'Chiudi tutti'),
-      el('button', { class: 'btn', onclick: apriMenu }, 'Menu')));
+      el('button', { class: 'btn btn-icona', 'aria-label': 'Menu', title: 'Menu', 'aria-haspopup': 'dialog', onclick: apriMenu }, icona('menu', 3))));
 
   // Capitoli: apro quello del prossimo passo di storia da fare
   const corrente = passoCorrente();
@@ -572,6 +589,13 @@ function costruisciTimeline() {
 
 function costruisciCapitolo(capitolo, aperto) {
   const stato = el('span', { class: 'mini' });
+  // Segni di completamento accanto al nome: ambra = storia, rosa = collezionabili e trofei, viola = secondarie.
+  // Compaiono solo quando quella parte del capitolo è tutta completata (e solo se il capitolo la contiene).
+  const ticks = {
+    storia: el('span', { class: 'tick tick-storia', role: 'img', 'aria-label': 'Storia del capitolo completata', title: 'Storia completata' }),
+    raccolta: el('span', { class: 'tick tick-raccolta', role: 'img', 'aria-label': 'Collezionabili e trofei del capitolo completati', title: 'Collezionabili e trofei completati' }),
+    secondaria: el('span', { class: 'tick tick-secondaria', role: 'img', 'aria-label': 'Missioni secondarie del capitolo completate', title: 'Missioni secondarie completate' }),
+  };
   const idCorpo = 'corpo-' + capitolo.id;
   const testata = el('button', {
     'aria-expanded': String(aperto),
@@ -583,7 +607,7 @@ function costruisciCapitolo(capitolo, aperto) {
   },
     el('span', { class: 'freccia' }, icona('destra')),
     capitolo.numero !== undefined ? el('span', { class: 'numero' }, capitolo.numero + '.') : null,
-    el('span', { class: 'nome' }, capitolo.nome),
+    el('span', { class: 'nome' }, capitolo.nome, ...Object.values(ticks)),
     stato);
 
   // Note sotto al titolo: livello consigliato, ordine libero, valido solo per una scelta
@@ -603,7 +627,7 @@ function costruisciCapitolo(capitolo, aperto) {
 
   const sezione = el('section', { class: 'capitolo' + (aperto ? ' aperto' : ''), id: 'cap-' + capitolo.id },
     finestra(el('h2', { class: 'testata' }, testata), corpo));
-  capitoliVista.push({ capitolo, sezione, stato });
+  capitoliVista.push({ capitolo, sezione, stato, ticks });
   return sezione;
 }
 
@@ -774,7 +798,7 @@ function aggiornaVista() {
   }
 
   // Capitoli: contatori e segno "corrente/finito"
-  for (const { capitolo, sezione, stato } of capitoliVista) {
+  for (const { capitolo, sezione, stato, ticks } of capitoliVista) {
     sezione.classList.toggle('nascosto', !applicabile(capitolo));
     const storia = contaInCapitolo(capitolo, (p) => p.tipo === 'storia');
     const extra = contaInCapitolo(capitolo, (p) => p.tipo !== 'storia');
@@ -782,7 +806,12 @@ function aggiornaVista() {
     if (storia.tot > 0) moduli.push(el('span', { class: 'modulo' }, 'storia ', el('b', {}, `${storia.ok}/${storia.tot}`)));
     if (extra.tot > 0) moduli.push(el('span', { class: 'modulo' }, 'extra ', el('b', {}, `${extra.ok}/${extra.tot}`)));
     stato.replaceChildren(...moduli);
-    sezione.classList.toggle('finito', storia.tot + extra.tot > 0 && storia.ok + extra.ok === storia.tot + extra.tot);
+    const raccolta = contaInCapitolo(capitolo, (p) => ['collezionabile', 'raccolta', 'trofeo'].includes(p.tipo));
+    const secondarie = contaInCapitolo(capitolo, (p) => p.tipo === 'secondaria');
+    const completo = (c) => c.tot > 0 && c.ok === c.tot;
+    ticks.storia.classList.toggle('on', completo(storia));
+    ticks.raccolta.classList.toggle('on', completo(raccolta));
+    ticks.secondaria.classList.toggle('on', completo(secondarie));
     sezione.classList.toggle('corrente', idQui !== null && ordine[indiceQui]?.capitolo.id === capitolo.id);
   }
 

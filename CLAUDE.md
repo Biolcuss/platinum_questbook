@@ -64,7 +64,7 @@ Un passo `tipo: "trofeo"` è salvato con l'id del **trofeo** (`passo.trofeo`), n
 **Interfaccia (public/app.js)**: pagina tramite hash (`#/` elenco, `#/gioco/<id>` guida). Tre schede (nell'indirizzo: `#/gioco/<id>/guida|trofei|info`): Guida (timeline), Trofei, Info.
 Dopo ogni spunta si aggiornano solo classi e testi (`aggiornaVista()`), senza ricostruire la pagina. Il testo delle guide si inserisce sempre come testo semplice, mai come HTML.
 "Sono qui" (a destra del passo di storia) è un'azione una tantum, non un interruttore: spunta tutti i passi di storia fino a quel passo compreso (con conferma se sono più di uno), senza toccare collezionabili e trofei. Il "punto in cui sei" è calcolato (`passoCorrente()`): il primo passo di storia non completato; è evidenziato e il suo capitolo ha il bordo ambra.
-Il pulsante "Menu" (accanto ad "Apri tutti/Chiudi tutti") apre una finestra `<dialog>` per azzerare Storia, Collezionabili, Trofei o Tutto (con conferma; "Tutto" mantiene le scelte come la casa).
+Il pulsante "Menu" (solo icona, accanto ad "Apri tutti/Chiudi tutti"; si chiude con la X in alto a destra) apre una finestra `<dialog>` per azzerare Storia, Collezionabili, Trofei o Tutto (con conferma; "Tutto" mantiene le scelte come la casa).
 Banner "mancabili": mostra i collezionabili `mancabile` non spuntati prima del punto a cui sei arrivato o nel capitolo corrente.
 
 ## Procedura "crea la guida per un gioco"
@@ -75,6 +75,8 @@ Dettagli completi in `docs/FORMATO-GUIDA.md`. In breve:
 4. Informazioni discordanti → `"daVerificare": true` e segnalarle all'utente.
 5. Salvare in `data/guides/<id>.json` ed eseguire il validatore.
 6. Riepilogo all'utente: capitoli, collezionabili, trofei, punti dubbi.
+
+**Segni di completamento dei capitoli** (accanto al nome): tick ambra = tutti i passi di storia fatti, tick rosa = tutti i collezionabili, raccolte e trofei del capitolo fatti, tick viola = tutte le missioni secondarie fatte. Ogni tick compare solo se il capitolo contiene quel tipo di passi.
 
 ## Limiti noti delle guide (da dire all'utente se rilevanti)
 - **Hogwarts Legacy**: ha oltre mille posizioni di collezionabili (una guida dice 1428). Non sono elencate una per una perché non è possibile verificarle tutte: ci sono solo i contatori (Pagine Revelio, Prove di Merlino, Floo Flames, statue dei Demiguise). Per aggiungere posizioni per regione si può usare più passi `raccolta` con la stessa categoria.

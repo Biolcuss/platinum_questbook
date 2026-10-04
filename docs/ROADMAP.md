@@ -49,6 +49,10 @@ Stato del progetto. Aggiornare a ogni sessione di lavoro.
 - [x] Menu con azzeramento di Storia, Collezionabili, Trofei e Tutto
 - [x] Spunta completata color ambra; collezionabili rosa come i trofei
 
+## Fase 3f — Icone e segni di completamento ✅
+- [x] Menu e chiusura (X) solo con icona, con etichetta per i lettori di schermo
+- [x] Tick ambra/rosa/viola accanto al nome del capitolo (storia / collezionabili e trofei / secondarie)
+
 ## Fase 4 — Validatore ✅
 - [x] `tools/valida-guida.js`: id unici, campi obbligatori, totali coerenti, riferimenti ai trofei validi
 
