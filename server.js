@@ -61,6 +61,7 @@ function leggiJson(percorso) {
 // Scrive un file JSON in modo "sicuro": prima scrive un file temporaneo, poi lo
 // rinomina. Se il PC si spegne a metà, il file originale resta integro.
 function scriviJsonSicuro(percorso, dati) {
+  fs.mkdirSync(path.dirname(percorso), { recursive: true }); // se la cartella è stata cancellata, la ricrea
   const temporaneo = percorso + '.tmp';
   fs.writeFileSync(temporaneo, JSON.stringify(dati, null, 2), 'utf8');
   fs.renameSync(temporaneo, percorso);

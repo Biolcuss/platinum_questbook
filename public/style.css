@@ -8,9 +8,9 @@
    ============================================================================= */
 
 @font-face {
-  font-family: "Pixelify Sans";
-  src: url("fonts/pixelify-sans.woff2") format("woff2");
-  font-weight: 400 700;
+  font-family: "Jersey 10";
+  src: url("fonts/jersey-10.woff2") format("woff2");
+  font-weight: 400;
   font-display: swap;
 }
 @font-face {
@@ -22,6 +22,7 @@
 
 :root {
   color-scheme: dark;
+  font-synthesis-weight: none;   /* il font pixel ha un solo peso: niente grassetto finto */
 
   --sfondo: #151225;
   --punti: rgba(176, 160, 255, .08);
@@ -43,7 +44,7 @@
 
   --gradiente: linear-gradient(45deg, var(--ciano), var(--verde));
 
-  --font-pixel: "Pixelify Sans", "Courier New", monospace;
+  --font-pixel: "Jersey 10", "Courier New", monospace;
   --font-testo: "JetBrains Mono", ui-monospace, Consolas, monospace;
 
   /* Angolo a gradini: 2 "pixel" per lato, ogni pixel è --s */
@@ -85,7 +86,7 @@ body {
 a { color: var(--ciano); }
 .nascosto { display: none !important; }
 
-h1, h2, h3 { font-family: var(--font-pixel); font-weight: 600; text-wrap: balance; margin: 0; }
+h1, h2, h3 { font-family: var(--font-pixel); font-weight: 400; text-wrap: balance; margin: 0; }
 
 .salta {
   position: absolute; left: 12px; top: -60px; z-index: 100;
@@ -106,7 +107,7 @@ h1, h2, h3 { font-family: var(--font-pixel); font-weight: 600; text-wrap: balanc
 /* ------------------------------------------------------------------ Pulsanti */
 .btn {
   --s: 2px;
-  font: 600 14px/1 var(--font-pixel);
+  font: 400 18px/1 var(--font-pixel);
   color: var(--testo);
   background: var(--superficie-2);
   border: 0;
@@ -138,7 +139,7 @@ h1, h2, h3 { font-family: var(--font-pixel); font-weight: 600; text-wrap: balanc
 .spazi { display: flex; gap: 4px; }
 .spazio {
   --s: 2px;
-  font: 600 15px/1 var(--font-pixel);
+  font: 400 20px/1 var(--font-pixel);
   color: var(--tenue);
   text-decoration: none;
   padding: 8px 12px;
@@ -156,7 +157,7 @@ h1, h2, h3 { font-family: var(--font-pixel); font-weight: 600; text-wrap: balanc
   background: var(--superficie-2);
   clip-path: var(--pixel);
   padding: 5px 10px;
-  font: 500 14px/1.2 var(--font-pixel);
+  font: 400 18px/1.2 var(--font-pixel);
   color: var(--tenue);
   white-space: nowrap;
 }
@@ -169,7 +170,7 @@ h1, h2, h3 { font-family: var(--font-pixel); font-weight: 600; text-wrap: balanc
 
 /* ---------------------------------------------------------------- Titolo gioco */
 .titolo-gioco { margin: 24px 0 20px; }
-.titolo-gioco h1 { font-size: 34px; line-height: 1.15; }
+.titolo-gioco h1 { font-size: 46px; line-height: 1.1; }
 .titolo-gioco p { margin: 6px 0 0; color: var(--tenue); }
 
 /* -------------------------------------------------------------------- Finestre */
@@ -178,7 +179,7 @@ h1, h2, h3 { font-family: var(--font-pixel); font-weight: 600; text-wrap: balanc
 .capitolo { margin-bottom: 18px; filter: var(--ombra); }
 .capitolo.corrente .finestra { --bordo-finestra: var(--gradiente); }
 
-.testata { font-size: 18px; }
+.testata { font-size: 24px; }
 .testata button {
   display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
   width: 100%;
@@ -193,7 +194,7 @@ h1, h2, h3 { font-family: var(--font-pixel); font-weight: 600; text-wrap: balanc
 .testata .numero { color: var(--tenue); font-variant-numeric: tabular-nums; }
 .testata .nome { flex: 1; min-width: 0; overflow-wrap: anywhere; }
 .testata .mini { display: flex; gap: 6px; }
-.mini .modulo { font-size: 13px; padding: 3px 8px; background: var(--superficie-3); }
+.mini .modulo { font-size: 17px; padding: 3px 8px; background: var(--superficie-3); }
 .capitolo.finito .nome::after {
   content: ""; display: inline-block; width: 14px; height: 10px; margin-left: 10px;
   background: var(--ok);
@@ -212,7 +213,7 @@ h1, h2, h3 { font-family: var(--font-pixel); font-weight: 600; text-wrap: balanc
 /* ------------------------------------------------------ Scelte del giocatore */
 .blocco-scelte { margin-bottom: 18px; filter: var(--ombra); }
 .contenuto-scelte { padding: 14px 16px; display: grid; gap: 14px; }
-.scelta h2 { font-size: 17px; margin-bottom: 8px; }
+.scelta h2 { font-size: 24px; margin-bottom: 8px; }
 .scelta .nota { margin: 8px 0 0; max-width: 74ch; }
 
 /* ------------------------------------------------- Contatore delle raccolte */
@@ -222,11 +223,11 @@ h1, h2, h3 { font-family: var(--font-pixel); font-weight: 600; text-wrap: balanc
   width: 5.5em; padding: 6px 8px;
   background: var(--sfondo); color: var(--testo);
   border: 2px solid var(--tenue); border-radius: 0;
-  font: 600 16px/1.2 var(--font-pixel); text-align: right;
+  font: 400 22px/1.2 var(--font-pixel); text-align: right;
   font-variant-numeric: tabular-nums;
 }
 .contatore .num:focus-visible { outline: 2px solid var(--ciano); outline-offset: 2px; border-color: var(--ciano); }
-.contatore .su-totale { font: 500 16px/1 var(--font-pixel); color: var(--tenue); font-variant-numeric: tabular-nums; }
+.contatore .su-totale { font: 400 22px/1 var(--font-pixel); color: var(--tenue); font-variant-numeric: tabular-nums; }
 
 /* ----------------------------------------------------------------------- Passi */
 .passo {
@@ -266,8 +267,8 @@ h1, h2, h3 { font-family: var(--font-pixel); font-weight: 600; text-wrap: balanc
 
 .contenuto { min-width: 0; }
 .contenuto p { margin: 6px 0 0; max-width: 74ch; overflow-wrap: anywhere; }
-.tipo { display: flex; align-items: center; gap: 8px; color: var(--colore); font: 500 14px/1.2 var(--font-pixel); margin: 0 0 4px !important; }
-.titolo-passo { display: block; font: 600 17px/1.35 var(--font-pixel); cursor: pointer; text-wrap: pretty; }
+.tipo { display: flex; align-items: center; gap: 8px; color: var(--colore); font: 400 18px/1.2 var(--font-pixel); margin: 0 0 4px !important; }
+.titolo-passo { display: block; font: 400 23px/1.25 var(--font-pixel); cursor: pointer; text-wrap: pretty; }
 .passo:not(.t-storia) .titolo-passo { font-weight: 500; }
 .dove b, .nota b { color: var(--tenue); font-weight: 700; }
 .avvertenza { display: flex; gap: 8px; align-items: flex-start; font-size: 13px; }
@@ -276,11 +277,11 @@ h1, h2, h3 { font-family: var(--font-pixel); font-weight: 600; text-wrap: balanc
 .nota { font-size: 13px; color: var(--tenue); }
 
 details.soluzione { margin-top: 10px; max-width: 74ch; background: var(--superficie-2); padding: 8px 12px; border-left: 4px solid var(--viola); }
-details.soluzione summary { cursor: pointer; font: 500 14px/1.4 var(--font-pixel); color: var(--viola); }
+details.soluzione summary { cursor: pointer; font: 400 18px/1.4 var(--font-pixel); color: var(--viola); }
 details.soluzione p { margin: 8px 0 2px; }
 
 .azioni-passo { margin-top: 10px; }
-.azioni-passo .btn { font-size: 13px; padding: 6px 12px; }
+.azioni-passo .btn { font-size: 17px; padding: 6px 12px; }
 .passo.qui .azioni-passo .btn { background: var(--gradiente); color: var(--inchiostro); }
 .passo.qui .azioni-passo .btn::after {
   content: ""; width: 8px; height: 14px; background: currentColor; display: inline-block;
@@ -296,7 +297,7 @@ details.soluzione p { margin: 8px 0 2px; }
 .box-avviso { margin: 0 0 18px; filter: var(--ombra); }
 .box-avviso .finestra { --bordo-finestra: var(--arancio); }
 .box-avviso .finestra-in { padding: 12px 16px; }
-.box-avviso h2 { font-size: 17px; color: var(--arancio); display: flex; gap: 8px; align-items: center; }
+.box-avviso h2 { font-size: 24px; color: var(--arancio); display: flex; gap: 8px; align-items: center; }
 .box-avviso p { margin: 8px 0 2px; }
 .box-avviso ul { margin: 4px 0 8px; padding-left: 20px; }
 
@@ -305,7 +306,7 @@ details.soluzione p { margin: 8px 0 2px; }
 .trofeo-card { margin-bottom: 14px; filter: var(--ombra); }
 .trofeo-card.fatto .contenuto { opacity: .55; }
 .trofeo-card.pronto .finestra { --bordo-finestra: var(--ok); }
-.grado { display: inline-block; font: 600 13px/1 var(--font-pixel); padding: 3px 8px; margin-left: 10px; color: var(--inchiostro); vertical-align: 2px; }
+.grado { display: inline-block; font: 400 17px/1 var(--font-pixel); padding: 3px 8px; margin-left: 10px; color: var(--inchiostro); vertical-align: 2px; }
 .grado.platino { background: #bfe3ff; }
 .grado.oro { background: #ffd166; }
 .grado.argento { background: #d5d9e6; }
@@ -316,14 +317,14 @@ details.soluzione p { margin: 8px 0 2px; }
 
 /* -------------------------------------------------------------------------- Info */
 .info-testo { padding: 18px 20px; }
-.info-testo h2 { font-size: 20px; margin: 22px 0 8px; color: var(--ciano); }
+.info-testo h2 { font-size: 28px; margin: 22px 0 8px; color: var(--ciano); }
 .info-testo h2:first-child { margin-top: 0; }
 .info-testo ul, .info-testo ol { padding-left: 22px; max-width: 74ch; }
 .info-testo li { margin-bottom: 8px; }
 .info-testo li::marker { color: var(--verde); }
 
 /* ------------------------------------------------------------------------- Home */
-.titolo-app { font-size: 44px; line-height: 1.1; margin: 40px 0 8px; }
+.titolo-app { font-size: 60px; line-height: 1.05; margin: 40px 0 8px; }
 .titolo-app::before { content: "> "; color: var(--verde); }
 .sottotitolo { margin: 0 0 28px; color: var(--tenue); max-width: 60ch; }
 .elenco-giochi { display: grid; gap: 18px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 380px), 1fr)); }
@@ -331,7 +332,7 @@ details.soluzione p { margin: 8px 0 2px; }
 .scheda-gioco .finestra-in { padding: 16px 18px; min-height: 120px; }
 .scheda-gioco:hover .finestra, .scheda-gioco:focus-visible .finestra { --bordo-finestra: var(--gradiente); }
 .scheda-gioco:focus-visible { outline: none; }
-.scheda-gioco h2 { font-size: 22px; overflow-wrap: anywhere; }
+.scheda-gioco h2 { font-size: 30px; overflow-wrap: anywhere; }
 .scheda-gioco p { margin: 4px 0 12px; color: var(--tenue); }
 .scheda-gioco .moduli { margin-left: 0; }
 
@@ -362,8 +363,8 @@ details.soluzione p { margin: 8px 0 2px; }
   html { scroll-padding-top: 16px; }
   .passo { scroll-margin-top: 16px; }
   .barra { position: static; }  /* su telefono la barra occupa troppo spazio per restare fissa */
-  .titolo-gioco h1 { font-size: 26px; }
-  .titolo-app { font-size: 32px; }
+  .titolo-gioco h1 { font-size: 36px; }
+  .titolo-app { font-size: 44px; }
   .moduli { margin-left: 0; }
   .testata .mini { width: 100%; padding-left: 30px; }
   .passo, .riga-trofeo { padding-left: 12px; padding-right: 12px; gap: 10px; }
