@@ -59,7 +59,7 @@ tools/valida-guida.js   controllo automatico delle guide
 Guide e progressi sono **separati**: i progressi fanno riferimento agli `id` dei passi.
 Un passo `tipo: "trofeo"` è salvato con l'id del **trofeo** (`passo.trofeo`), non con l'id del passo: così spuntarlo nella timeline o nella scheda Trofei è la stessa cosa.
 
-**Stile (richiesta dell'utente)**: estetica retrò/pixel ispirata a Hyprland (tiling window manager): barra in alto tipo "waybar" (schede = spazi di lavoro, contatori = moduli), capitoli = finestre con angoli a gradini e ombre dure, bordo a gradiente ciano→verde sul capitolo dove sei. Font Pixelify Sans (titoli/interfaccia) + JetBrains Mono (testo), scaricati in `public/fonts/` (funziona offline). Icone pixel art disegnate in codice (`ICONE` in app.js, niente emoji). Colori e dimensioni sono variabili all'inizio di `public/style.css`. Accessibilità: skip link, focus visibile, `prefers-reduced-motion` rispettato, etichette cliccabili, tab nell'indirizzo. Se cambi lo stile, rispetta questi punti.
+**Stile (richiesta dell'utente)**: estetica retrò/pixel ispirata a Hyprland (tiling window manager): barra in alto tipo "waybar" (schede = spazi di lavoro, contatori = moduli), capitoli = finestre con angoli a gradini e ombre dure, bordo a gradiente ciano→verde sul capitolo dove sei. Font Jersey 10 (titoli/interfaccia, un solo peso: niente grassetto) + JetBrains Mono (testo), scaricati in `public/fonts/` (funziona offline). Pixelify Sans è stato scartato perché la "c" si confondeva con la "o". Icone pixel art disegnate in codice (`ICONE` in app.js, niente emoji). Colori e dimensioni sono variabili all'inizio di `public/style.css`. Accessibilità: skip link, focus visibile, `prefers-reduced-motion` rispettato, etichette cliccabili, tab nell'indirizzo. Se cambi lo stile, rispetta questi punti.
 
 **Interfaccia (public/app.js)**: pagina tramite hash (`#/` elenco, `#/gioco/<id>` guida). Tre schede (nell'indirizzo: `#/gioco/<id>/guida|trofei|info`): Guida (timeline), Trofei, Info.
 Dopo ogni spunta si aggiornano solo classi e testi (`aggiornaVista()`), senza ricostruire la pagina. Il testo delle guide si inserisce sempre come testo semplice, mai come HTML.
@@ -75,9 +75,16 @@ Dettagli completi in `docs/FORMATO-GUIDA.md`. In breve:
 5. Salvare in `data/guides/<id>.json` ed eseguire il validatore.
 6. Riepilogo all'utente: capitoli, collezionabili, trofei, punti dubbi.
 
+## Limiti noti delle guide (da dire all'utente se rilevanti)
+- **Hogwarts Legacy**: ha oltre mille posizioni di collezionabili (una guida dice 1428). Non sono elencate una per una perché non è possibile verificarle tutte: ci sono solo i contatori (Pagine Revelio, Prove di Merlino, Floo Flames, statue dei Demiguise). Per aggiungere posizioni per regione si può usare più passi `raccolta` con la stessa categoria.
+- La fonte principale per le missioni di Hogwarts Legacy è una sola wiki (Fandom): la catena principale è confrontata con altre due guide, gli obiettivi con 4 fonti. Le missioni secondarie senza sblocco noto sono nel capitolo a ordine libero.
+- I nomi italiani ufficiali di capitoli/missioni non sono stati trovati in modo affidabile: restano in inglese.
+
 ## Regole importanti
 - `data/progress/` è in `.gitignore`: i progressi dell'utente **non** vanno nei commit (decisione dell'utente). Un export/import dei progressi è previsto in futuro.
 - **Mai cambiare l'`id` di un passo** in una guida già esistente: le spunte dell'utente si perderebbero. Per correggere, modificare i testi; per aggiungere passi, usare nuovi id.
+- I file del progetto possono avere terminazioni di riga Windows (CRLF): negli script di modifica normalizzare `
+` prima di cercare/sostituire testo.
 - Non modificare a mano `data/progress/` salvo richiesta esplicita dell'utente.
 - A fine di ogni sessione di lavoro aggiornare `docs/ROADMAP.md` (e questo file se cambia qualcosa).
 
@@ -90,3 +97,4 @@ Dettagli completi in `docs/FORMATO-GUIDA.md`. In breve:
 | Gioco | File | Piattaforma | Stato |
 |---|---|---|---|
 | Uncharted: Drake's Fortune | `uncharted-drakes-fortune.json` | PS3 originale | v1, 22 capitoli, 60 tesori + Strange Relic, 48 trofei; 1 punto da verificare |
+| Hogwarts Legacy | `hogwarts-legacy.json` | PC (Steam) | v1, 54 capitoli (46 missioni principali + 12 compiti, 4 raccolte con contatore, 24 relazioni, 58 secondarie), 45 obiettivi Steam; 9 punti da verificare. Collezionabili solo come contatori (vedi limiti) |

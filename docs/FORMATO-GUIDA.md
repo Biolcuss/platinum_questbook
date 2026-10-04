@@ -171,5 +171,7 @@ scontro importante o enigma), ma senza descrivere ogni singolo salto.
 9. Eseguire il validatore e correggere gli errori.
 10. Riepilogo all'utente: numero di capitoli, collezionabili, trofei e punti dubbi.
 
+**Giochi open world**: se ci sono centinaia di collezionabili, usare `raccolta` (contatori) e non inventare posizioni. Se una missione non ha un punto di sblocco confermato, metterla in un capitolo `ordinato: false` e dirlo.
+
 **Suggerimento tecnico**: molti siti bloccano la lettura automatica. Le wiki Fandom si leggono bene tramite la
 loro API, es. `https://<wiki>.fandom.com/api.php?action=parse&page=<Pagina>&prop=wikitext&format=json`.

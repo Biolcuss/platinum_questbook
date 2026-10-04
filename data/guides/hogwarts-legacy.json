@@ -1,0 +1,3196 @@
+{
+  "id": "hogwarts-legacy",
+  "titolo": "Hogwarts Legacy",
+  "piattaforma": "PC (Steam)",
+  "versioneGuida": 1,
+  "verificataIl": "2026-10-04",
+  "fonti": [
+    {
+      "nome": "Hogwarts Legacy Wiki – elenco delle missioni e pagine di ogni missione",
+      "url": "https://hogwarts-legacy.fandom.com/wiki/Quests"
+    },
+    {
+      "nome": "Steam Community – obiettivi di Hogwarts Legacy (pagina ufficiale)",
+      "url": "https://steamcommunity.com/stats/990080/achievements"
+    },
+    {
+      "nome": "Hogwarts Legacy Wiki – Achievements and Trophies",
+      "url": "https://hogwarts-legacy.fandom.com/wiki/Achievements_and_Trophies"
+    },
+    {
+      "nome": "GamerGuides – Trophy guide",
+      "url": "https://gamerguides.com/hogwarts-legacy/guide/trophy-guide"
+    },
+    {
+      "nome": "KeenGamer – Trophies and achievements list",
+      "url": "https://www.keengamer.com/articles/features/others/hogwarts-legacy-trophies-achievements-list/"
+    },
+    {
+      "nome": "GamePretty – 100% achievements guide",
+      "url": "https://gamepretty.com/hogwarts-legacy-100-achievements-guide-how-to-unlock/"
+    },
+    {
+      "nome": "PowerPyx – Collectibles guide",
+      "url": "https://www.powerpyx.com/hogwarts-legacy-collectibles-guide-100-completion/"
+    },
+    {
+      "nome": "GameRant – Main story missions (chapter list)",
+      "url": "https://gamerant.com/hogwarts-legacy-chapter-list-all-side-quests-relationship-missions-walkthrough/"
+    },
+    {
+      "nome": "GamerGuides – All main quests",
+      "url": "https://www.gamerguides.com/hogwarts-legacy/guide/walkthrough/main-quests/all-main-quests-in-hogwarts-legacy"
+    }
+  ],
+  "introduzione": [
+    "Hogwarts Legacy è un gioco di ruolo a mondo aperto. La storia è una catena di missioni principali, ma molte cose si fanno in ordine libero.",
+    "In questa guida ogni capitolo è una missione principale, nell'ordine in cui il gioco le sblocca. Dentro trovi i compiti obbligatori e le missioni secondarie che si sbloccano in quel punto. Il diario del gioco raggruppa le missioni in 13 capitoli, ma le fonti non concordano sui loro titoli: per non sbagliare qui ogni missione ha il suo capitolo.",
+    "Le missioni che si possono fare in qualsiasi ordine tra loro hanno una nota nel riepilogo.",
+    "I compiti dei professori (Assignments) danno gli incantesimi. Sei sono OBBLIGATORI perché le missioni principali li richiedono: Ronen (Reparo), Hecat 1 (Incendio), Hecat 2 (Expelliarmus), Sharp 1 (Depulso), Garlick 1 (Wingardium Leviosa) e Howin (Bombarda). Gli altri sono facoltativi.",
+    "Il livello conta: le missioni principali arrivano al livello 24, ma l'ultima (The House Cup) richiede il 34. Nel frattempo fai missioni secondarie ed esplora.",
+    "Dopo la storia puoi continuare a esplorare e finire le raccolte. L'unica eccezione sono gli obiettivi \"Find the Map Chamber\" (uno per casa): secondo le guide servono partite diverse.",
+    "Scegli la tua casa in cima alla Guida: nasconde le missioni e gli obiettivi delle altre case.",
+    "Le raccolte più grandi (Prove di Merlino, Pagine Revelio, Floo Flames, statue dei Demiguise) sono contatori. Il gioco contiene più di mille posizioni di collezionabili (secondo una guida): elencarle una per una senza una posizione verificata porterebbe a errori.",
+    "Fonti: le missioni e i loro prerequisiti vengono dalle pagine della Hogwarts Legacy Wiki, la catena principale è confrontata con altre due guide, e i 45 obiettivi Steam sono confrontati con la pagina Steam ufficiale e con tre guide. Dove le fonti non concordano o ce n'è una sola trovi l'avviso \"Da verificare\"."
+  ],
+  "percorsoConsigliato": [
+    "Segui la storia nell'ordine dei capitoli e fai le missioni secondarie man mano che si sbloccano: ti servono per i livelli. Il livello consigliato di ogni missione è scritto nel capitolo.",
+    "Completa i compiti dei professori appena arrivano: sono brevi e danno incantesimi utili. Ricorda che sei sono obbligatori.",
+    "Dopo The Final Repository finisci le missioni di relazione di Natty, Poppy e Sebastian e sali di livello per The House Cup (livello 34).",
+    "Dopo la storia: capitolo \"Raccolte e obiettivi a lungo termine\" e missioni del \"Mondo aperto\".",
+    "Per ottenere tutti e 4 gli obiettivi della Map Chamber, secondo le guide serve una partita per ogni casa."
+  ],
+  "scelte": [
+    {
+      "id": "casa",
+      "nome": "La tua casa",
+      "descrizione": "Scegli la casa in cui sei stato smistato: la guida nasconde le missioni e gli obiettivi delle altre case. Finché non scegli, vedi tutto.",
+      "opzioni": [
+        {
+          "id": "grifondoro",
+          "nome": "Grifondoro"
+        },
+        {
+          "id": "corvonero",
+          "nome": "Corvonero"
+        },
+        {
+          "id": "tassorosso",
+          "nome": "Tassorosso"
+        },
+        {
+          "id": "serpeverde",
+          "nome": "Serpeverde"
+        }
+      ]
+    }
+  ],
+  "categorie": [
+    {
+      "id": "revelio",
+      "nome": "Pagine Revelio",
+      "totale": 150,
+      "descrizione": "Pagine della Guida del Mago che compaiono con Revelio."
+    },
+    {
+      "id": "merlin",
+      "nome": "Prove di Merlino",
+      "totale": 95,
+      "descrizione": "Enigmi a incantesimi sparsi nel mondo."
+    },
+    {
+      "id": "floo",
+      "nome": "Floo Flames",
+      "totale": 83,
+      "descrizione": "Punti di viaggio rapido."
+    },
+    {
+      "id": "demiguise",
+      "nome": "Statue dei Demiguise",
+      "totale": 33,
+      "descrizione": "Statue con una luna, da prendere di notte."
+    }
+  ],
+  "trofei": [
+    {
+      "id": "tr-sort",
+      "nome": "The Sort Who Makes an Entrance",
+      "grado": "obiettivo",
+      "descrizione": "Completa l'introduzione e finisci la cerimonia dello Smistamento.",
+      "suggerimento": "Si sblocca da solo nelle prime ore di gioco, subito prima della missione Welcome to Hogwarts."
+    },
+    {
+      "id": "tr-first-class",
+      "nome": "First Class Student",
+      "grado": "obiettivo",
+      "descrizione": "Partecipa alla tua prima lezione.",
+      "suggerimento": "Si sblocca alla prima lezione: Charms Class o Defence Against the Dark Arts Class, la prima che fai."
+    },
+    {
+      "id": "tr-troll",
+      "nome": "Troll with the Punches",
+      "grado": "obiettivo",
+      "descrizione": "Sopravvivi all'attacco del troll a Hogsmeade.",
+      "suggerimento": "Missione Welcome to Hogsmeade, durante l'obiettivo \"Defend Hogsmeade\"."
+    },
+    {
+      "id": "tr-ancient-magic",
+      "nome": "A Keen Sense of Spell",
+      "grado": "obiettivo",
+      "descrizione": "Usa l'Ancient Magic per la prima volta.",
+      "suggerimento": "Impari l'Ancient Magic come ricompensa di Welcome to Hogsmeade; l'obiettivo si sblocca al primo utilizzo."
+    },
+    {
+      "id": "tr-keeper",
+      "nome": "That's a Keeper",
+      "grado": "obiettivo",
+      "descrizione": "Incontra Charles Rookwood nella Map Chamber.",
+      "spoiler": true,
+      "suggerimento": "Alla fine di Percival Rackham's Trial."
+    },
+    {
+      "id": "tr-phoenix",
+      "nome": "Rising From the Ashes",
+      "grado": "obiettivo",
+      "descrizione": "Salva la fenice.",
+      "suggerimento": "Missione secondaria Phoenix Rising (la dà Deek nella Room of Requirement, livello consigliato 20)."
+    },
+    {
+      "id": "tr-dragon",
+      "nome": "The Defender of Dragons",
+      "grado": "obiettivo",
+      "descrizione": "Salva un drago.",
+      "suggerimento": "Missione Fire and Vice (libera il drago prigioniero)."
+    },
+    {
+      "id": "tr-coasting",
+      "nome": "Coasting Along",
+      "grado": "obiettivo",
+      "descrizione": "Visita Poidsear Coast.",
+      "suggerimento": "Poidsear Coast è una regione della mappa: l'obiettivo si sblocca arrivandoci."
+    },
+    {
+      "id": "tr-hallowed",
+      "nome": "The Hallowed Hero",
+      "grado": "obiettivo",
+      "descrizione": "Impugna una Reliquia della Morte.",
+      "spoiler": true,
+      "suggerimento": "Durante Niamh Fitzgerald's Trial."
+    },
+    {
+      "id": "tr-memories",
+      "nome": "The One Who Mastered Memories",
+      "grado": "obiettivo",
+      "descrizione": "Guarda tutti i ricordi del Pensieve.",
+      "suggerimento": "I ricordi del Pensieve si vedono alla fine delle prove dei Keeper (Percival Rackham, Charles Rookwood, Niamh Fitzgerald, San Bakar): completale tutte.",
+      "daVerificare": true,
+      "notaVerifica": "Il numero esatto dei ricordi non è riportato nelle fonti consultate."
+    },
+    {
+      "id": "tr-graphorn",
+      "nome": "Grappling with a Graphorn",
+      "grado": "obiettivo",
+      "descrizione": "Sottometti il Lord of the Shore.",
+      "spoiler": true,
+      "suggerimento": "Missione San Bakar's Trial."
+    },
+    {
+      "id": "tr-hero",
+      "nome": "The Hero of Hogwarts",
+      "grado": "obiettivo",
+      "descrizione": "Sconfiggi Ranrok.",
+      "spoiler": true,
+      "suggerimento": "Alla fine di The Final Repository."
+    },
+    {
+      "id": "tr-house-cup",
+      "nome": "The Seeker of Knowledge",
+      "grado": "obiettivo",
+      "descrizione": "Vinci la Coppa delle Case.",
+      "suggerimento": "Missione finale The House Cup: serve il livello 34, quindi potresti dover fare prima altre missioni secondarie."
+    },
+    {
+      "id": "tr-map-gryffindor",
+      "nome": "The Gryffindor in the Graveyard",
+      "grado": "obiettivo",
+      "descrizione": "Trova la Map Chamber come Grifondoro.",
+      "spoiler": true,
+      "soloSe": {
+        "casa": "grifondoro"
+      },
+      "mancabile": true,
+      "notaMancabile": "Ogni casa ha il suo obiettivo e secondo le guide serve una nuova partita con quella casa.",
+      "suggerimento": "Si ottiene quando raggiungi la Map Chamber, alla fine di Jackdaw's Rest."
+    },
+    {
+      "id": "tr-map-ravenclaw",
+      "nome": "The Wise Owl",
+      "grado": "obiettivo",
+      "descrizione": "Trova la Map Chamber come Corvonero.",
+      "spoiler": true,
+      "soloSe": {
+        "casa": "corvonero"
+      },
+      "mancabile": true,
+      "notaMancabile": "Ogni casa ha il suo obiettivo e secondo le guide serve una nuova partita con quella casa.",
+      "suggerimento": "Si ottiene quando raggiungi la Map Chamber, alla fine di Jackdaw's Rest."
+    },
+    {
+      "id": "tr-map-hufflepuff",
+      "nome": "The Auror's Apprentice",
+      "grado": "obiettivo",
+      "descrizione": "Trova la Map Chamber come Tassorosso.",
+      "spoiler": true,
+      "soloSe": {
+        "casa": "tassorosso"
+      },
+      "mancabile": true,
+      "notaMancabile": "Ogni casa ha il suo obiettivo e secondo le guide serve una nuova partita con quella casa.",
+      "suggerimento": "Si ottiene quando raggiungi la Map Chamber, alla fine di Jackdaw's Rest."
+    },
+    {
+      "id": "tr-map-slytherin",
+      "nome": "The Toast of the Town",
+      "grado": "obiettivo",
+      "descrizione": "Trova la Map Chamber come Serpeverde.",
+      "spoiler": true,
+      "soloSe": {
+        "casa": "serpeverde"
+      },
+      "mancabile": true,
+      "notaMancabile": "Ogni casa ha il suo obiettivo e secondo le guide serve una nuova partita con quella casa.",
+      "suggerimento": "Si ottiene quando raggiungi la Map Chamber, alla fine di Jackdaw's Rest."
+    },
+    {
+      "id": "tr-natty",
+      "nome": "The Avenging Gazelle",
+      "grado": "obiettivo",
+      "descrizione": "Completa la linea di missioni di Natsai Onai.",
+      "suggerimento": "L'ultima missione è Acting on Instinct (7 missioni in tutto)."
+    },
+    {
+      "id": "tr-poppy",
+      "nome": "Beast Friends",
+      "grado": "obiettivo",
+      "descrizione": "Completa la linea di missioni di Poppy Sweeting.",
+      "suggerimento": "L'ultima missione è Poppy Blooms (8 missioni in tutto)."
+    },
+    {
+      "id": "tr-sebastian",
+      "nome": "A Sallow Grave",
+      "grado": "obiettivo",
+      "descrizione": "Completa la linea di missioni di Sebastian Sallow.",
+      "suggerimento": "L'ultima missione è In the Shadow of Friendship (9 missioni in tutto)."
+    },
+    {
+      "id": "tr-level-40",
+      "nome": "A Forte for Achievement",
+      "grado": "obiettivo",
+      "descrizione": "Raggiungi il livello 40.",
+      "suggerimento": "Il livello massimo si raggiunge facendo missioni secondarie, sfide e raccolte dopo la storia."
+    },
+    {
+      "id": "tr-talents-5",
+      "nome": "A Talent for Spending",
+      "grado": "obiettivo",
+      "descrizione": "Spendi 5 punti talento.",
+      "suggerimento": "I talenti si sbloccano al termine di Jackdaw's Rest e si guadagna un punto per livello a partire dal livello 5."
+    },
+    {
+      "id": "tr-talents-all",
+      "nome": "Savvy Spender",
+      "grado": "obiettivo",
+      "descrizione": "Spendi tutti i punti talento.",
+      "suggerimento": "I punti sono un massimo di 36 (uno per livello dal 5 al 40), quindi serve il livello 40."
+    },
+    {
+      "id": "tr-loom-1",
+      "nome": "Loom for Improvement",
+      "grado": "obiettivo",
+      "descrizione": "Potenzia un pezzo di equipaggiamento.",
+      "suggerimento": "Missione The Elf, the Nab-Sack, and the Loom: usi il telaio e potenzi un capo."
+    },
+    {
+      "id": "tr-loom-3",
+      "nome": "Third Time's a Charm",
+      "grado": "obiettivo",
+      "descrizione": "Potenzia un pezzo di equipaggiamento 3 volte.",
+      "suggerimento": "Usa di nuovo il telaio (Enchanted Loom) nella Room of Requirement."
+    },
+    {
+      "id": "tr-spells",
+      "nome": "The Spell Master",
+      "grado": "obiettivo",
+      "descrizione": "Impara tutti gli incantesimi.",
+      "suggerimento": "Servono i compiti dei professori e le missioni che danno incantesimi, comprese quelle di Sebastian (Crucio, Imperio e Avada Kedavra sono ricompense; due sono segnalate come facoltative).",
+      "daVerificare": true,
+      "notaVerifica": "Le fonti non chiariscono se gli Unforgivable Curses facoltativi servano per questo obiettivo."
+    },
+    {
+      "id": "tr-combo-100",
+      "nome": "Raising Expectations",
+      "grado": "obiettivo",
+      "descrizione": "Raggiungi una combo da 100.",
+      "suggerimento": "Si ottiene in combattimento, contro gruppi numerosi di nemici."
+    },
+    {
+      "id": "tr-petrificus",
+      "nome": "The Ends Petrify the Means",
+      "grado": "obiettivo",
+      "descrizione": "Sconfiggi in tutto 50 nemici usando Petrificus Totalus.",
+      "suggerimento": "Il conteggio è totale e continua nel tempo."
+    },
+    {
+      "id": "tr-mandrake",
+      "nome": "The Root of the Problem",
+      "grado": "obiettivo",
+      "descrizione": "Stordisci 10 nemici diversi usando una Mandragola.",
+      "suggerimento": "Si impara con l'Herbology; il compito di Professor Garlick (Assignment 1) ti fa già usare la Mandragola."
+    },
+    {
+      "id": "tr-ancient-all",
+      "nome": "Finishing Touches",
+      "grado": "obiettivo",
+      "descrizione": "Usa l'Ancient Magic su ogni nemico del gioco.",
+      "suggerimento": "Una guida parla di 34 tipi di nemico. Controlla la pagina Nemici della Guida del Mago per vedere quali ti mancano.",
+      "daVerificare": true,
+      "notaVerifica": "Il numero di tipi di nemico (34) viene da una sola guida."
+    },
+    {
+      "id": "tr-arenas",
+      "nome": "Rise to the Challenges",
+      "grado": "obiettivo",
+      "descrizione": "Sconfiggi i nemici in tutte le arene di battaglia.",
+      "suggerimento": "Le arene sono segnate sulla mappa. Esiste anche un'arena che fa parte del pacchetto Dark Arts.",
+      "daVerificare": true,
+      "notaVerifica": "Le fonti non chiariscono se l'arena del pacchetto Dark Arts sia necessaria senza possedere il pacchetto."
+    },
+    {
+      "id": "tr-challenge",
+      "nome": "Challenge Accepted",
+      "grado": "obiettivo",
+      "descrizione": "Completa tutti i livelli di una sfida.",
+      "suggerimento": "Il modo più semplice: la sfida \"Complete Assignments\" ha tre livelli (2, 4 e 6 compiti dei professori)."
+    },
+    {
+      "id": "tr-floo",
+      "nome": "Floo Around the World",
+      "grado": "obiettivo",
+      "descrizione": "Sblocca tutti i Floo Flames.",
+      "obiettivo": {
+        "categoria": "floo",
+        "quantita": 83
+      },
+      "suggerimento": "I Floo Flames sono 83 secondo le guide consultate."
+    },
+    {
+      "id": "tr-merlin",
+      "nome": "Merlin's Beard!",
+      "grado": "obiettivo",
+      "descrizione": "Completa tutte le Prove di Merlino.",
+      "obiettivo": {
+        "categoria": "merlin",
+        "quantita": 95
+      },
+      "suggerimento": "Le prove si sbloccano completando la missione Trials of Merlin."
+    },
+    {
+      "id": "tr-demiguise",
+      "nome": "Demiguise Dread",
+      "grado": "obiettivo",
+      "descrizione": "Trova tutte le statue dei Demiguise.",
+      "obiettivo": {
+        "categoria": "demiguise",
+        "quantita": 33
+      },
+      "suggerimento": "Servono Alohomora I, II e III per aprire alcune stanze; le lune si prendono di notte.",
+      "daVerificare": true,
+      "notaVerifica": "Le guide e la wiki parlano di 33 statue; una pagina della stessa wiki dice 30."
+    },
+    {
+      "id": "tr-collector",
+      "nome": "Collector's Edition",
+      "grado": "obiettivo",
+      "descrizione": "Completa tutte le collezioni.",
+      "suggerimento": "Le collezioni sono nella Guida del Mago e il gioco mostra l'avanzamento: Strumenti, Nemici, Aspetti, Pagine Revelio, Bestie, Tratti, Manici di bacchetta, Evocazioni, Ingredienti e Scope.",
+      "daVerificare": true,
+      "notaVerifica": "I totali di alcune collezioni (es. Aspetti: 89 o 107) cambiano tra le fonti, forse per gli aggiornamenti del gioco."
+    },
+    {
+      "id": "tr-good-samaritan",
+      "nome": "The Good Samaritan",
+      "grado": "obiettivo",
+      "descrizione": "Completa tutte le missioni secondarie.",
+      "suggerimento": "In questa guida trovi le missioni secondarie nel punto in cui si sbloccano oppure nel capitolo \"Mondo aperto\".",
+      "daVerificare": true,
+      "notaVerifica": "Le guide parlano di 57 missioni secondarie (58 con Minding Your Own Business, esclusiva PlayStation fino a giugno 2024): falle tutte."
+    },
+    {
+      "id": "tr-butterflies",
+      "nome": "Followed the Butterflies",
+      "grado": "obiettivo",
+      "descrizione": "Segui le farfalle fino a un tesoro.",
+      "suggerimento": "Missione secondaria Follow the Butterflies, nella Forbidden Forest."
+    },
+    {
+      "id": "tr-beasts",
+      "nome": "The Nature of the Beast",
+      "grado": "obiettivo",
+      "descrizione": "Alleva ogni tipo di bestia.",
+      "suggerimento": "L'allevamento si sblocca con la missione secondaria Foal of the Dead."
+    },
+    {
+      "id": "tr-potions",
+      "nome": "Going Through the Potions",
+      "grado": "obiettivo",
+      "descrizione": "Prepara ogni tipo di pozione.",
+      "suggerimento": "Usa la postazione per pozioni (la prima è nella Potions Class; poi quelle della Room of Requirement)."
+    },
+    {
+      "id": "tr-plants",
+      "nome": "Put Down Roots",
+      "grado": "obiettivo",
+      "descrizione": "Coltiva ogni tipo di pianta.",
+      "suggerimento": "Usa i tavoli da giardinaggio (il primo si ottiene con Herbology Class e altri nella Room of Requirement)."
+    },
+    {
+      "id": "tr-cairns",
+      "nome": "The Intrepid Explorer",
+      "grado": "obiettivo",
+      "descrizione": "Scopri tutti i dungeon dei cairn.",
+      "suggerimento": "Alcuni cairn si sbloccano completando missioni secondarie o di relazione."
+    },
+    {
+      "id": "tr-flying",
+      "nome": "Flight the Good Flight",
+      "grado": "obiettivo",
+      "descrizione": "Batti il tempo di Imelda in tutte le gare di scopa.",
+      "suggerimento": "Le gare di Imelda Reyes partono dalla missione secondaria Flight Test (campo da Quidditch) e continuano con Sweeping the Competition e The Sky is the Limit."
+    },
+    {
+      "id": "tr-study",
+      "nome": "Room with a View",
+      "grado": "obiettivo",
+      "descrizione": "Raggiungi il punto più alto del castello: lo studio superiore del Preside.",
+      "suggerimento": "L'ufficio del Preside diventa accessibile durante Niamh Fitzgerald's Trial.",
+      "daVerificare": true,
+      "notaVerifica": "Le fonti non indicano il momento esatto in cui si può salire fino allo studio superiore."
+    },
+    {
+      "id": "tr-milk",
+      "nome": "Spilled Milk",
+      "grado": "obiettivo",
+      "descrizione": "Usa Flipendo dieci volte, su una o più mucche.",
+      "suggerimento": "Impari Flipendo con il secondo compito di Professor Garlick (Assignment 2). Usalo sulle mucche che incontri nel mondo."
+    }
+  ],
+  "capitoli": [
+    {
+      "id": "c01",
+      "nome": "The Path to Hogwarts",
+      "numero": 1,
+      "riepilogo": "Prologo giocabile: la tua prima uscita insieme a Professor Fig. Insegna i comandi base e i primi incantesimi.",
+      "passi": [
+        {
+          "id": "c01-p01",
+          "tipo": "storia",
+          "titolo": "Segui Professor Fig e distruggi la barriera magica",
+          "descrizione": "Usa Basic Cast per rompere la barriera, poi prosegui seguendo Fig."
+        },
+        {
+          "id": "c01-p02",
+          "tipo": "storia",
+          "titolo": "Esplora le rovine e sveglia il goblin",
+          "descrizione": "Interagisci con la magia nelle rovine finché si apre la strada verso il caveau."
+        },
+        {
+          "id": "c01-p03",
+          "tipo": "storia",
+          "titolo": "Entra nel caveau con Revelio e Lumos",
+          "descrizione": "Impari Revelio (rivela ciò che è nascosto) e Lumos (tieni premuto per fare luce) mentre avanzi."
+        },
+        {
+          "id": "c01-p04",
+          "tipo": "storia",
+          "titolo": "Supera le statue animate",
+          "descrizione": "Distruggi le statue con Basic Cast. Con Protego pari gli attacchi dei nemici e rispondi con Stupefy (a volte questo obiettivo non compare)."
+        },
+        {
+          "id": "c01-p05",
+          "tipo": "storia",
+          "titolo": "Raggiungi Professor Fig",
+          "descrizione": "Attiva le statue, distruggile con Basic Cast e raggiungi Fig per chiudere la missione.",
+          "nota": "Nel caveau ci sono nove forzieri con 20-70 monete l'uno. Ricompense della missione: 3 Wiggenweld Potion e gli incantesimi Basic Cast, Lumos, Protego, Revelio e Stupefy."
+        }
+      ]
+    },
+    {
+      "id": "c02",
+      "nome": "Welcome to Hogwarts",
+      "numero": 2,
+      "riepilogo": "Arrivo a scuola: trovi la tua sala comune e conosci i compagni. Ricevi la Guida del Mago (Wizard's Field Guide).",
+      "passi": [
+        {
+          "id": "c02-tr01",
+          "tipo": "trofeo",
+          "trofeo": "tr-sort",
+          "titolo": "The Sort Who Makes an Entrance",
+          "dove": "Subito prima di questa missione c'è lo Smistamento (cutscene all'inizio del gioco): l'obiettivo si sblocca da solo."
+        },
+        {
+          "id": "c02-p01",
+          "tipo": "storia",
+          "titolo": "Trova la tua sala comune",
+          "descrizione": "Dove si trova dipende dalla casa: Grifondoro nella Faculty Tower, Tassorosso sotto la Reception Hall, Corvonero nella Ravenclaw Tower, Serpeverde nei sotterranei di Slytherin."
+        },
+        {
+          "id": "c02-p02",
+          "tipo": "storia",
+          "titolo": "Presentati ai compagni di casa e agli altri studenti",
+          "descrizione": "Parla con Cressida, Garreth, Nellie, Adelaide, Arthur, Lenora, Amit, Everett, Samantha, Imelda, Ominis e Sebastian."
+        },
+        {
+          "id": "c02-p03",
+          "tipo": "storia",
+          "titolo": "Incontra Professor Weasley fuori dalla sala comune e seguilo"
+        },
+        {
+          "id": "c02-p04",
+          "tipo": "storia",
+          "titolo": "Raccogli la pagina della Guida del Mago",
+          "descrizione": "La pagina da prendere dipende dalla tua casa."
+        },
+        {
+          "id": "c02-p05",
+          "tipo": "storia",
+          "titolo": "Parla con Professor Fig",
+          "descrizione": "La missione finisce qui. Si aprono Charms Class e Defence Against the Dark Arts Class."
+        },
+        {
+          "id": "c02-m01",
+          "tipo": "secondaria",
+          "titolo": "Like a Moth to a Frame",
+          "dove": "Lenora Everleigh, vicino al puzzle del quadro con la falena, accanto alla fontana della Central Hall.",
+          "descrizione": "Aiuta Lenora a risolvere il mistero di un dipinto e riporta la falena al suo posto.",
+          "nota": "Ricompensa: Cobalt Regalia (aspetto)."
+        }
+      ]
+    },
+    {
+      "id": "c03",
+      "nome": "Charms Class",
+      "numero": 3,
+      "livello": 1,
+      "riepilogo": "La tua prima lezione di Incantesimi. Si può fare in qualsiasi ordine rispetto a Defence Against the Dark Arts Class (le ricevi insieme).",
+      "passi": [
+        {
+          "id": "c03-p01",
+          "tipo": "storia",
+          "titolo": "Vai a lezione di Charms",
+          "descrizione": "L'aula è nella Astronomy Wing. La Charmed Compass della Guida del Mago ti aiuta a trovare la strada nel castello."
+        },
+        {
+          "id": "c03-p02",
+          "tipo": "storia",
+          "titolo": "Esercitati con Accio su tre palline",
+          "descrizione": "Professor Ronen ti fa provare a richiamare le tre palline di un gioco ispirato ai Gobstones."
+        },
+        {
+          "id": "c03-p03",
+          "tipo": "storia",
+          "titolo": "Gioca a Summoner's Court contro Natty",
+          "descrizione": "Due round amichevoli: l'esito cambia solo il testo finale del diario."
+        },
+        {
+          "id": "c03-p04",
+          "tipo": "storia",
+          "titolo": "Parla con Professor Ronen dopo la lezione",
+          "descrizione": "Ricompensa: l'incantesimo Accio."
+        },
+        {
+          "id": "c03-tr01",
+          "tipo": "trofeo",
+          "trofeo": "tr-first-class",
+          "titolo": "First Class Student",
+          "dove": "Si sblocca alla tua prima lezione: se hai fatto prima Defence Against the Dark Arts, l'hai già ottenuto lì."
+        },
+        {
+          "id": "c03-m01",
+          "tipo": "secondaria",
+          "titolo": "Flying Off the Shelves",
+          "dove": "Cressida Blume, nella Central Hall vicino alla biblioteca.",
+          "livello": 2,
+          "descrizione": "Recupera i 5 libri volanti di Cressida dalla biblioteca.",
+          "nota": "Ricompensa: Wand Handle Avian - Grey (e denaro se lo chiedi)."
+        }
+      ]
+    },
+    {
+      "id": "c04",
+      "nome": "Defence Against the Dark Arts Class",
+      "numero": 4,
+      "livello": 1,
+      "riepilogo": "Lezione di Difesa contro le Arti Oscure con il primo duello. Ordine libero rispetto a Charms Class.",
+      "passi": [
+        {
+          "id": "c04-p01",
+          "tipo": "storia",
+          "titolo": "Partecipa alla lezione",
+          "descrizione": "Prova Basic Cast sul manichino."
+        },
+        {
+          "id": "c04-p02",
+          "tipo": "storia",
+          "titolo": "Impara Levioso",
+          "descrizione": "Lancia Levioso sul manichino e poi un Basic Cast."
+        },
+        {
+          "id": "c04-p03",
+          "tipo": "storia",
+          "titolo": "Sfida Sebastian in un duello",
+          "descrizione": "Puoi vincere in due modi: scagliarlo giù dalla piattaforma (il più veloce) oppure svuotare la sua barra di salute. Sebastian potrebbe usare Confringo anche se si dovrebbero usare solo Levioso, Basic Cast e Protego."
+        },
+        {
+          "id": "c04-p04",
+          "tipo": "storia",
+          "titolo": "Parla con Sebastian",
+          "descrizione": "Ricompensa: l'incantesimo Levioso."
+        },
+        {
+          "id": "c04-m01",
+          "tipo": "secondaria",
+          "titolo": "Crossed Wands: Round 1",
+          "dove": "Lucan Brattleby, nell'angolo della Clock Tower.",
+          "livello": 2,
+          "descrizione": "Il club segreto di duelli. Sconfiggi gli avversari. Questa missione è richiesta dal compito di Professor Hecat (vedi capitolo dedicato)."
+        }
+      ]
+    },
+    {
+      "id": "c05",
+      "nome": "Weasley After Class",
+      "numero": 5,
+      "livello": 2,
+      "riepilogo": "Professor Weasley ti aspetta dopo la lezione. Non dà esperienza.",
+      "passi": [
+        {
+          "id": "c05-p01",
+          "tipo": "storia",
+          "titolo": "Incontra Professor Weasley nell'aula di Trasfigurazione",
+          "descrizione": "Ti chiede di scegliere chi ti accompagnerà nel primo viaggio a Hogsmeade: Natsai Onai o Sebastian Sallow."
+        },
+        {
+          "id": "c05-m01",
+          "tipo": "secondaria",
+          "titolo": "Gobs of Gobstones",
+          "dove": "Zenobia Noke, sulle scale sotto l'aula di Difesa contro le Arti Oscure.",
+          "livello": 2,
+          "descrizione": "Trova i 6 Gobstones persi da Zenobia sparsi per il castello.",
+          "nota": "Ricompensa: Wand Handle Orbicular - Violet."
+        }
+      ]
+    },
+    {
+      "id": "c06",
+      "nome": "Professor Ronen's Assignment",
+      "numero": 6,
+      "livello": 2,
+      "riepilogo": "Compito OBBLIGATORIO: serve per sbloccare Welcome to Hogsmeade. Ti insegna Reparo.",
+      "passi": [
+        {
+          "id": "c06-p01",
+          "tipo": "storia",
+          "titolo": "Presentati da Professor Ronen"
+        },
+        {
+          "id": "c06-p02",
+          "tipo": "storia",
+          "titolo": "Raccogli le due pagine volanti",
+          "descrizione": "Una vicino alla statua rotta, l'altra nella Defence Against the Dark Arts Tower. Contano anche per le sfide delle Pagine del Manuale."
+        },
+        {
+          "id": "c06-p03",
+          "tipo": "storia",
+          "titolo": "Torna da Professor Ronen",
+          "descrizione": "Ricompensa: l'incantesimo Reparo. Puoi esercitarti tornando alla statua rotta."
+        }
+      ]
+    },
+    {
+      "id": "c07",
+      "nome": "Welcome to Hogsmeade",
+      "numero": 7,
+      "livello": 2,
+      "riepilogo": "Prima uscita dal castello con Natty o Sebastian: il villaggio, i negozi e un attacco da respingere. Sblocca moltissime missioni secondarie.",
+      "passi": [
+        {
+          "id": "c07-p01",
+          "tipo": "storia",
+          "titolo": "Raggiungi il livello 2 e impara Reparo da Professor Ronen",
+          "descrizione": "Se non hai ancora fatto il compito di Ronen, falla prima."
+        },
+        {
+          "id": "c07-p02",
+          "tipo": "storia",
+          "titolo": "Incontra il tuo compagno all'ingresso di Hogwarts e seguilo a Hogsmeade"
+        },
+        {
+          "id": "c07-p03",
+          "tipo": "storia",
+          "titolo": "Visita i quattro negozi",
+          "descrizione": "Tomes and Scrolls, Ollivanders, J. Pippin's Potions e The Magic Neep. Da Ollivanders puoi personalizzare la bacchetta."
+        },
+        {
+          "id": "c07-p04",
+          "tipo": "storia",
+          "titolo": "Incontra il compagno nella piazza del paese e difendi Hogsmeade",
+          "descrizione": "Respingi l'attacco, poi ripara i danni con Reparo (0/7)."
+        },
+        {
+          "id": "c07-tr01",
+          "tipo": "trofeo",
+          "trofeo": "tr-troll",
+          "titolo": "Troll with the Punches",
+          "dove": "Durante l'obiettivo \"Defend Hogsmeade\"."
+        },
+        {
+          "id": "c07-p05",
+          "tipo": "storia",
+          "titolo": "Parla con il negoziante, poi raggiungi le Three Broomsticks",
+          "descrizione": "Segui il compagno e parla con lui fuori dal locale. Ricompensa: Ancient Magic Throw e Ancient Magic."
+        },
+        {
+          "id": "c07-tr02",
+          "tipo": "trofeo",
+          "trofeo": "tr-ancient-magic",
+          "titolo": "A Keen Sense of Spell",
+          "dove": "La ottieni come ricompensa di questa missione: l'obiettivo si sblocca la prima volta che la usi."
+        },
+        {
+          "id": "c07-m01",
+          "tipo": "secondaria",
+          "titolo": "Breaking Camp",
+          "dove": "Claire Beaumont, dietro la sua bancarella nella parte est di Upper Hogsfield.",
+          "livello": 2,
+          "descrizione": "Libera due accampamenti di goblin.",
+          "nota": "Ricompensa: Conjuration Spellcraft Stag Skull Decoration."
+        },
+        {
+          "id": "c07-m02",
+          "tipo": "secondaria",
+          "titolo": "Cache in the Castle",
+          "dove": "Arthur Plummly, fuori dall'aula di Charms, vicino alla statua.",
+          "livello": 2,
+          "descrizione": "Segui la mappa del tesoro di Arthur: tre punti di riferimento e un dipinto con un segreto.",
+          "nota": "Ricompensa: Authentic Historian's Uniform (aspetto)."
+        },
+        {
+          "id": "c07-m03",
+          "tipo": "secondaria",
+          "titolo": "Carted Away",
+          "dove": "Arn, a est del Floo Flame di Lower Hogsfield, sul lato nord della strada vicino all'acqua.",
+          "livello": 2,
+          "descrizione": "Libera i carri del goblin dall'accampamento.",
+          "nota": "Ricompensa: Goblin-Made Helmet (aspetto)."
+        },
+        {
+          "id": "c07-m04",
+          "tipo": "secondaria",
+          "titolo": "The Lost Astrolabe",
+          "dove": "Grace Pinch-Smedley, sul molo che dà sul Black Lake, a nord-est del Floo Flame di Lower Hogsfield.",
+          "livello": 2,
+          "descrizione": "Immergiti nel Black Lake e recupera l'astrolabio.",
+          "nota": "Ricompensa: Mermaid Mask (aspetto)."
+        },
+        {
+          "id": "c07-m05",
+          "tipo": "secondaria",
+          "titolo": "The Daedalian Keys",
+          "dove": "Nellie Oggspire, sul lato nord della Transfiguration Courtyard.",
+          "livello": 2,
+          "descrizione": "Trova le chiavi daedaliane sparse per Hogwarts e porta i gettoni della tua casa nel forziere della sala comune.",
+          "nota": "Livello consigliato per farla tutta: 14. Le ultime tre chiavi si raggiungono solo con Alohomora, che impari in The Caretaker's Lunar Lament."
+        },
+        {
+          "id": "c07-m06",
+          "tipo": "secondaria",
+          "titolo": "Kidnapped Cabbage",
+          "dove": "Eddie Thistlewood, dietro la sua bancarella al centro di Hogsmeade.",
+          "livello": 15,
+          "descrizione": "Recupera i cavoli rubati e consegna 4 Chinese Chomping Cabbage a Bernard Ndiaye a Feldcroft.",
+          "nota": "Si sblocca da qui ma il livello consigliato è 15. Ricompensa: Conjuration Spellcraft Herbology Tools."
+        },
+        {
+          "id": "c07-m07",
+          "tipo": "secondaria",
+          "titolo": "E-vase-ive Manoeuvre",
+          "dove": "Althea Twiddle, davanti al suo cottage a destra del Floo Flame di Irondale.",
+          "livello": 15,
+          "descrizione": "Trova e attiva la misteriosa statua di Madam Twiddle.",
+          "nota": "Si sblocca da qui ma il livello consigliato è 15. Ricompensa: Wand Handle Column - Beige."
+        },
+        {
+          "id": "c07-m08",
+          "tipo": "secondaria",
+          "titolo": "Brother's Keeper",
+          "dove": "Dorothy Sprottle, davanti a casa sua vicino al Floo Flame di Upper Hogsfield.",
+          "livello": 17,
+          "descrizione": "Scopri che fine ha fatto Bardolph Beaumont nella Forbidden Forest (sconfiggi 7 Inferi e il cadavere), poi riferisci a Claire Beaumont.",
+          "nota": "Si sblocca da qui ma il livello consigliato è 17. Ricompensa: Wand Handle Arrow - Black."
+        },
+        {
+          "id": "c07-m09",
+          "tipo": "secondaria",
+          "titolo": "Well, Well, Well",
+          "dove": "Un pozzo magico a sud-est di Aranshire, su una collina tra le rovine.",
+          "livello": 4,
+          "descrizione": "Esamina il pozzo e usa la sua mappa del tesoro per trovare il premio.",
+          "nota": "Ricompensa: Treasure-Seeker's Bicorne Hat (aspetto)."
+        }
+      ]
+    },
+    {
+      "id": "c08",
+      "nome": "The Locket's Secret",
+      "numero": 8,
+      "livello": 2,
+      "riepilogo": "Una breve missione per riprendere i contatti con Professor Fig. Non dà esperienza.",
+      "passi": [
+        {
+          "id": "c08-p01",
+          "tipo": "storia",
+          "titolo": "Parla con Professor Fig",
+          "descrizione": "Riceverai una lettera di Fig: parla con lui nella sua aula."
+        }
+      ]
+    },
+    {
+      "id": "c09",
+      "nome": "Professor Hecat's Assignment 1",
+      "numero": 9,
+      "livello": 2,
+      "riepilogo": "Compito OBBLIGATORIO: serve per proseguire (Secrets of the Restricted Section richiede Incendio). Comprende tre missioni del club di duelli.",
+      "passi": [
+        {
+          "id": "c09-p01",
+          "tipo": "storia",
+          "titolo": "Presentati da Professor Hecat"
+        },
+        {
+          "id": "c09-p02",
+          "tipo": "storia",
+          "titolo": "Crossed Wands: Round 1",
+          "descrizione": "Parla con Lucan Brattleby nella Clock Tower e sconfiggi gli avversari (se non l'hai già fatta)."
+        },
+        {
+          "id": "c09-p03",
+          "tipo": "storia",
+          "titolo": "Spell Combination Practice 1",
+          "descrizione": "Parla con Lucan: lancia Accio seguito da quattro attacchi base, poi Levioso seguito da quattro attacchi base, senza far cadere il manichino a terra."
+        },
+        {
+          "id": "c09-p04",
+          "tipo": "storia",
+          "titolo": "Crossed Wands: Round 2",
+          "descrizione": "Torna da Lucan e sconfiggi altri avversari. Il compito richiede di vincere due round in tutto."
+        },
+        {
+          "id": "c09-p05",
+          "tipo": "storia",
+          "titolo": "Torna da Professor Hecat",
+          "descrizione": "Ricompensa: l'incantesimo Incendio. Puoi esercitarti sul manichino e sui bracieri nel fondo dell'aula (il gioco ti lascia attaccare solo il manichino: mettiti in modo che un braciere sia dietro di lui)."
+        },
+        {
+          "id": "c09-m01",
+          "tipo": "secondaria",
+          "titolo": "Venomous Valour",
+          "dove": "Duncan Hobhouse, ai piedi delle scale della Defence Against the Dark Arts Tower.",
+          "livello": 2,
+          "descrizione": "Entra nel Hidden Herbology Corridor e raccogli una foglia gigante di Venomous Tentacula per far fare bella figura a Duncan.",
+          "nota": "Ricompensa: Venomous Tentacula Robe (aspetto)."
+        }
+      ]
+    },
+    {
+      "id": "c10",
+      "nome": "Secrets of the Restricted Section",
+      "numero": 10,
+      "livello": 3,
+      "riepilogo": "Prima missione notturna: la biblioteca e un luogo segreto sotto di essa. Richiede Incendio.",
+      "passi": [
+        {
+          "id": "c10-p01",
+          "tipo": "storia",
+          "titolo": "Impara Incendio",
+          "descrizione": "Il gioco avvisa che devi conoscere l'incantesimo del fuoco per continuare: completa il compito di Professor Hecat."
+        },
+        {
+          "id": "c10-p02",
+          "tipo": "storia",
+          "titolo": "Torna nell'aula di Professor Fig e parla con Sebastian"
+        },
+        {
+          "id": "c10-p03",
+          "tipo": "storia",
+          "titolo": "Incontra Sebastian di notte nella Central Hall e infiltrati in biblioteca",
+          "descrizione": "Prendi la chiave dalla scrivania del bibliotecario."
+        },
+        {
+          "id": "c10-p04",
+          "tipo": "storia",
+          "titolo": "Entra nella Restricted Section e trova il libro"
+        },
+        {
+          "id": "c10-p05",
+          "tipo": "storia",
+          "titolo": "Cerca il segreto nella Restricted Section ed entra nell'Athenaeum",
+          "descrizione": "Sono tre stanze con enigmi e scontri. Stanza 1: dopo aver evocato il ponte con Basic Cast sul dispositivo, torna indietro e apri il grande forziere. Stanza 2: due ondate di 2 Pensieve Sentries. Stanza 3: 2 Pensieve Sentinels; sulla piattaforma c'è una piccola sporgenza a sinistra che evoca un sentiero fino a un grande forziere (parti di corsa e salta a metà del percorso, poi di nuovo quando sta per rientrare)."
+        },
+        {
+          "id": "c10-p06",
+          "tipo": "storia",
+          "titolo": "Scopri il segreto dell'Antecamera",
+          "descrizione": "Ricompensa: Disillusionment."
+        }
+      ]
+    },
+    {
+      "id": "c11",
+      "nome": "Tomes and Tribulations",
+      "numero": 11,
+      "livello": 3,
+      "riepilogo": "Chiude il capitolo della biblioteca: porti il libro a Professor Fig.",
+      "passi": [
+        {
+          "id": "c11-p01",
+          "tipo": "storia",
+          "titolo": "Torna nell'aula di Professor Fig",
+          "descrizione": "Porta il libro a Fig."
+        },
+        {
+          "id": "c11-m01",
+          "tipo": "secondaria",
+          "titolo": "Crossed Wands: Round 3",
+          "dove": "Lucan Brattleby, nell'angolo in fondo alla Clock Tower.",
+          "livello": 5,
+          "descrizione": "Terzo round del club di duelli.",
+          "nota": "Ricompensa: Crossed Wands Champion Garb (aspetto)."
+        },
+        {
+          "id": "c11-m02",
+          "tipo": "secondaria",
+          "titolo": "Spell Combination Practice 2",
+          "dove": "Lucan Brattleby, nell'angolo in fondo alla Clock Tower.",
+          "livello": 3,
+          "descrizione": "Combina Accio, Incendio e Levioso prima che il manichino tocchi terra."
+        }
+      ]
+    },
+    {
+      "id": "c12",
+      "nome": "Professor Hecat's Assignment 2",
+      "numero": 12,
+      "livello": 3,
+      "riepilogo": "Compito OBBLIGATORIO: ti insegna Expelliarmus, necessario per Jackdaw's Rest.",
+      "passi": [
+        {
+          "id": "c12-p01",
+          "tipo": "storia",
+          "titolo": "Schiva gli attacchi nemici con la rotolata (0/10)",
+          "descrizione": "Si può fare combattendo in qualsiasi momento, anche durante altre missioni."
+        },
+        {
+          "id": "c12-p02",
+          "tipo": "storia",
+          "titolo": "Lancia Incendio sui nemici (0/5)",
+          "descrizione": "Anche questo può avvenire durante altre missioni."
+        },
+        {
+          "id": "c12-p03",
+          "tipo": "storia",
+          "titolo": "Partecipa a una lezione di Difesa contro le Arti Oscure di giorno"
+        },
+        {
+          "id": "c12-p04",
+          "tipo": "storia",
+          "titolo": "Torna da Professor Hecat",
+          "descrizione": "Ricompensa: l'incantesimo Expelliarmus."
+        }
+      ]
+    },
+    {
+      "id": "c13",
+      "nome": "The Girl from Uagadou",
+      "numero": 13,
+      "livello": 4,
+      "riepilogo": "Raggiungi il livello 4 e incontra Natty a Lower Hogsfield. Non dà esperienza. Alla fine parte da sola la missione Trials of Merlin. Si può alternare con Herbology Class e Potions Class.",
+      "passi": [
+        {
+          "id": "c13-p01",
+          "tipo": "storia",
+          "titolo": "Raggiungi il livello 4 e incontra Natty a Lower Hogsfield",
+          "descrizione": "Al termine parte automaticamente Trials of Merlin nelle vicinanze."
+        }
+      ]
+    },
+    {
+      "id": "c14",
+      "nome": "Trials of Merlin",
+      "numero": 14,
+      "livello": 4,
+      "riepilogo": "Fuori da Lower Hogsfield inizi con le Prove di Merlino, piccoli enigmi sparsi per il mondo.",
+      "passi": [
+        {
+          "id": "c14-p01",
+          "tipo": "storia",
+          "titolo": "Aiuta lo sconosciuto e sconfiggi i ladri",
+          "descrizione": "Due ondate di Ashwinder: la prima con 2 Scout, la seconda con 2 Scout e 1 Duellist."
+        },
+        {
+          "id": "c14-p02",
+          "tipo": "storia",
+          "titolo": "Parla con lo sconosciuto e prendi la Mallowsweet dal baule"
+        },
+        {
+          "id": "c14-p03",
+          "tipo": "storia",
+          "titolo": "Risolvi la prima Prova di Merlino",
+          "descrizione": "Dopo aver usato la Mallowsweet, accendi con Incendio i bracieri di tutti e tre i pilastri. Ogni pilastro inizia a sprofondare appena acceso, quindi sii veloce o la prova si azzera."
+        },
+        {
+          "id": "c14-p04",
+          "tipo": "storia",
+          "titolo": "Risolvi la seconda prova e parla con Nora Treadwell",
+          "descrizione": "Completare questa missione sblocca le Prove di Merlino in tutte le Highlands."
+        },
+        {
+          "id": "c14-r01",
+          "tipo": "raccolta",
+          "categoria": "merlin",
+          "quantita": 95,
+          "titolo": "Prove di Merlino",
+          "dove": "Piccoli enigmi a incantesimi che trovi quasi a ogni passo nel mondo. Si risolvono davanti a un altare dopo aver lanciato un incantesimo. Per regione: Feldcroft Region 17, South Hogwarts Region 15, Hogwarts Valley 15, Poidsear Coast 9, North Ford Bog 5, Hogsmeade Valley 5, Cragcroftshire 5, Manor Cape 5, Clagmar Coast 5, North Hogwarts Region 4, Marunweem Lake 4, Forbidden Forest 3, Coastal Cavern 2, South Sea Bog 1.",
+          "nota": "Danno esperienza e soprattutto slot per l'equipaggiamento. Il totale è 95: la somma delle regioni della wiki coincide con quello di due guide."
+        }
+      ]
+    },
+    {
+      "id": "c15",
+      "nome": "Herbology Class",
+      "numero": 15,
+      "livello": 3,
+      "riepilogo": "Ricevi il tuo primo tavolo da giardinaggio. Si può alternare con la coppia The Girl from Uagadou e Trials of Merlin.",
+      "passi": [
+        {
+          "id": "c15-p01",
+          "tipo": "storia",
+          "titolo": "Vai a lezione di Herbology e parla con Professor Garlick"
+        },
+        {
+          "id": "c15-p02",
+          "tipo": "storia",
+          "titolo": "Pianta i semi di dittamo al tavolo da giardinaggio",
+          "descrizione": "Qui incontri Leander Prewett."
+        },
+        {
+          "id": "c15-p03",
+          "tipo": "storia",
+          "titolo": "Passa all'altra serra e raccogli un Chinese Chomping Cabbage",
+          "descrizione": "Usalo per colpire il bersaglio."
+        },
+        {
+          "id": "c15-p04",
+          "tipo": "storia",
+          "titolo": "Torna da Professor Garlick",
+          "descrizione": "Dopo la missione ti resta a disposizione il tavolo da giardinaggio con un piccolo vaso: è la tua prima postazione di creazione."
+        }
+      ]
+    },
+    {
+      "id": "c16",
+      "nome": "Potions Class",
+      "numero": 16,
+      "livello": 4,
+      "riepilogo": "Ricevi la tua postazione per pozioni. Richiede aver fatto Herbology Class.",
+      "passi": [
+        {
+          "id": "c16-p01",
+          "tipo": "storia",
+          "titolo": "Vai a lezione di Potions",
+          "descrizione": "Professor Sharp ti manda a raccogliere ingredienti."
+        },
+        {
+          "id": "c16-p02",
+          "tipo": "storia",
+          "titolo": "Raccogli le Ashwinder Eggs e il Dark Mongrel Fur"
+        },
+        {
+          "id": "c16-p03",
+          "tipo": "storia",
+          "titolo": "Prendi una piuma di Fwooper per Garreth",
+          "descrizione": "Se rifiuti di aiutare Garreth puoi comunque prendere la piuma dall'ufficio e darla a lui o tenerla."
+        },
+        {
+          "id": "c16-p04",
+          "tipo": "storia",
+          "titolo": "Prepara una Edurus Potion e torna da Professor Sharp",
+          "descrizione": "Dopo la missione hai una piccola postazione per pozioni: è la tua seconda postazione di creazione. Nell'ufficio di Sharp c'è un Ministry Memorandum sulla scrivania."
+        },
+        {
+          "id": "c16-m01",
+          "tipo": "secondaria",
+          "titolo": "'Dissending' for Sweets",
+          "dove": "Garreth Weasley, in cima alle scale della Reception Hall.",
+          "livello": 4,
+          "descrizione": "Trova la statua della strega con un occhio solo e apri il passaggio segreto verso Honeydukes.",
+          "nota": "Ricompensa: Conjuration Spellcraft Quidditch Board (e denaro se lo chiedi)."
+        },
+        {
+          "id": "c16-m02",
+          "tipo": "secondaria",
+          "titolo": "Summoner's Court: Match 1",
+          "dove": "Leander Prewett, alla bacheca di Summoner's Court ai margini della Bell Tower Courtyard.",
+          "livello": 4,
+          "descrizione": "Prima partita della serie di Summoner's Court."
+        }
+      ]
+    },
+    {
+      "id": "c17",
+      "nome": "The Hunt for the Missing Pages",
+      "numero": 17,
+      "livello": 5,
+      "soloSe": {
+        "casa": "grifondoro"
+      },
+      "riepilogo": "Missione della casa Grifondoro. Richiede Potions Class e Trials of Merlin.",
+      "passi": [
+        {
+          "id": "c17-p01",
+          "tipo": "storia",
+          "titolo": "Parla con Nearly Headless Nick e seguilo",
+          "descrizione": "Il punto d'inizio è l'owl post di Nellie Oggspire. Ti porta fuori dalla Great Hall e alle cucine."
+        },
+        {
+          "id": "c17-p02",
+          "tipo": "storia",
+          "titolo": "Procurati tre pezzi di rosbif avariato",
+          "descrizione": "Sono in un'alcova nell'angolo sud-ovest delle cucine."
+        },
+        {
+          "id": "c17-p03",
+          "tipo": "storia",
+          "titolo": "Trova la partita della Headless Hunt e il cimitero",
+          "descrizione": "Distruggi le zucche per trovare la testa: quella che trema è la giusta, oppure usa Revelio, oppure distruggile tutte."
+        },
+        {
+          "id": "c17-p04",
+          "tipo": "storia",
+          "titolo": "Parla con Richard Jackdaw"
+        },
+        {
+          "id": "c17-m01",
+          "tipo": "secondaria",
+          "titolo": "Ghost of Our Love",
+          "dove": "Nel cimitero, su una lapide accanto a The Tomb of the Villager (è dietro di te quando arrivi): Map with Floating Candles.",
+          "livello": 5,
+          "soloSe": {
+            "casa": "grifondoro"
+          },
+          "descrizione": "Raccogli la mappa durante la missione: inizia così la missione secondaria. Se non la prendi subito, il punto è segnato sulla mappa di Hogsmeade con un'icona di missione secondaria.",
+          "nota": "Ricompensa: Treasure-Seeker's Scarf (aspetto). Il luogo della mappa cambia per ogni casa."
+        }
+      ]
+    },
+    {
+      "id": "c18",
+      "nome": "Ollivander's Heirloom",
+      "numero": 18,
+      "livello": 5,
+      "soloSe": {
+        "casa": "corvonero"
+      },
+      "riepilogo": "Missione della casa Corvonero. Richiede Potions Class e Trials of Merlin.",
+      "passi": [
+        {
+          "id": "c18-p01",
+          "tipo": "storia",
+          "titolo": "Visita Mr Ollivander a Hogsmeade",
+          "descrizione": "Il punto d'inizio è l'owl post di Gerbold Ollivander."
+        },
+        {
+          "id": "c18-p02",
+          "tipo": "storia",
+          "titolo": "Indaga nell'Owlery",
+          "descrizione": "Apri le nicchie sigillate usando Accio sulle maniglie di metallo: 8 nicchie al piano principale e altre 12 salendo la scala. In 5 ci sono statue di uccelli."
+        },
+        {
+          "id": "c18-p03",
+          "tipo": "storia",
+          "titolo": "Rimetti le statue degli uccelli sui loro posatoi"
+        },
+        {
+          "id": "c18-m01",
+          "tipo": "secondaria",
+          "titolo": "Ghost of Our Love",
+          "dove": "Sul piano più alto dell'Owlery: Map with Floating Candles.",
+          "livello": 5,
+          "soloSe": {
+            "casa": "corvonero"
+          },
+          "descrizione": "Raccogli la mappa: inizia così la missione secondaria. Se non la prendi subito, il punto è segnato sulla mappa di Hogwarts con un'icona di missione secondaria.",
+          "nota": "Ricompensa: Treasure-Seeker's Scarf (aspetto). Il luogo della mappa cambia per ogni casa."
+        }
+      ]
+    },
+    {
+      "id": "c19",
+      "nome": "Prisoner of Love",
+      "numero": 19,
+      "livello": 5,
+      "soloSe": {
+        "casa": "tassorosso"
+      },
+      "riepilogo": "Missione della casa Tassorosso. Richiede Potions Class e Trials of Merlin.",
+      "passi": [
+        {
+          "id": "c19-p01",
+          "tipo": "storia",
+          "titolo": "Parla con il ritratto di Eldritch Diggory",
+          "descrizione": "Il punto d'inizio è l'owl post di Lenora Everleigh, nella sala comune di Tassorosso."
+        },
+        {
+          "id": "c19-p02",
+          "tipo": "storia",
+          "titolo": "Parla con Helen Thistlewood",
+          "descrizione": "Dovrai parlarle due volte, a Upper Hogsfield."
+        },
+        {
+          "id": "c19-p03",
+          "tipo": "storia",
+          "titolo": "Parla con Anne ad Azkaban"
+        },
+        {
+          "id": "c19-p04",
+          "tipo": "storia",
+          "titolo": "Trova ciò che Jackdaw ha lasciato per Anne ed esci dal caveau"
+        },
+        {
+          "id": "c19-m01",
+          "tipo": "secondaria",
+          "titolo": "Ghost of Our Love",
+          "dove": "A Upper Hogsfield, in un forziere dietro la bancarella di Claire Beaumont: Map with Floating Candles.",
+          "livello": 5,
+          "soloSe": {
+            "casa": "tassorosso"
+          },
+          "descrizione": "Raccogli la mappa: inizia così la missione secondaria. Se non la prendi subito, il punto è segnato sulla mappa del mondo con un'icona di missione secondaria.",
+          "nota": "Ricompensa: Treasure-Seeker's Scarf (aspetto). Il luogo della mappa cambia per ogni casa."
+        }
+      ]
+    },
+    {
+      "id": "c20",
+      "nome": "Scrope's Last Hope",
+      "numero": 20,
+      "livello": 5,
+      "soloSe": {
+        "casa": "serpeverde"
+      },
+      "riepilogo": "Missione della casa Serpeverde. Richiede Potions Class e Trials of Merlin.",
+      "passi": [
+        {
+          "id": "c20-p01",
+          "tipo": "storia",
+          "titolo": "Trova la nota di Scrope nel cortile",
+          "descrizione": "Il punto d'inizio è l'owl post di Scrope."
+        },
+        {
+          "id": "c20-p02",
+          "tipo": "storia",
+          "titolo": "Cerca le note successive",
+          "descrizione": "Una è nel campo di zucche."
+        },
+        {
+          "id": "c20-p03",
+          "tipo": "storia",
+          "titolo": "Incontra Scrope sulla riva e indaga nella grotta",
+          "descrizione": "Il diario di Apollonia Black è su un tavolo nella grotta: raccoglierlo fa arrivare Richard Jackdaw."
+        },
+        {
+          "id": "c20-p04",
+          "tipo": "storia",
+          "titolo": "Torna da Scrope"
+        },
+        {
+          "id": "c20-m01",
+          "tipo": "secondaria",
+          "titolo": "Ghost of Our Love",
+          "dove": "In un forziere nella grotta: Map with Floating Candles.",
+          "livello": 5,
+          "soloSe": {
+            "casa": "serpeverde"
+          },
+          "descrizione": "Raccogli la mappa: inizia così la missione secondaria. Se non la prendi subito, il punto è segnato sulla mappa di Hogwarts con un'icona di missione secondaria.",
+          "nota": "Ricompensa: Treasure-Seeker's Scarf (aspetto). Il luogo della mappa cambia per ogni casa."
+        }
+      ]
+    },
+    {
+      "id": "c21",
+      "nome": "Jackdaw's Rest",
+      "numero": 21,
+      "livello": 5,
+      "riepilogo": "Nella Forbidden Forest segui Richard Jackdaw fino a una tomba nascosta. Al termine si sbloccano i talenti. Richiede Expelliarmus.",
+      "passi": [
+        {
+          "id": "c21-p01",
+          "tipo": "storia",
+          "titolo": "Impara Expelliarmus",
+          "descrizione": "Il gioco non ti lascia seguire Jackdaw senza: completa il secondo compito di Professor Hecat."
+        },
+        {
+          "id": "c21-p02",
+          "tipo": "storia",
+          "titolo": "Incontra Richard Jackdaw nella Forbidden Forest e seguilo",
+          "descrizione": "Prima di avvicinarti alla porta, gira dietro l'angolo del muro e prendi il Coin Pouch."
+        },
+        {
+          "id": "c21-p03",
+          "tipo": "storia",
+          "titolo": "Trova la grotta dove è morto Jackdaw e sussurra la parola d'ordine"
+        },
+        {
+          "id": "c21-p04",
+          "tipo": "storia",
+          "titolo": "Sconfiggi i Loyalist di Ranrok",
+          "descrizione": "Un Loyalist Sentinel e due Loyalist Warriors."
+        },
+        {
+          "id": "c21-p05",
+          "tipo": "storia",
+          "titolo": "Cerca le pagine mancanti nella tomba",
+          "descrizione": "Sblocca la porta con 3 Basic Cast e brucia la ragnatela con Incendio. Al bivio ti tendono un'imboscata 2 Thornback Scurriours e 2 Thornback Shooters. Nella zona c'è anche una Horklump Juice."
+        },
+        {
+          "id": "c21-p06",
+          "tipo": "storia",
+          "titolo": "Difenditi dagli Ancient Defenders",
+          "descrizione": "Quattro ondate: 2 Pensieve Sentinels e 2 Sentries, poi 2 Sentries, poi 1 Protector, poi 2 Protectors."
+        },
+        {
+          "id": "c21-p07",
+          "tipo": "storia",
+          "titolo": "Indaga sulle tracce di magia antica, parla con il ritratto ed esci dalla Map Chamber",
+          "descrizione": "Ricompensa: i talenti si sbloccano."
+        },
+        {
+          "id": "c21-tr01",
+          "tipo": "trofeo",
+          "trofeo": "tr-map-gryffindor",
+          "titolo": "The Gryffindor in the Graveyard",
+          "dove": "Quando raggiungi la Map Chamber."
+        },
+        {
+          "id": "c21-tr02",
+          "tipo": "trofeo",
+          "trofeo": "tr-map-ravenclaw",
+          "titolo": "The Wise Owl",
+          "dove": "Quando raggiungi la Map Chamber."
+        },
+        {
+          "id": "c21-tr03",
+          "tipo": "trofeo",
+          "trofeo": "tr-map-hufflepuff",
+          "titolo": "The Auror's Apprentice",
+          "dove": "Quando raggiungi la Map Chamber."
+        },
+        {
+          "id": "c21-tr04",
+          "tipo": "trofeo",
+          "trofeo": "tr-map-slytherin",
+          "titolo": "The Toast of the Town",
+          "dove": "Quando raggiungi la Map Chamber."
+        },
+        {
+          "id": "c21-m01",
+          "tipo": "secondaria",
+          "titolo": "Follow the Butterflies",
+          "dove": "Clementine Willardsey, in fondo alle Three Broomsticks, vicino alla parete di sinistra.",
+          "livello": 5,
+          "descrizione": "Segui lo sciame di farfalle nella Forbidden Forest e scopri dove stanno andando.",
+          "nota": "Ricompensa: Conjuration Spellcraft Flower Box."
+        },
+        {
+          "id": "c21-tr05",
+          "tipo": "trofeo",
+          "trofeo": "tr-butterflies",
+          "titolo": "Followed the Butterflies",
+          "dove": "Si ottiene seguendo le farfalle fino a un tesoro, come in questa missione."
+        }
+      ]
+    },
+    {
+      "id": "c22",
+      "nome": "Flying Class",
+      "numero": 22,
+      "livello": 6,
+      "riepilogo": "Impari a volare sulla scopa. Dopo la lezione puoi comprare e usare le scope.",
+      "passi": [
+        {
+          "id": "c22-p01",
+          "tipo": "storia",
+          "titolo": "Raggiungi il livello 6 e vai a lezione di volo",
+          "descrizione": "La classe è sul prato del Flying Class Lawn."
+        },
+        {
+          "id": "c22-p02",
+          "tipo": "storia",
+          "titolo": "Vola attraverso gli anelli (0/3), poi quelli intorno al parco"
+        },
+        {
+          "id": "c22-p03",
+          "tipo": "storia",
+          "titolo": "Segui Everett Clopton",
+          "descrizione": "Poi torna nel cortile, atterra e scendi dalla scopa."
+        },
+        {
+          "id": "c22-p04",
+          "tipo": "storia",
+          "titolo": "Torna da Everett Clopton",
+          "descrizione": "Ricompensa: puoi comprare e ottenere scope."
+        },
+        {
+          "id": "c22-m01",
+          "tipo": "secondaria",
+          "titolo": "A Demanding Delivery",
+          "dove": "Parry Pippin, dietro il bancone del suo negozio J. Pippin's Potions a Hogsmeade.",
+          "livello": 6,
+          "descrizione": "Consegna 3 Invisibility Potion a Fatimah Lawang (bevi tu una pozione per non farti vedere).",
+          "nota": "Ricompensa: Potioneer's Cap (aspetto)."
+        },
+        {
+          "id": "c22-m02",
+          "tipo": "secondaria",
+          "titolo": "Flight Test",
+          "dove": "Albie Weekes, dietro il bancone di Spintwitches Sporting Needs a Hogsmeade.",
+          "livello": 6,
+          "descrizione": "Compra una scopa da Spintwitches, parla con Imelda Reyes al campo da Quidditch, fai una gara con la scopa e torna da Albie."
+        },
+        {
+          "id": "c22-tr01",
+          "tipo": "trofeo",
+          "trofeo": "tr-flying",
+          "titolo": "Flight the Good Flight",
+          "dove": "Le gare di Imelda sono tre: questa (campo da Quidditch), Sweeping the Competition (Hogwarts South) e The Sky is the Limit (Coastal). Devi battere il suo tempo in tutte."
+        }
+      ]
+    },
+    {
+      "id": "c23",
+      "nome": "Professor Sharp's Assignment 1",
+      "numero": 23,
+      "livello": 5,
+      "riepilogo": "Compito OBBLIGATORIO: ti insegna Depulso, necessario per The Helm of Urtkot. Si riceve dopo Jackdaw's Rest.",
+      "passi": [
+        {
+          "id": "c23-p01",
+          "tipo": "storia",
+          "titolo": "Usa una Focus Potion",
+          "descrizione": "Si può comprare o preparare."
+        },
+        {
+          "id": "c23-p02",
+          "tipo": "storia",
+          "titolo": "Prepara le pozioni Maxima e Edurus e usale insieme"
+        },
+        {
+          "id": "c23-p03",
+          "tipo": "storia",
+          "titolo": "Partecipa a una lezione di Potions di giorno"
+        },
+        {
+          "id": "c23-p04",
+          "tipo": "storia",
+          "titolo": "Torna da Professor Sharp",
+          "descrizione": "Ricompensa: l'incantesimo Depulso."
+        },
+        {
+          "id": "c23-m01",
+          "tipo": "secondaria",
+          "titolo": "Professor Sharp's Assignment 2",
+          "dove": "Owl post di Professor Sharp, dopo il primo compito.",
+          "livello": 5,
+          "descrizione": "Usa una Invisibility Potion e una Thunderbrew Potion contro i nemici, poi torna da Sharp.",
+          "nota": "Ricompensa: l'incantesimo Diffindo."
+        }
+      ]
+    },
+    {
+      "id": "c24",
+      "nome": "The Room of Requirement",
+      "numero": 24,
+      "livello": 6,
+      "riepilogo": "Scopri la stanza segreta che diventa il tuo spazio personale. Si può fare in qualsiasi ordine rispetto a In the Shadow of the Undercroft.",
+      "passi": [
+        {
+          "id": "c24-p01",
+          "tipo": "storia",
+          "titolo": "Incontra Professor Weasley e seguilo",
+          "descrizione": "L'incontro è alla Astronomy Tower (lettera di Weasley)."
+        },
+        {
+          "id": "c24-p02",
+          "tipo": "storia",
+          "titolo": "Elimina l'ostacolo con Evanesco",
+          "descrizione": "Ricompensa: l'incantesimo Evanesco."
+        },
+        {
+          "id": "c24-p03",
+          "tipo": "storia",
+          "titolo": "Esplora la Room of Requirement",
+          "descrizione": "Accio sulla scatola, arrampicati sopra per salire sul muro e apri il grande forziere. Scivola lungo la rampa e usa di nuovo Accio su una borsa per farla scendere. Con Evanesco entra nello spazio stretto e usa Levioso e Accio per far cadere un'altra borsa. La Fireplace Note è sul pavimento vicino al camino.",
+          "mancabile": true,
+          "notaMancabile": "I forzieri e le borse della stanza di adesso spariscono quando trovi Deek: apri tutto prima di parlargli."
+        },
+        {
+          "id": "c24-p04",
+          "tipo": "storia",
+          "titolo": "Usa la Desk of Description"
+        },
+        {
+          "id": "c24-p05",
+          "tipo": "storia",
+          "titolo": "Parla con Professor Weasley"
+        },
+        {
+          "id": "c24-p06",
+          "tipo": "storia",
+          "titolo": "Crea un tavolo da giardinaggio e una postazione per pozioni",
+          "descrizione": "Ricompense: l'incantesimo Conjuring e le prime creazioni (Desk of Description, ritratto, luci, tappeti, sedie, tavolini, specchi)."
+        },
+        {
+          "id": "c24-m01",
+          "tipo": "secondaria",
+          "titolo": "Interior Decorating",
+          "dove": "Professor Weasley, nell'angolo in fondo a destra della Room of Requirement.",
+          "livello": 5,
+          "descrizione": "Raccogli moonstone (40/50), crea decorazioni per pareti (0/5) e pavimento (0/5), poi prova a cambiare stile, colore e dimensione di un oggetto e il balcone o il pavimento.",
+          "nota": "Ricompensa: l'incantesimo Altering. Il livello consigliato è 5 ma puoi riceverla dal 6."
+        }
+      ]
+    },
+    {
+      "id": "c25",
+      "nome": "In the Shadow of the Undercroft",
+      "numero": 25,
+      "livello": 8,
+      "riepilogo": "Sebastian ti mostra un luogo segreto sotto il castello. Richiede il livello 8. Ordine libero rispetto a The Room of Requirement.",
+      "passi": [
+        {
+          "id": "c25-p01",
+          "tipo": "storia",
+          "titolo": "Raggiungi il livello 8 e incontra Sebastian",
+          "descrizione": "Lettera di Sebastian: ti aspetta fuori dall'aula di Difesa contro le Arti Oscure."
+        },
+        {
+          "id": "c25-p02",
+          "tipo": "storia",
+          "titolo": "Entra nella stanza segreta ed esplorala"
+        },
+        {
+          "id": "c25-p03",
+          "tipo": "storia",
+          "titolo": "Parla con Sebastian e allenati con Confringo"
+        },
+        {
+          "id": "c25-p04",
+          "tipo": "storia",
+          "titolo": "Controlla di nuovo con Sebastian ed esci dall'Undercroft",
+          "descrizione": "Ricompensa: l'incantesimo Confringo."
+        }
+      ]
+    },
+    {
+      "id": "c26",
+      "nome": "Professor Garlick's Assignment 1",
+      "numero": 26,
+      "livello": 8,
+      "riepilogo": "Compito OBBLIGATORIO: ti insegna Wingardium Leviosa, necessario per The High Keep. Si riceve dopo The Room of Requirement e In the Shadow of the Undercroft.",
+      "passi": [
+        {
+          "id": "c26-p01",
+          "tipo": "storia",
+          "titolo": "Procurati e usa una Venomous Tentacula"
+        },
+        {
+          "id": "c26-p02",
+          "tipo": "storia",
+          "titolo": "Usa una Mandragola su più nemici insieme"
+        },
+        {
+          "id": "c26-p03",
+          "tipo": "storia",
+          "titolo": "Partecipa a una lezione di Herbology di giorno"
+        },
+        {
+          "id": "c26-p04",
+          "tipo": "storia",
+          "titolo": "Torna da Professor Garlick",
+          "descrizione": "Ricompensa: l'incantesimo Wingardium Leviosa. Nelle casse vicino a lei trovi una Maxima, una Wiggenweld e una Edurus Potion."
+        }
+      ]
+    },
+    {
+      "id": "c27",
+      "nome": "The Map Chamber",
+      "numero": 27,
+      "livello": 10,
+      "riepilogo": "Professor Fig ti porta nella Map Chamber. Richiede il livello 10. Sblocca altri compiti dei professori.",
+      "passi": [
+        {
+          "id": "c27-p01",
+          "tipo": "storia",
+          "titolo": "Raggiungi il livello 10 e presentati da Professor Fig"
+        },
+        {
+          "id": "c27-p02",
+          "tipo": "storia",
+          "titolo": "Entra nella Map Chamber"
+        },
+        {
+          "id": "c27-p03",
+          "tipo": "storia",
+          "titolo": "Parla con il ritratto di Professor Rackham"
+        },
+        {
+          "id": "c27-m01",
+          "tipo": "secondaria",
+          "titolo": "Professor Garlick's Assignment 2",
+          "dove": "Owl post di Professor Garlick.",
+          "livello": 8,
+          "descrizione": "Coltiva e raccogli la Fluxweed, usa insieme tutte e tre le piante da combattimento e torna da Garlick.",
+          "nota": "Ricompensa: l'incantesimo Flipendo."
+        },
+        {
+          "id": "c27-tr01",
+          "tipo": "trofeo",
+          "trofeo": "tr-milk",
+          "titolo": "Spilled Milk",
+          "dove": "Dopo aver imparato Flipendo con il compito di Garlick."
+        },
+        {
+          "id": "c27-m02",
+          "tipo": "secondaria",
+          "titolo": "Madam Kogawa's Assignment 1",
+          "dove": "Owl post di Madam Kogawa.",
+          "livello": 10,
+          "descrizione": "Fai scoppiare i palloncini volando: 5 sopra la stazione di Hogsmeade e 5 intorno al campo da Quidditch, poi torna da lei.",
+          "nota": "Ricompensa: l'incantesimo Glacius."
+        },
+        {
+          "id": "c27-m03",
+          "tipo": "secondaria",
+          "titolo": "Madam Kogawa's Assignment 2",
+          "dove": "Owl post di Madam Kogawa, dopo il primo compito.",
+          "livello": 10,
+          "descrizione": "Esercitati a volare vicino alle Spires (5) e alla Keenbridge Tower (5), poi torna da lei.",
+          "nota": "Ricompensa: l'incantesimo Arresto Momentum."
+        }
+      ]
+    },
+    {
+      "id": "c28",
+      "nome": "Percival Rackham's Trial",
+      "numero": 28,
+      "livello": 11,
+      "riepilogo": "La prima prova di un Keeper: un luogo antico con enigmi e scontri. Richiede il livello 11.",
+      "passi": [
+        {
+          "id": "c28-p01",
+          "tipo": "storia",
+          "titolo": "Raggiungi il livello 11 e incontra Professor Fig alla torre"
+        },
+        {
+          "id": "c28-p02",
+          "tipo": "storia",
+          "titolo": "Indaga sulla presenza dei goblin",
+          "descrizione": "Elimina 7 Loyalist Warriors e 1 Loyalist Sentinel con Petrificus Totalus, poi trova la Goblin Note."
+        },
+        {
+          "id": "c28-p03",
+          "tipo": "storia",
+          "titolo": "Supera i goblin",
+          "descrizione": "1 Loyalist Assassin, 1 Sentinel e 3 Warriors."
+        },
+        {
+          "id": "c28-p04",
+          "tipo": "storia",
+          "titolo": "Cerca nella torre ed entra nella prova",
+          "descrizione": "Trova l'ingresso della prima prova."
+        },
+        {
+          "id": "c28-p05",
+          "tipo": "storia",
+          "titolo": "Completa la prova",
+          "descrizione": "Traccia la magia antica ai piedi della seconda rampa di scale e apri il forziere prima di andare verso il ponte. Sul ponte apri i 2 grandi forzieri prima di attraversarlo del tutto. Nella stanza 4 traccia la magia antica e apri altri 2 grandi forzieri prima di passare dall'arco.",
+          "mancabile": true,
+          "notaMancabile": "Il ponte e i suoi forzieri spariscono dopo averlo attraversato: apri i 2 grandi forzieri prima di arrivare dall'altra parte."
+        },
+        {
+          "id": "c28-p06",
+          "tipo": "storia",
+          "titolo": "Sconfiggi le guardie",
+          "descrizione": "2 Pensieve Protectors, 2 Sentries e 2 Sentinels, poi 1 Guardian: distruggi il suo globo con incantesimi del colore corrispondente."
+        },
+        {
+          "id": "c28-p07",
+          "tipo": "storia",
+          "titolo": "Scopri il segreto della prova e torna alla Map Chamber"
+        },
+        {
+          "id": "c28-p08",
+          "tipo": "storia",
+          "titolo": "Parla con Fig, con Professor Rackham e con Charles Rookwood",
+          "descrizione": "Ricompense: Pensieve Artefact e, sulla mappa, la posizione degli Ancient Magic Hotspots."
+        },
+        {
+          "id": "c28-tr01",
+          "tipo": "trofeo",
+          "trofeo": "tr-keeper",
+          "titolo": "That's a Keeper",
+          "dove": "All'ultimo obiettivo, quando parli con Charles Rookwood."
+        },
+        {
+          "id": "c28-m01",
+          "tipo": "secondaria",
+          "titolo": "Professor Onai's Assignment",
+          "dove": "Owl post di Professor Onai.",
+          "livello": 11,
+          "descrizione": "Raccogli un Troll Bogey, lancia Depulso su un nemico levitato, partecipa a una lezione di Divination di giorno e torna da lei.",
+          "nota": "Ricompensa: l'incantesimo Descendo. Richiede di aver fatto anche il primo compito di Professor Sharp."
+        },
+        {
+          "id": "c28-m02",
+          "tipo": "secondaria",
+          "titolo": "'Mer-ky' Depths",
+          "dove": "Nerida Roberts, accanto al Floo Flame del Boathouse.",
+          "livello": 11,
+          "descrizione": "Trova le Leaky Caves, recupera un manufatto dei Sirenidi e riportalo a Nerida.",
+          "nota": "Ricompensa: Mermish Liaison Uniform (aspetto)."
+        },
+        {
+          "id": "c28-m03",
+          "tipo": "secondaria",
+          "titolo": "Sweeping the Competition",
+          "dove": "Albie Weekes, nel suo negozio vicino al bancone (owl post dopo Flight Test).",
+          "livello": 11,
+          "descrizione": "Compra un potenziamento per la scopa, parla con Imelda e fai la gara Hogwarts South Broom Trial, poi torna da Albie."
+        }
+      ]
+    },
+    {
+      "id": "c29",
+      "nome": "The Helm of Urtkot",
+      "numero": 29,
+      "livello": 12,
+      "riepilogo": "Una caccia a un elmo in una tomba. Richiede Depulso. Fa parte di un gruppo di tre missioni (con Beasts Class e The Caretaker's Lunar Lament) in ordine libero.",
+      "passi": [
+        {
+          "id": "c29-p01",
+          "tipo": "storia",
+          "titolo": "Raggiungi il livello 12 e impara Depulso da Professor Sharp",
+          "descrizione": "Se non l'hai fatto, completa il primo compito di Professor Sharp."
+        },
+        {
+          "id": "c29-p02",
+          "tipo": "storia",
+          "titolo": "Parla con Sirona alle Three Broomsticks e cerca Lodgok al Hog's Head Inn"
+        },
+        {
+          "id": "c29-p03",
+          "tipo": "storia",
+          "titolo": "Incontra Lodgok vicino alla tomba della strega e seguilo all'ingresso"
+        },
+        {
+          "id": "c29-p04",
+          "tipo": "storia",
+          "titolo": "Cerca l'elmo nella tomba",
+          "descrizione": "Alla prima porta con le falene, prima di guidare l'ultima falena con Lumos, prendi il mucchio di monete sulla cassa a destra. La stanza successiva ha 2 alcove: a destra monete, a sinistra un grande forziere. Più avanti ci sono 2 ondate di Inferi (3 poi 2)."
+        },
+        {
+          "id": "c29-p05",
+          "tipo": "storia",
+          "titolo": "Torna da Lodgok, recupera l'elmo dai ladri e consegnalo"
+        }
+      ]
+    },
+    {
+      "id": "c30",
+      "nome": "Beasts Class",
+      "numero": 30,
+      "livello": 13,
+      "riepilogo": "Lezione di Bestie e primo contatto con Poppy. Fa parte del gruppo di tre missioni in ordine libero.",
+      "passi": [
+        {
+          "id": "c30-p01",
+          "tipo": "storia",
+          "titolo": "Raggiungi il livello 13 e vai a lezione di Beasts"
+        },
+        {
+          "id": "c30-p02",
+          "tipo": "storia",
+          "titolo": "Spazzola e dai da mangiare a un Puffskein e a un Kneazle"
+        },
+        {
+          "id": "c30-p03",
+          "tipo": "storia",
+          "titolo": "Parla con Professor Howin, poi con Poppy e seguila"
+        },
+        {
+          "id": "c30-p04",
+          "tipo": "storia",
+          "titolo": "Spazzola e dai da mangiare a Highwing",
+          "descrizione": "Ricompense: Beast Petting Brush e Beast Feed."
+        }
+      ]
+    },
+    {
+      "id": "c31",
+      "nome": "The Caretaker's Lunar Lament",
+      "numero": 31,
+      "livello": 14,
+      "riepilogo": "Aiuti il custode con delle lune magiche e impari Alohomora. Ultima del gruppo di tre missioni: dopo tutte e tre si sbloccano molte missioni secondarie.",
+      "passi": [
+        {
+          "id": "c31-p01",
+          "tipo": "storia",
+          "titolo": "Raggiungi il livello 14 e parla con Gladwin Moon"
+        },
+        {
+          "id": "c31-p02",
+          "tipo": "storia",
+          "titolo": "Togli la luna dalla statua e segui Gladwin"
+        },
+        {
+          "id": "c31-p03",
+          "tipo": "storia",
+          "titolo": "Apri la porta della Faculty Tower con Alohomora"
+        },
+        {
+          "id": "c31-p04",
+          "tipo": "storia",
+          "titolo": "Recupera le lune dei Demiguise nel Prefects' Bathroom e nell'Hospital Wing",
+          "descrizione": "Poi riportale a Gladwin. Ricompensa: Alohomora I."
+        },
+        {
+          "id": "c31-r01",
+          "tipo": "raccolta",
+          "categoria": "demiguise",
+          "quantita": 33,
+          "titolo": "Statue dei Demiguise",
+          "dove": "Piccole statue di un Demiguise che regge una luna. Di giorno sono di bronzo; di notte diventano trasparenti e puoi prendere la luna (la statua sparisce). Le prime 3 le trovi in questa missione, 10 sono a Hogwarts, 9 a Hogsmeade e una in ognuno degli 11 villaggi. Molte sono dietro porte chiuse che richiedono Alohomora I, II o III.",
+          "nota": "Compaiono a Hogsmeade già durante Welcome to Hogsmeade e a Hogwarts il giorno dopo, ma diventano importanti solo con questa missione. Contano per la missione The Man Behind the Moons.",
+          "daVerificare": true,
+          "notaVerifica": "La wiki e le guide dicono 33 statue; una pagina dell'obiettivo sulla stessa wiki parla di 30."
+        },
+        {
+          "id": "c31-m01",
+          "tipo": "secondaria",
+          "titolo": "The Man Behind the Moons",
+          "dove": "Gladwin Moon, vicino alla porta della Faculty Tower.",
+          "livello": 11,
+          "descrizione": "Riporta a Gladwin le lune dei Demiguise (prima 9, poi 13), poi parla con Piers Pemberton a Hogsmeade.",
+          "nota": "Si può sbloccare solo dal livello 14. Ricompense: Alohomora II e Alohomora III."
+        },
+        {
+          "id": "c31-m02",
+          "tipo": "secondaria",
+          "titolo": "A Friend in Deed",
+          "dove": "Sirona Ryan, vicino al bancone delle Three Broomsticks.",
+          "livello": 14,
+          "descrizione": "Parla con Dorothy Sprottle a Upper Hogsfield, entra nella caverna e raccogli 5 lettere, poi 10 Horklump, poi altre 5 lettere. Riporta la scatola di lettere a Dorothy e poi a Sirona.",
+          "nota": "Ricompensa: Conjuration Spellcraft Keg Shelf. Si sblocca dopo il gruppo di tre missioni."
+        },
+        {
+          "id": "c31-m03",
+          "tipo": "secondaria",
+          "titolo": "Summoner's Court: Match 2",
+          "dove": "Samantha Dale, alla bacheca di Summoner's Court nella Bell Tower Courtyard.",
+          "livello": 14,
+          "descrizione": "Seconda partita. Equipaggia Accio nel tuo set di incantesimi (a volte il passaggio può essere saltato).",
+          "nota": "Si sblocca dopo il gruppo di tre missioni."
+        },
+        {
+          "id": "c31-m04",
+          "tipo": "secondaria",
+          "titolo": "The Hall of Herodiana",
+          "dove": "Sophronia Franklin, nel salotto vicino all'aula di Charms.",
+          "livello": 14,
+          "descrizione": "Trova l'ingresso della Hall of Herodiana ed entra: risolvi tre enigmi (0/3) e torna da Sophronia.",
+          "nota": "Ricompense: Herodiana's Cape, Attire e Cap (aspetti). Si sblocca dopo il gruppo di tre missioni."
+        },
+        {
+          "id": "c31-m05",
+          "tipo": "secondaria",
+          "titolo": "The Tale of Rowland Oakes",
+          "dove": "Adelaide Oakes (owl post), a nord della Wyvern Fountain, a lato della Central Hall.",
+          "livello": 10,
+          "descrizione": "Segui le tracce di Rowland Oakes: l'accampamento, la mappa, un avamposto di goblin. Alla fine ritrova la sua bacchetta e restituiscigliela.",
+          "nota": "Il livello consigliato è 10 ma si sblocca solo dopo il gruppo di tre missioni (livello 14). Ricompensa: Handcrafted Necklace."
+        },
+        {
+          "id": "c31-m06",
+          "tipo": "secondaria",
+          "titolo": "Venomous Revenge",
+          "dove": "Ackley Barnes, l'uomo che borbotta dietro le Three Broomsticks, vicino alle scale.",
+          "livello": 14,
+          "descrizione": "Trova la cantina di Alfred Lawley, recupera la sua Venomous Tentacula e portala ad Ackley.",
+          "nota": "Ricompensa: Dragonhide Herbologist Gloves (aspetto). Si sblocca dopo il gruppo di tre missioni."
+        }
+      ]
+    },
+    {
+      "id": "c32",
+      "nome": "In the Shadow of the Estate",
+      "numero": 32,
+      "livello": 15,
+      "riepilogo": "Sebastian ti porta a Feldcroft. Richiede il livello 15 e aver fatto Helm of Urtkot, Beasts Class e The Caretaker's Lunar Lament. Ordine libero rispetto a The Elf, the Nab-Sack, and the Loom.",
+      "passi": [
+        {
+          "id": "c32-p01",
+          "tipo": "storia",
+          "titolo": "Raggiungi il livello 15 e incontra Sebastian a Feldcroft"
+        },
+        {
+          "id": "c32-p02",
+          "tipo": "storia",
+          "titolo": "Entra a casa Sallow e parla con Anne e Solomon"
+        },
+        {
+          "id": "c32-p03",
+          "tipo": "storia",
+          "titolo": "Difendi Feldcroft",
+          "descrizione": "Due ondate: la prima con 1 Loyalist Ranger, 1 Sentinel e 5 Warriors; la seconda con 1 Assassin, 1 Commander e 4 Warriors."
+        },
+        {
+          "id": "c32-p04",
+          "tipo": "storia",
+          "titolo": "Cerca indizi nella tenuta ed esplora la cantina",
+          "descrizione": "Nella cantina ci sono le pagine 1 e 2 del diario di Isidora Morganach (sono 7 in tutto, sparse nelle missioni successive)."
+        },
+        {
+          "id": "c32-p05",
+          "tipo": "storia",
+          "titolo": "Entra nell'Undercroft e mostra la nota a Sebastian"
+        },
+        {
+          "id": "c32-m01",
+          "tipo": "secondaria",
+          "titolo": "In the Shadow of the Bloodline",
+          "dove": "Sebastian Sallow, dietro l'angolo vicino al Floo Flame della Great Hall.",
+          "livello": 15,
+          "descrizione": "Prima missione di relazione di Sebastian (9 in tutto): scopri perché lui e Ominis stavano discutendo."
+        }
+      ]
+    },
+    {
+      "id": "c33",
+      "nome": "The Elf, the Nab-Sack, and the Loom",
+      "numero": 33,
+      "livello": 15,
+      "riepilogo": "Deek ti insegna a salvare le bestie, ti dà la nab-sack e il telaio per potenziare l'equipaggiamento. Ordine libero rispetto a In the Shadow of the Estate.",
+      "passi": [
+        {
+          "id": "c33-p01",
+          "tipo": "storia",
+          "titolo": "Raggiungi il livello 15 e parla con Deek",
+          "descrizione": "Dì a Deek quando sei pronto a partire."
+        },
+        {
+          "id": "c33-p02",
+          "tipo": "storia",
+          "titolo": "Salva un Puffskein, un Jobberknoll e un Mooncalf",
+          "descrizione": "Dopo ognuno parla con Deek. Incontri Deek vicino all'habitat di ogni bestia."
+        },
+        {
+          "id": "c33-p03",
+          "tipo": "storia",
+          "titolo": "Torna nella Room of Requirement e libera le bestie nel vivarium",
+          "descrizione": "Raccogli una piuma di Jobberknoll, pelo di Puffskein e pelo di Mooncalf."
+        },
+        {
+          "id": "c33-p04",
+          "tipo": "storia",
+          "titolo": "Crea un Enchanted Loom e potenzia un capo",
+          "descrizione": "Aggiungi un tratto a un capo e potenzialo, poi dì a Deek che hai usato il telaio. Ricompense: Nab-Sack, Conjuration Spellcraft Enchanted Loom, panche e recinti, il primo vivarium."
+        },
+        {
+          "id": "c33-tr01",
+          "tipo": "trofeo",
+          "trofeo": "tr-loom-1",
+          "titolo": "Loom for Improvement",
+          "dove": "Quando potenzi un capo con il telaio durante questa missione."
+        },
+        {
+          "id": "c33-tr02",
+          "tipo": "trofeo",
+          "trofeo": "tr-loom-3",
+          "titolo": "Third Time's a Charm",
+          "dove": "Usa di nuovo il telaio altre due volte, anche più avanti."
+        },
+        {
+          "id": "c33-m01",
+          "tipo": "secondaria",
+          "titolo": "A Thief in the Night",
+          "dove": "Pádraic Haggarty, dietro la sua bancarella nella parte ovest di Irondale.",
+          "livello": 15,
+          "descrizione": "Torna di notte sul luogo del furto, segui la scia di monete e cattura il ladro.",
+          "nota": "Ricompensa: Niffler Mask (aspetto)."
+        },
+        {
+          "id": "c33-m02",
+          "tipo": "secondaria",
+          "titolo": "Take the Biscuit",
+          "dove": "Garnuff, a sud del ponte occidentale vicino al Floo Flame di West Hogsmeade.",
+          "livello": 10,
+          "descrizione": "Trova l'accampamento dei bracconieri dove è tenuto Biscuit e liberalo.",
+          "nota": "Il livello consigliato è 10 ma si sblocca solo dal livello 15. Ricompensa: Beast Rescuer Robe (aspetto)."
+        },
+        {
+          "id": "c33-m03",
+          "tipo": "secondaria",
+          "titolo": "Birds of a Feather",
+          "dove": "Marianne Moffett, a Marunweem.",
+          "descrizione": "Vai di notte alla tana dei Diricawl, salva Gwyneira e torna da Marianne."
+        }
+      ]
+    },
+    {
+      "id": "c34",
+      "nome": "Astronomy Class",
+      "numero": 34,
+      "livello": 16,
+      "riepilogo": "Lezione di Astronomia sulla torre. Ordine libero rispetto a The High Keep.",
+      "passi": [
+        {
+          "id": "c34-p01",
+          "tipo": "storia",
+          "titolo": "Raggiungi il livello 16 e vai a lezione di Astronomy"
+        },
+        {
+          "id": "c34-p02",
+          "tipo": "storia",
+          "titolo": "Trova il telescopio di Amit nel magazzino",
+          "descrizione": "Il magazzino si raggiunge da una piccola scala vicino alla ringhiera esterna del ponte di osservazione. Nella prima torretta rompi alcune casse per arrivare all'altra porta; nella seconda usa Incendio sulla ragnatela che blocca le scale."
+        },
+        {
+          "id": "c34-p03",
+          "tipo": "storia",
+          "titolo": "Trova Amit sul ponte inferiore e seguilo"
+        },
+        {
+          "id": "c34-p04",
+          "tipo": "storia",
+          "titolo": "Trova e usa l'Astronomy Table",
+          "descrizione": "Da ora le tavole astronomiche si possono usare in tutte le Highlands."
+        }
+      ]
+    },
+    {
+      "id": "c35",
+      "nome": "The High Keep",
+      "numero": 35,
+      "livello": 17,
+      "riepilogo": "Natty ti porta a un castello abbandonato. Richiede Wingardium Leviosa e il livello 17. Ordine libero rispetto ad Astronomy Class.",
+      "passi": [
+        {
+          "id": "c35-p01",
+          "tipo": "storia",
+          "titolo": "Impara Wingardium Leviosa",
+          "descrizione": "Il gioco non ti lascia iniziare senza: completa il primo compito di Professor Garlick."
+        },
+        {
+          "id": "c35-p02",
+          "tipo": "storia",
+          "titolo": "Raggiungi il livello 17 e incontra Natty vicino a Falbarton Castle"
+        },
+        {
+          "id": "c35-p03",
+          "tipo": "storia",
+          "titolo": "Scala i bastioni ed entra nel Gatehouse",
+          "descrizione": "Dai bastioni inferiori colpisci con Depulso una girella di metallo per raggiungere una cassa da levitare. Per alzare il cancello usa Depulso su una seconda girella dentro il Gatehouse, poi Accio su una maniglia per tenerlo aperto."
+        },
+        {
+          "id": "c35-p04",
+          "tipo": "storia",
+          "titolo": "Apri il cancello principale e segui Natty fino al tetto"
+        },
+        {
+          "id": "c35-p05",
+          "tipo": "storia",
+          "titolo": "Vola in sella a Highwing",
+          "descrizione": "Ricompense: Highwing e +15 slot per le bestie."
+        },
+        {
+          "id": "c35-m01",
+          "tipo": "secondaria",
+          "titolo": "The Lost Child",
+          "dove": "Natsai Onai (owl post), vicino al Floo Flame di Lower Hogsfield.",
+          "livello": 16,
+          "descrizione": "Prima missione di relazione di Natty (7 in tutto). Si sblocca dopo The High Keep e Astronomy Class: non prima del livello 17."
+        },
+        {
+          "id": "c35-m02",
+          "tipo": "secondaria",
+          "titolo": "In the Shadow of the Study",
+          "dove": "Sebastian Sallow (owl post), di fronte all'ingresso della sua sala comune.",
+          "livello": 16,
+          "descrizione": "Seconda missione di relazione di Sebastian. Non prima del livello 17.",
+          "nota": "Ricompensa: l'incantesimo Crucio."
+        },
+        {
+          "id": "c35-m03",
+          "tipo": "secondaria",
+          "titolo": "Spot Removal",
+          "dove": "Sacharissa Tugwood, a sinistra della porta di Dogweed and Deathcap a Hogsmeade.",
+          "livello": 20,
+          "descrizione": "Vai nella Forbidden Forest a nord di Hogsmeade e raccogli 5 Bubotuber, poi torna da Sacharissa.",
+          "nota": "Si sblocca dal livello 17 ma il livello consigliato è 20. Ricompensa: Bubotuber Harvesting Attire (aspetto)."
+        },
+        {
+          "id": "c35-m04",
+          "tipo": "secondaria",
+          "titolo": "The Plight of the House-Elf",
+          "dove": "Deek (owl post di Professor Weasley), nell'alcova a destra della Room of Requirement.",
+          "livello": 20,
+          "descrizione": "Trova la caverna del suo amico, cerca Tobbs e riferisci a Deek.",
+          "nota": "Si sblocca dal livello 17 con The High Keep. Ricompensa: il secondo vivarium e più spazio nella stanza."
+        }
+      ]
+    },
+    {
+      "id": "c36",
+      "nome": "Back on the Path",
+      "numero": 36,
+      "livello": 18,
+      "riepilogo": "Un breve incontro con Fig nella Map Chamber. Non dà esperienza. Richiede The High Keep e Astronomy Class.",
+      "passi": [
+        {
+          "id": "c36-p01",
+          "tipo": "storia",
+          "titolo": "Vai nella Map Chamber e parla con Professor Fig"
+        }
+      ]
+    },
+    {
+      "id": "c37",
+      "nome": "Charles Rookwood's Trial",
+      "numero": 37,
+      "livello": 18,
+      "riepilogo": "La seconda prova di un Keeper, dentro Rookwood Castle. Richiede il livello 18.",
+      "passi": [
+        {
+          "id": "c37-p01",
+          "tipo": "storia",
+          "titolo": "Parla con Professor Fig"
+        },
+        {
+          "id": "c37-p02",
+          "tipo": "storia",
+          "titolo": "Entra a Rookwood Castle",
+          "descrizione": "Usa Accio sulla cassa vicina per arrampicarti sul muro ed entrare. Elimina almeno un Loyalist Ranger e un Warrior; poi gli Ashwinder (Assassin, Duellist, Executioner, Ranger…). Nei dintorni ci sono forzieri e monete."
+        },
+        {
+          "id": "c37-p03",
+          "tipo": "storia",
+          "titolo": "Trova il ritratto di Charles Rookwood e collegati alla magia antica"
+        },
+        {
+          "id": "c37-p04",
+          "tipo": "storia",
+          "titolo": "Entra nella prova di Charles Rookwood e completala"
+        },
+        {
+          "id": "c37-p05",
+          "tipo": "storia",
+          "titolo": "Continua a esplorare la prova e guarda il ricordo del Pensieve"
+        },
+        {
+          "id": "c37-p06",
+          "tipo": "storia",
+          "titolo": "Esci dalla prova e parla con Percival, poi con Professor Fig"
+        },
+        {
+          "id": "c37-m01",
+          "tipo": "secondaria",
+          "titolo": "Foal of the Dead",
+          "dove": "Professor Weasley (owl post) e Deek, nella Room of Requirement.",
+          "livello": 17,
+          "descrizione": "Salva un Thestral maschio e uno femmina, compra e crea il recinto per la riproduzione e allevali.",
+          "nota": "Si sblocca dopo The Plight of the House-Elf e Charles Rookwood's Trial (livello 18). Ricompense: il terzo vivarium e la possibilità di allevare bestie."
+        },
+        {
+          "id": "c37-tr01",
+          "tipo": "trofeo",
+          "trofeo": "tr-beasts",
+          "titolo": "The Nature of the Beast",
+          "dove": "Con la riproduzione di Foal of the Dead puoi allevare ogni tipo di bestia."
+        },
+        {
+          "id": "c37-m02",
+          "tipo": "secondaria",
+          "titolo": "Summoner's Court: Match 3",
+          "dove": "Grace Pinch-Smedley, alla bacheca di Summoner's Court nella Bell Tower Courtyard.",
+          "livello": 18,
+          "descrizione": "Terza partita della serie."
+        },
+        {
+          "id": "c37-m03",
+          "tipo": "secondaria",
+          "titolo": "'Beeting' a Curse",
+          "dove": "Samantha Dale, davanti all'ingresso della serra a destra del Floo Flame delle Greenhouses.",
+          "livello": 15,
+          "descrizione": "Entra nella Dale Family Tomb e riporta a Samantha lo stemma di Marmaduke.",
+          "nota": "Si sblocca dopo Charles Rookwood's Trial (livello 18) e Summoner's Court: Match 2. Ricompensa: Conjuration Spellcraft Totem."
+        },
+        {
+          "id": "c37-m04",
+          "tipo": "secondaria",
+          "titolo": "In the Shadow of Discovery",
+          "dove": "Sebastian Sallow (owl post), nella parte sinistra dell'Undercroft.",
+          "livello": 18,
+          "descrizione": "Terza missione di relazione di Sebastian: parla con lui, poi con Ominis."
+        }
+      ]
+    },
+    {
+      "id": "c38",
+      "nome": "Fire and Vice",
+      "numero": 38,
+      "livello": 19,
+      "riepilogo": "Con Poppy entri in un accampamento di bracconieri per salvare una creatura. Richiede il livello 19. Sblocca diverse missioni di relazione.",
+      "passi": [
+        {
+          "id": "c38-p01",
+          "tipo": "storia",
+          "titolo": "Raggiungi il livello 19 e incontra Poppy Sweeting"
+        },
+        {
+          "id": "c38-p02",
+          "tipo": "storia",
+          "titolo": "Segui Poppy e cerca tracce dei bracconieri",
+          "descrizione": "Nel primo accampamento c'è una borsa grande, una piccola e un piccolo forziere."
+        },
+        {
+          "id": "c38-p03",
+          "tipo": "storia",
+          "titolo": "Entra nella tenda",
+          "descrizione": "Ci sono quattro cose da esaminare ma serve solo il collare di metallo dei goblin, oltre il lato sinistro della tenda. Gabbia, pelle e fuoco da campo sono facoltativi."
+        },
+        {
+          "id": "c38-p04",
+          "tipo": "storia",
+          "titolo": "Indaga su Horntail Hall e raggiungi il prigioniero",
+          "descrizione": "Prima di attraversare il ponte raccogli una borsa grande, un piccolo forziere e un sacchetto di monete."
+        },
+        {
+          "id": "c38-p05",
+          "tipo": "storia",
+          "titolo": "Raccogli l'uovo di drago"
+        },
+        {
+          "id": "c38-p06",
+          "tipo": "storia",
+          "titolo": "Sconfiggi i bracconieri e libera il drago",
+          "descrizione": "Sei bracconieri (1 Duellist, 1 Ranger, 1 Stalker e 3 Trackers): sconfiggili come preferisci oppure passa di soppiatto. Per liberare il drago usa Accio."
+        },
+        {
+          "id": "c38-tr01",
+          "tipo": "trofeo",
+          "trofeo": "tr-dragon",
+          "titolo": "The Defender of Dragons",
+          "dove": "Quando liberi il drago alla fine della missione."
+        },
+        {
+          "id": "c38-m01",
+          "tipo": "secondaria",
+          "titolo": "A Dragon Debrief",
+          "dove": "Poppy Sweeting (owl post), dentro le Three Broomsticks, contro la parete in fondo a destra.",
+          "livello": 19,
+          "descrizione": "Prima missione di relazione di Poppy (8 in tutto): una conversazione."
+        },
+        {
+          "id": "c38-m02",
+          "tipo": "secondaria",
+          "titolo": "Poached Egg",
+          "dove": "Poppy Sweeting (owl post), nella piazza di Hogsmeade.",
+          "descrizione": "Seconda missione di Poppy: riporta l'uovo nel nido del drago.",
+          "daVerificare": true,
+          "notaVerifica": "Arriva con una lettera di Poppy dopo A Dragon Debrief: le fonti non indicano un momento preciso."
+        },
+        {
+          "id": "c38-m03",
+          "tipo": "secondaria",
+          "titolo": "The Poachers' House Call",
+          "dove": "Poppy Sweeting.",
+          "descrizione": "Terza missione di Poppy: una conversazione, non dà esperienza.",
+          "daVerificare": true,
+          "notaVerifica": "Si sblocca dopo Poached Egg: le fonti non indicano un momento preciso."
+        },
+        {
+          "id": "c38-m04",
+          "tipo": "secondaria",
+          "titolo": "Mum's the Word",
+          "dove": "Natsai Onai (owl post), accanto alla scala sotto l'aula di Divination.",
+          "livello": 19,
+          "descrizione": "Seconda missione di relazione di Natty (7 in tutto): una conversazione."
+        },
+        {
+          "id": "c38-m05",
+          "tipo": "secondaria",
+          "titolo": "Professor Weasley's Assignment",
+          "dove": "Owl post di Professor Weasley (richiede livello 20).",
+          "livello": 20,
+          "descrizione": "Raggiungi il livello 20, raccogli la pagina della Guida nell'Underground Harbour e quella dal libro Intermediate Transfiguration in biblioteca (risolvi i quiz di Sophronia), partecipa a una lezione di Transfiguration di giorno e parla con Weasley.",
+          "nota": "Ricompensa: l'incantesimo Transformation."
+        },
+        {
+          "id": "c38-m06",
+          "tipo": "secondaria",
+          "titolo": "In the Shadow of Time",
+          "dove": "Sebastian Sallow (owl post), a sinistra dell'ingresso della catacomba di Feldcroft.",
+          "livello": 17,
+          "descrizione": "Quarta missione di relazione di Sebastian: lunga, con l'esplorazione di una catacomba.",
+          "nota": "Il livello consigliato è 17 ma si sblocca dopo il compito di Professor Weasley (livello 20). Ricompensa: Imperio (facoltativo)."
+        },
+        {
+          "id": "c38-m07",
+          "tipo": "secondaria",
+          "titolo": "In the Shadow of Distance",
+          "dove": "Sebastian Sallow, appena entri nell'Undercroft, vicino alla parete destra.",
+          "livello": 20,
+          "descrizione": "Quinta missione di relazione di Sebastian: una conversazione nell'Undercroft."
+        },
+        {
+          "id": "c38-m08",
+          "tipo": "secondaria",
+          "titolo": "Minding Your Own Business",
+          "dove": "Penny, il folletto davanti al negozio vuoto di Hogsmeade.",
+          "livello": 18,
+          "descrizione": "Compra il negozio da Cassandra Mason (1500 monete), ripara con Reparo (x3), esplora i sotterranei e affronta Fastidio, poi confronta Cassandra Mason.",
+          "nota": "Si sblocca dopo il compito di Professor Weasley (livello 20). Ricompensa: il tuo negozio. Era esclusiva PlayStation fino a giugno 2024."
+        }
+      ]
+    },
+    {
+      "id": "c39",
+      "nome": "Professor Howin's Assignment",
+      "numero": 39,
+      "livello": 18,
+      "riepilogo": "Compito OBBLIGATORIO: ti insegna Bombarda, necessario per In the Shadow of the Mountain. Si riceve dopo Charles Rookwood's Trial: puoi farlo anche prima di Fire and Vice.",
+      "passi": [
+        {
+          "id": "c39-p01",
+          "tipo": "storia",
+          "titolo": "Cattura un Diricawl con la nab-sack"
+        },
+        {
+          "id": "c39-p02",
+          "tipo": "storia",
+          "titolo": "Cattura un Giant Purple Toad con la nab-sack",
+          "descrizione": "Il punto più vicino al castello è oltre il Black Lake, a nord di Aranshire, sotto il ponte."
+        },
+        {
+          "id": "c39-p03",
+          "tipo": "storia",
+          "titolo": "Partecipa a una lezione di Beasts di giorno"
+        },
+        {
+          "id": "c39-p04",
+          "tipo": "storia",
+          "titolo": "Torna da Professor Howin",
+          "descrizione": "Ricompensa: l'incantesimo Bombarda."
+        }
+      ]
+    },
+    {
+      "id": "c40",
+      "nome": "In the Shadow of the Mine",
+      "numero": 40,
+      "livello": 22,
+      "riepilogo": "Con Sebastian in una miniera dei goblin. Richiede il livello 22. Si riceve insieme a It's All Gobbledegook: ordine libero.",
+      "passi": [
+        {
+          "id": "c40-p01",
+          "tipo": "storia",
+          "titolo": "Incontra Sebastian all'Overlook e raggiungi l'ingresso della miniera",
+          "descrizione": "L'Overlook è a nord-est di Upper Hogsfield. Lungo il sentiero ci sono due gruppi di Loyalist goblin: puoi passare di soppiatto sulla destra (est), aspettando se serve che le sentinelle si voltino."
+        },
+        {
+          "id": "c40-p02",
+          "tipo": "storia",
+          "titolo": "Cerca il simbolo delle rune e sconfiggi i nemici"
+        },
+        {
+          "id": "c40-p03",
+          "tipo": "storia",
+          "titolo": "Indaga la caverna ed esplora la camera",
+          "descrizione": "Nella camera segreta, su un tavolo rotondo, c'è la pagina 3 (su 7) del diario di Isidora; il secondo pezzo della tela del trittico è in un forziere lì vicino."
+        },
+        {
+          "id": "c40-p04",
+          "tipo": "storia",
+          "titolo": "Usa il passaggio magico, metti il ritratto nel trittico e parla con Sebastian"
+        }
+      ]
+    },
+    {
+      "id": "c41",
+      "nome": "It's All Gobbledegook",
+      "numero": 41,
+      "livello": 21,
+      "riepilogo": "Con Amit e Lodgok in una miniera di goblin. Richiede il livello 21. Ordine libero rispetto a In the Shadow of the Mine.",
+      "passi": [
+        {
+          "id": "c41-p01",
+          "tipo": "storia",
+          "titolo": "Parla con Amit e incontra Lodgok all'ingresso della miniera",
+          "descrizione": "La miniera è a sud di Hogwarts, dall'altra parte del lago."
+        },
+        {
+          "id": "c41-p02",
+          "tipo": "storia",
+          "titolo": "Entra nella miniera cercando prove del piano di Ranrok",
+          "descrizione": "Amit parla Gobbledegook: serve a te per entrare."
+        },
+        {
+          "id": "c41-p03",
+          "tipo": "storia",
+          "titolo": "Esci dalla miniera e parla con Amit e poi con Lodgok"
+        },
+        {
+          "id": "c41-m01",
+          "tipo": "secondaria",
+          "titolo": "The Sky is the Limit",
+          "dove": "Albie Weekes (owl post), nel suo negozio vicino al bancone.",
+          "descrizione": "Compra un potenziamento per la scopa, parla con Imelda e fai la gara Coastal Broom Trial, poi torna da Albie.",
+          "nota": "Si sblocca dopo Sweeping the Competition, It's All Gobbledegook e In the Shadow of the Mine.",
+          "daVerificare": true,
+          "notaVerifica": "La wiki non indica il livello consigliato."
+        },
+        {
+          "id": "c41-m02",
+          "tipo": "secondaria",
+          "titolo": "A Basis for Blackmail",
+          "dove": "Natsai Onai (owl post): ti aspetta fuori da Hogsmeade.",
+          "descrizione": "Terza missione di relazione di Natty: parla con Agabus Philbert. Si sblocca dopo In the Shadow of the Mine e It's All Gobbledegook."
+        },
+        {
+          "id": "c41-m03",
+          "tipo": "secondaria",
+          "titolo": "Grief and Vengeance",
+          "dove": "Natsai Onai, nella Great Hall.",
+          "descrizione": "Quarta missione di Natty: una conversazione. Non dà esperienza.",
+          "nota": "Si sblocca dopo A Basis for Blackmail."
+        },
+        {
+          "id": "c41-m04",
+          "tipo": "secondaria",
+          "titolo": "Surprise Meeting",
+          "dove": "Poppy Sweeting, nella Forbidden Forest.",
+          "descrizione": "Quarta missione di Poppy: una scena. Non conta per le sfide. Si sblocca dopo In the Shadow of the Mine e It's All Gobbledegook."
+        }
+      ]
+    },
+    {
+      "id": "c42",
+      "nome": "The Headmistress Speaks",
+      "numero": 42,
+      "livello": 23,
+      "riepilogo": "Un breve incontro nella Map Chamber. Non dà esperienza. Richiede In the Shadow of the Mine e It's All Gobbledegook.",
+      "passi": [
+        {
+          "id": "c42-p01",
+          "tipo": "storia",
+          "titolo": "Parla con il ritratto della Professoressa Niamh Fitzgerald nella Map Chamber",
+          "descrizione": "Ricompensa: aspetti (Appearances)."
+        }
+      ]
+    },
+    {
+      "id": "c43",
+      "nome": "The Polyjuice Plot",
+      "numero": 43,
+      "livello": 23,
+      "riepilogo": "Un piano per entrare nello studio del Preside.",
+      "passi": [
+        {
+          "id": "c43-p01",
+          "tipo": "storia",
+          "titolo": "Parla con Professor Fig nel suo ufficio"
+        },
+        {
+          "id": "c43-p02",
+          "tipo": "storia",
+          "titolo": "Parla con Madam Kogawa a proposito di Scrope"
+        },
+        {
+          "id": "c43-p03",
+          "tipo": "storia",
+          "titolo": "Impara la password da Scrope e nasconditi quando la Polyjuice Potion svanisce"
+        }
+      ]
+    },
+    {
+      "id": "c44",
+      "nome": "Niamh Fitzgerald's Trial",
+      "numero": 44,
+      "livello": 23,
+      "riepilogo": "La terza prova di un Keeper, che inizia nello studio del Preside.",
+      "passi": [
+        {
+          "id": "c44-p01",
+          "tipo": "storia",
+          "titolo": "Accedi allo studio del Preside e trova il libro",
+          "descrizione": "La pagina Revelio The Sorting Hat è su un tavolo da un lato dello studio. Sul tavolo c'è anche la Key of Admittance: serve per una delle tre Hogwarts Secrets, una porta elaborata all'estremità opposta del corridoio rispetto alle scale."
+        },
+        {
+          "id": "c44-tr01",
+          "tipo": "trofeo",
+          "trofeo": "tr-study",
+          "titolo": "Room with a View",
+          "dove": "Qui puoi salire nello studio superiore del Preside."
+        },
+        {
+          "id": "c44-p02",
+          "tipo": "storia",
+          "titolo": "Attraversa la città senza farti vedere"
+        },
+        {
+          "id": "c44-p03",
+          "tipo": "storia",
+          "titolo": "Supera le parti della prova",
+          "descrizione": "Dopo l'ultima parte devi affrontare ondate di nemici che compaiono solo in questa missione: Death's Shadow, Death's Dark Mongrel e Death's Troll."
+        },
+        {
+          "id": "c44-tr02",
+          "tipo": "trofeo",
+          "trofeo": "tr-hallowed",
+          "titolo": "The Hallowed Hero",
+          "dove": "Durante la prova."
+        },
+        {
+          "id": "c44-p04",
+          "tipo": "storia",
+          "titolo": "Guarda il ricordo, torna alla Map Chamber e parla con il nuovo Keeper"
+        },
+        {
+          "id": "c44-m01",
+          "tipo": "secondaria",
+          "titolo": "In the Shadow of Hope",
+          "dove": "Sebastian Sallow, a Feldcroft.",
+          "descrizione": "Sesta missione di relazione di Sebastian: incontra lui e Anne fuori da Feldcroft. Non dà esperienza.",
+          "nota": "Si sblocca dopo Niamh Fitzgerald's Trial."
+        }
+      ]
+    },
+    {
+      "id": "c45",
+      "nome": "In the Shadow of the Mountain",
+      "numero": 45,
+      "livello": 24,
+      "riepilogo": "Con Sebastian sulla costa per cercare l'ultimo pezzo del trittico. Richiede Bombarda.",
+      "passi": [
+        {
+          "id": "c45-p01",
+          "tipo": "storia",
+          "titolo": "Impara Bombarda",
+          "descrizione": "Il gioco non ti lascia iniziare senza: completa il compito di Professor Howin."
+        },
+        {
+          "id": "c45-p02",
+          "tipo": "storia",
+          "titolo": "Incontra Sebastian lungo la costa e sali i tornanti",
+          "descrizione": "Sconfiggi tutti i nemici lungo la salita e le guardie."
+        },
+        {
+          "id": "c45-p03",
+          "tipo": "storia",
+          "titolo": "Entra nelle caverne e cerca le rune",
+          "descrizione": "Sconfiggi tutti i nemici, poi apri la porta delle rune. Troverai un troll e dovrai cercare il segmento del trittico. Le pagine del diario di Isidora 4, 5, 6 e 7 sono: la 4 in un forziere aperto dopo la prima porta runica; la 5 al piano successivo dopo il troll; la 6 su un tavolo nella stanza con la porta piena di macerie; la 7 su un tavolo rotondo dopo la seconda porta runica."
+        },
+        {
+          "id": "c45-p04",
+          "tipo": "storia",
+          "titolo": "Usa il passaggio magico e metti la tela nel trittico"
+        },
+        {
+          "id": "c45-m01",
+          "tipo": "secondaria",
+          "titolo": "Finding Focus",
+          "dove": "Natsai Onai (owl post), nella Great Hall.",
+          "descrizione": "Quinta missione di relazione di Natty: una conversazione. Non dà esperienza.",
+          "nota": "Si sblocca dopo In the Shadow of the Mountain e Grief and Vengeance."
+        },
+        {
+          "id": "c45-m02",
+          "tipo": "secondaria",
+          "titolo": "The Centaur and the Stone",
+          "dove": "Poppy Sweeting (owl post), vicino a Irondale, in una grotta.",
+          "livello": 27,
+          "descrizione": "Quinta missione di relazione di Poppy: entra nel Moonstone Garden."
+        }
+      ]
+    },
+    {
+      "id": "c46",
+      "nome": "Lodgok's Loyalty",
+      "numero": 46,
+      "livello": 24,
+      "riepilogo": "Entri da solo in una miniera sulla costa per cercare Lodgok.",
+      "passi": [
+        {
+          "id": "c46-p01",
+          "tipo": "storia",
+          "titolo": "Trova l'ingresso della miniera ed entra"
+        },
+        {
+          "id": "c46-p02",
+          "tipo": "storia",
+          "titolo": "Cerca Lodgok e sconfiggi tutti i nemici"
+        },
+        {
+          "id": "c46-p03",
+          "tipo": "storia",
+          "titolo": "Fai crollare i 5 pilastri per distruggere la trivella ed esci dalla miniera"
+        },
+        {
+          "id": "c46-m01",
+          "tipo": "secondaria",
+          "titolo": "In the Shadow of the Relic",
+          "dove": "Sebastian Sallow (owl post): ti manda a chiamare Ominis alla catacomba.",
+          "livello": 28,
+          "descrizione": "Settima missione di relazione di Sebastian: sconfiggi gli Inferi e affronta una difficile scena in catacomba.",
+          "nota": "Si sblocca dopo Lodgok's Loyalty. Ricompensa: Avada Kedavra (facoltativo)."
+        },
+        {
+          "id": "c46-m02",
+          "tipo": "secondaria",
+          "titolo": "In the Shadow of Fate",
+          "dove": "Sebastian Sallow, nell'Undercroft.",
+          "descrizione": "Ottava missione di Sebastian: parla con lui e con Ominis. Alla fine c'è una scelta.",
+          "nota": "Si sblocca dopo In the Shadow of the Relic. Non dà esperienza."
+        }
+      ]
+    },
+    {
+      "id": "c47",
+      "nome": "San Bakar's Trial",
+      "numero": 47,
+      "livello": 24,
+      "riepilogo": "La quarta prova di un Keeper, con la cattura di una grande bestia.",
+      "passi": [
+        {
+          "id": "c47-p01",
+          "tipo": "storia",
+          "titolo": "Vai alla Map Chamber e parla con Professor Fig"
+        },
+        {
+          "id": "c47-p02",
+          "tipo": "storia",
+          "titolo": "Incontra Fig alla camera del Pensieve e trova l'indizio per aprirla",
+          "descrizione": "Lancia Confringo sulle viti sulla parete."
+        },
+        {
+          "id": "c47-p03",
+          "tipo": "storia",
+          "titolo": "Cerca il Lord of the Shore ed entra nella sua tana"
+        },
+        {
+          "id": "c47-p04",
+          "tipo": "storia",
+          "titolo": "Sottometti il Lord of the Shore",
+          "descrizione": "Ha una barra di salute in due parti: a metà entra in uno stato di furia. Quando la salute è a zero ti viene data una scelta: inginocchiarti (lo domi con il rispetto) o attaccare (lo domi con la forza)."
+        },
+        {
+          "id": "c47-tr01",
+          "tipo": "trofeo",
+          "trofeo": "tr-graphorn",
+          "titolo": "Grappling with a Graphorn",
+          "dove": "Alla fine dello scontro, quando lo sottometti."
+        },
+        {
+          "id": "c47-p05",
+          "tipo": "storia",
+          "titolo": "Riportalo alla camera del Pensieve, guarda il ricordo e parla con i Keeper",
+          "descrizione": "Ricompense: la cavalcatura Graphorn e +10 slot per le bestie. Da ora i Graphorn si possono tenere in un vivarium."
+        },
+        {
+          "id": "c47-m01",
+          "tipo": "secondaria",
+          "titolo": "It's in the Stars",
+          "dove": "Poppy Sweeting, nella Forbidden Forest.",
+          "livello": 24,
+          "descrizione": "Sesta missione di relazione di Poppy. Non dà esperienza.",
+          "nota": "Si sblocca dopo The Centaur and the Stone e San Bakar's Trial."
+        },
+        {
+          "id": "c47-m02",
+          "tipo": "secondaria",
+          "titolo": "A Bird in the Hand",
+          "dove": "Poppy Sweeting (owl post), a sud-ovest di Brocburrow.",
+          "livello": 27,
+          "descrizione": "Settima missione di relazione di Poppy: incontra Dorran e risolvi il puzzle per entrare alle rovine, poi affronta i bracconieri.",
+          "nota": "Si sblocca dopo It's in the Stars. Richiede di aver imparato Glacius (compito di Madam Kogawa)."
+        },
+        {
+          "id": "c47-m03",
+          "tipo": "secondaria",
+          "titolo": "Poppy Blooms",
+          "dove": "Poppy Sweeting, nella Great Hall.",
+          "descrizione": "Ultima missione di relazione di Poppy: una conversazione."
+        },
+        {
+          "id": "c47-tr02",
+          "tipo": "trofeo",
+          "trofeo": "tr-poppy",
+          "titolo": "Beast Friends",
+          "dove": "Con Poppy Blooms finisci tutte e 8 le sue missioni."
+        }
+      ]
+    },
+    {
+      "id": "c48",
+      "nome": "Wand Mastery",
+      "numero": 48,
+      "livello": 24,
+      "riepilogo": "Un incontro con Mr Ollivander e un duello decisivo.",
+      "passi": [
+        {
+          "id": "c48-p01",
+          "tipo": "storia",
+          "titolo": "Consulta Gerbold Ollivander"
+        },
+        {
+          "id": "c48-p02",
+          "tipo": "storia",
+          "titolo": "Difenditi dagli uomini di Rookwood"
+        },
+        {
+          "id": "c48-p03",
+          "tipo": "storia",
+          "titolo": "Sconfiggi Victor Rookwood"
+        },
+        {
+          "id": "c48-m01",
+          "tipo": "secondaria",
+          "titolo": "Harlow's Last Stand",
+          "dove": "Natsai Onai (owl post): vuole incontrarti vicino a Manor Cape.",
+          "livello": 28,
+          "descrizione": "Sesta missione di relazione di Natty: viaggia con lei fino a Manor Cape. Preparati prima di partire.",
+          "nota": "Si sblocca dopo Wand Mastery."
+        },
+        {
+          "id": "c48-m02",
+          "tipo": "secondaria",
+          "titolo": "Acting on Instinct",
+          "dove": "Natsai Onai, nell'Hospital Wing.",
+          "descrizione": "Ultima missione di relazione di Natty. Parte subito dopo Harlow's Last Stand."
+        },
+        {
+          "id": "c48-tr01",
+          "tipo": "trofeo",
+          "trofeo": "tr-natty",
+          "titolo": "The Avenging Gazelle",
+          "dove": "Con Acting on Instinct finisci tutte e 7 le missioni di Natty."
+        }
+      ]
+    },
+    {
+      "id": "c49",
+      "nome": "The Final Repository",
+      "numero": 49,
+      "livello": 24,
+      "riepilogo": "L'ultima missione della storia principale. Dopo di essa la storia prosegue con due missioni brevi e la cerimonia finale.",
+      "passi": [
+        {
+          "id": "c49-p01",
+          "tipo": "storia",
+          "titolo": "Torna alla Map Chamber e parla con Professor Fig"
+        },
+        {
+          "id": "c49-p02",
+          "tipo": "storia",
+          "titolo": "Entra nelle Keepers' Caverns e raggiungi il Repository",
+          "descrizione": "Ferma i Loyalist goblin e sconfiggi i Loyalist e i loro troll. Devi arrivare al Repository prima di Ranrok, in più tappe."
+        },
+        {
+          "id": "c49-p03",
+          "tipo": "storia",
+          "titolo": "Sconfiggi Ranrok",
+          "descrizione": "Lo scontro ha più fasi. Alcuni scudi colorati vanno distrutti con l'incantesimo del colore corrispondente prima di poterlo ferire; si rigenerano."
+        },
+        {
+          "id": "c49-tr01",
+          "tipo": "trofeo",
+          "trofeo": "tr-hero",
+          "titolo": "The Hero of Hogwarts",
+          "dove": "Alla fine dello scontro finale."
+        },
+        {
+          "id": "c49-m01",
+          "tipo": "secondaria",
+          "titolo": "In the Shadow of Friendship",
+          "dove": "Sebastian Sallow o Ominis Gaunt (dipende dalla scelta fatta in In the Shadow of Fate).",
+          "descrizione": "Ultima missione di relazione di Sebastian: una conversazione. L'obiettivo si sblocca in entrambi i casi."
+        },
+        {
+          "id": "c49-tr02",
+          "tipo": "trofeo",
+          "trofeo": "tr-sebastian",
+          "titolo": "A Sallow Grave",
+          "dove": "Con In the Shadow of Friendship finisci tutte e 9 le missioni di Sebastian."
+        }
+      ]
+    },
+    {
+      "id": "c50",
+      "nome": "In the Shadow of Revelation",
+      "numero": 50,
+      "livello": 24,
+      "riepilogo": "Una scena che inizia subito dopo The Final Repository, senza obiettivi. Non dà esperienza.",
+      "passi": [
+        {
+          "id": "c50-p01",
+          "tipo": "storia",
+          "titolo": "Guarda la scena",
+          "descrizione": "Non ci sono obiettivi: la missione risulta nel diario tra quelle completate."
+        }
+      ]
+    },
+    {
+      "id": "c51",
+      "nome": "Weasley's Watchful Eye",
+      "numero": 51,
+      "livello": 24,
+      "riepilogo": "Un incontro con Professor Weasley.",
+      "passi": [
+        {
+          "id": "c51-p01",
+          "tipo": "storia",
+          "titolo": "Parla con Professor Weasley"
+        }
+      ]
+    },
+    {
+      "id": "c52",
+      "nome": "The House Cup",
+      "numero": 52,
+      "livello": 34,
+      "riepilogo": "Ultima missione della storia. Richiede il livello 34, molto più alto delle missioni precedenti (24): potresti dover fare prima altre missioni secondarie e sfide.",
+      "passi": [
+        {
+          "id": "c52-p01",
+          "tipo": "storia",
+          "titolo": "Raggiungi il livello 34 e vai alla Great Hall"
+        },
+        {
+          "id": "c52-tr01",
+          "tipo": "trofeo",
+          "trofeo": "tr-house-cup",
+          "titolo": "The Seeker of Knowledge",
+          "dove": "Si sblocca alla fine di questa missione."
+        }
+      ]
+    },
+    {
+      "id": "c53",
+      "nome": "Mondo aperto: missioni senza ordine fisso",
+      "ordinato": false,
+      "riepilogo": "Missioni secondarie che le fonti non collegano a un punto preciso della storia. Le trovi parlando con i personaggi indicati: puoi farle quando vuoi, rispettando il livello consigliato.",
+      "passi": [
+        {
+          "id": "c53-m01",
+          "tipo": "secondaria",
+          "titolo": "All's Well That Ends Bell",
+          "dove": "Evangeline Bardsley, nella Astronomy Wing (è una Tassorosso).",
+          "descrizione": "Vai nella Music Room, trova le campane della torre e riportane due al loro posto.",
+          "nota": "Ricompensa: Erumpent Horn (spellcraft)."
+        },
+        {
+          "id": "c53-m02",
+          "tipo": "secondaria",
+          "titolo": "History of Magic Class",
+          "dove": "Professor Binns, in aula di Storia della Magia.",
+          "descrizione": "Partecipa alla lezione e segui Professor Binns.",
+          "daVerificare": true,
+          "notaVerifica": "La pagina della wiki è molto scarna: non indica quando si sblocca né il livello."
+        },
+        {
+          "id": "c53-m03",
+          "tipo": "secondaria",
+          "titolo": "Tangled Web",
+          "dove": "Crispin Dunne, alle Three Broomsticks.",
+          "livello": 15,
+          "descrizione": "Controlla Mary Portman ad Aranshire, proteggi il villaggio dai ragni, trova la fonte dell'infestazione e cerca il nido."
+        },
+        {
+          "id": "c53-m04",
+          "tipo": "secondaria",
+          "titolo": "Phoenix Rising",
+          "dove": "Deek, nella Room of Requirement.",
+          "livello": 20,
+          "descrizione": "Entra nella Phoenix Mountain Cave, cerca la fenice e sconfiggi i bracconieri; raggiungi la cima della montagna."
+        },
+        {
+          "id": "c53-tr01",
+          "tipo": "trofeo",
+          "trofeo": "tr-phoenix",
+          "titolo": "Rising From the Ashes",
+          "dove": "Alla fine della missione, quando salvi la fenice."
+        },
+        {
+          "id": "c53-m05",
+          "tipo": "secondaria",
+          "titolo": "Portrait in a Pickle",
+          "dove": "Il ritratto di Ferdinand Octavius Patt, in fondo alla biblioteca.",
+          "livello": 20,
+          "descrizione": "Parla con Astoria Crickett alle Three Broomsticks, trova Ferdinand nelle rovine e brucia la sua cornice alternativa."
+        },
+        {
+          "id": "c53-m06",
+          "tipo": "secondaria",
+          "titolo": "The Unique Unicorn",
+          "dove": "Betty Bugbrooke, nella piazza di Hogsmeade.",
+          "livello": 20,
+          "descrizione": "Aiuta un unicorno ferito nella Forbidden Forest.",
+          "daVerificare": true,
+          "notaVerifica": "La wiki non ha gli obiettivi di questa missione."
+        },
+        {
+          "id": "c53-m07",
+          "tipo": "secondaria",
+          "titolo": "Cursed Tomb Treasure",
+          "dove": "Parte da sola quando passi vicino a una vecchia villa abbandonata presso il Floo Flame di West Manor Cape.",
+          "livello": 23,
+          "descrizione": "Apri il forziere chiuso nel seminterrato della villa a Manor Glen e usa il Mysterious Map Fragment per trovare il tesoro."
+        },
+        {
+          "id": "c53-m08",
+          "tipo": "secondaria",
+          "titolo": "Troll Control",
+          "dove": "Alexandra Ricketts, a Brocburrow.",
+          "livello": 25,
+          "descrizione": "Vai nella tana del troll e sconfiggi il troll di Alexandra."
+        },
+        {
+          "id": "c53-m09",
+          "tipo": "secondaria",
+          "titolo": "Rescuing Rococo",
+          "dove": "Agnes Coffey, la bancarella di Bainburgh.",
+          "livello": 25,
+          "descrizione": "Trova Henrietta's Hideaway, entraci e salva Rococo."
+        },
+        {
+          "id": "c53-m10",
+          "tipo": "secondaria",
+          "titolo": "Solved by the Bell",
+          "dove": "Parte dopo Rescuing Rococo, con la Musical Map che trovi a Henrietta's Hideaway.",
+          "descrizione": "Usa la mappa musicale per trovare i tesori. L'enigma è alle rovine di Clagmar Castle.",
+          "nota": "Se non l'hai già ripulito, qui ci sono Silvanus Selwyn e i suoi Ashwinder (vedi Sacking Selwyn).",
+          "soluzione": "Suona le campane come note di un pentagramma: F, B, D, C, B, F, E, C. Se le numeri da 1 (la più bassa) a 9 (la più alta): 2, 5, 7, 6, 5, 9, 8, 6. È la celebre melodia di Harry Potter.",
+          "daVerificare": true,
+          "notaVerifica": "L'ordine delle campane viene da una sola fonte (la wiki)."
+        },
+        {
+          "id": "c53-m11",
+          "tipo": "secondaria",
+          "titolo": "The Hippogriff Marks the Spot",
+          "dove": "Una pergamena arrotolata su un tavolo nei terreni di Poidsear Castle, sulla Southern Coast.",
+          "descrizione": "Recupera la pergamena e usa la Henrietta's Map per trovare il tesoro."
+        },
+        {
+          "id": "c53-m12",
+          "tipo": "secondaria",
+          "titolo": "Absconder Encounter",
+          "dove": "Edgar Adley, un venditore di Aranshire.",
+          "livello": 30,
+          "descrizione": "Trova la grotta dell'Absconder, sconfiggilo e recupera per Edgar l'orologio da tasca di famiglia del suo amico."
+        },
+        {
+          "id": "c53-m13",
+          "tipo": "secondaria",
+          "titolo": "Sacking Selwyn",
+          "dove": "Hyacinth Olivier, a Cragcroft.",
+          "livello": 37,
+          "descrizione": "Trova il nascondiglio di Silvanus Selwyn alle rovine di Clagmar Castle (South Coast, a sud di Cragcroft), sconfiggilo e torna da Hyacinth.",
+          "nota": "Ricompense: 300 monete e Ashwinder Skull Gloves."
+        },
+        {
+          "id": "c53-m14",
+          "tipo": "secondaria",
+          "titolo": "Summoner's Court: Match 4",
+          "dove": "Bacheca di Summoner's Court nella Bell Tower Courtyard.",
+          "descrizione": "Quarta partita della serie.",
+          "daVerificare": true,
+          "notaVerifica": "La wiki non indica quando si sblocca né chi ti sfida (il livello 3 riportato sembra un errore)."
+        },
+        {
+          "id": "c53-m15",
+          "tipo": "secondaria",
+          "titolo": "Summoner's Court: Match 5",
+          "dove": "Bacheca di Summoner's Court nella Bell Tower Courtyard.",
+          "descrizione": "Quinta partita della serie.",
+          "daVerificare": true,
+          "notaVerifica": "La wiki non indica quando si sblocca né chi ti sfida."
+        }
+      ]
+    },
+    {
+      "id": "c54",
+      "nome": "Raccolte e obiettivi a lungo termine",
+      "ordinato": false,
+      "riepilogo": "Contatori per le raccolte più grandi e promemoria degli obiettivi che si completano giocando liberamente. Niente di tutto questo si perde: dopo la storia puoi continuare a esplorare.",
+      "passi": [
+        {
+          "id": "c54-r01",
+          "tipo": "raccolta",
+          "categoria": "revelio",
+          "quantita": 150,
+          "titolo": "Pagine Revelio",
+          "dove": "Pagine della Guida del Mago che compaiono lanciando Revelio su luoghi e oggetti. Le trovi in tre gruppi: Hogsmeade, Hogwarts e The Highlands. Le pagine trovate si vedono nella sezione Revelio Pages delle Collezioni.",
+          "nota": "Il totale di 150 è confermato dalla wiki e da una guida. Esistono anche pagine \"semplici\" (volanti, statue da levitare, puzzle delle falene, bracieri di Wyvern) che il gioco non permette di contare."
+        },
+        {
+          "id": "c54-r02",
+          "tipo": "raccolta",
+          "categoria": "floo",
+          "quantita": 83,
+          "titolo": "Floo Flames",
+          "dove": "Punti di viaggio rapido: un busto di Ignatia Wildsmith sopra una piccola ciotola con una fiamma, di solito su una parete o su un palo. Sulla mappa quelli trovati hanno la fiamma verde, quelli da trovare grigia. Sono a Hogwarts, Hogsmeade e in tutte le altre aree.",
+          "nota": "Il totale di 83 viene da due guide."
+        },
+        {
+          "id": "c54-tr01",
+          "tipo": "trofeo",
+          "trofeo": "tr-coasting",
+          "titolo": "Coasting Along",
+          "dove": "Visita la regione Poidsear Coast."
+        },
+        {
+          "id": "c54-tr02",
+          "tipo": "trofeo",
+          "trofeo": "tr-cairns",
+          "titolo": "The Intrepid Explorer",
+          "dove": "I cairn sono segnati sulla mappa; alcuni si sbloccano completando missioni secondarie o di relazione."
+        },
+        {
+          "id": "c54-tr03",
+          "tipo": "trofeo",
+          "trofeo": "tr-arenas",
+          "titolo": "Rise to the Challenges",
+          "dove": "Le arene di battaglia sono segnate sulla mappa."
+        },
+        {
+          "id": "c54-tr04",
+          "tipo": "trofeo",
+          "trofeo": "tr-challenge",
+          "titolo": "Challenge Accepted",
+          "dove": "Il modo più semplice: la sfida \"Complete Assignments\" ha tre livelli (2, 4 e 6 compiti dei professori)."
+        },
+        {
+          "id": "c54-tr05",
+          "tipo": "trofeo",
+          "trofeo": "tr-mandrake",
+          "titolo": "The Root of the Problem",
+          "dove": "Usa la Mandragola (dalle lezioni di Herbology) su 10 tipi diversi di nemici."
+        },
+        {
+          "id": "c54-tr06",
+          "tipo": "trofeo",
+          "trofeo": "tr-petrificus",
+          "titolo": "The Ends Petrify the Means",
+          "dove": "Sconfiggi 50 nemici con Petrificus Totalus in totale."
+        },
+        {
+          "id": "c54-tr07",
+          "tipo": "trofeo",
+          "trofeo": "tr-combo-100",
+          "titolo": "Raising Expectations",
+          "dove": "Raggiungi una combo da 100 in combattimento."
+        },
+        {
+          "id": "c54-tr08",
+          "tipo": "trofeo",
+          "trofeo": "tr-ancient-all",
+          "titolo": "Finishing Touches",
+          "dove": "Usa l'Ancient Magic per sconfiggere ogni tipo di nemico; la Guida del Mago mostra quali nemici hai già incontrato."
+        },
+        {
+          "id": "c54-tr09",
+          "tipo": "trofeo",
+          "trofeo": "tr-potions",
+          "titolo": "Going Through the Potions",
+          "dove": "Usa le postazioni per pozioni: ne hai una a Potions Class e una nella Room of Requirement."
+        },
+        {
+          "id": "c54-tr10",
+          "tipo": "trofeo",
+          "trofeo": "tr-plants",
+          "titolo": "Put Down Roots",
+          "dove": "Usa i tavoli da giardinaggio: uno si ottiene con Herbology Class e altri nella Room of Requirement."
+        },
+        {
+          "id": "c54-tr11",
+          "tipo": "trofeo",
+          "trofeo": "tr-memories",
+          "titolo": "The One Who Mastered Memories",
+          "dove": "Guarda tutti i ricordi del Pensieve alla fine delle prove dei Keeper."
+        },
+        {
+          "id": "c54-tr12",
+          "tipo": "trofeo",
+          "trofeo": "tr-spells",
+          "titolo": "The Spell Master",
+          "dove": "Servono i compiti dei professori e le missioni che danno incantesimi."
+        },
+        {
+          "id": "c54-tr13",
+          "tipo": "trofeo",
+          "trofeo": "tr-talents-5",
+          "titolo": "A Talent for Spending",
+          "dove": "I talenti si sbloccano al termine di Jackdaw's Rest; ti viene dato un punto per livello dal livello 5."
+        },
+        {
+          "id": "c54-tr14",
+          "tipo": "trofeo",
+          "trofeo": "tr-talents-all",
+          "titolo": "Savvy Spender",
+          "dove": "Un punto per livello fino a 36 punti al livello 40."
+        },
+        {
+          "id": "c54-tr15",
+          "tipo": "trofeo",
+          "trofeo": "tr-level-40",
+          "titolo": "A Forte for Achievement",
+          "dove": "Raggiungi il livello 40."
+        },
+        {
+          "id": "c54-tr16",
+          "tipo": "trofeo",
+          "trofeo": "tr-collector",
+          "titolo": "Collector's Edition",
+          "dove": "Controlla le percentuali nella schermata Collezioni della Guida del Mago."
+        },
+        {
+          "id": "c54-tr17",
+          "tipo": "trofeo",
+          "trofeo": "tr-good-samaritan",
+          "titolo": "The Good Samaritan",
+          "dove": "Completa tutte le missioni secondarie di questa guida (trovi quelle sbloccate dalla storia nei capitoli, le altre qui sopra)."
+        }
+      ]
+    }
+  ]
+}

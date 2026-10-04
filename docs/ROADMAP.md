@@ -31,6 +31,14 @@ Stato del progetto. Aggiornare a ogni sessione di lavoro.
 - [x] Indirizzo con la scheda (`#/gioco/<id>/trofei`)
 - [ ] Filtri nell'indirizzo (oggi restano solo in memoria)
 
+## Fase 3c — Formato esteso per i giochi open world ✅
+- [x] Passi `raccolta` con contatore (+ −, casella "trovati tutti")
+- [x] Scelte del giocatore (`scelte` / `soloSe`), es. la casa: nascondono ciò che non vale e non contano nei totali
+- [x] Capitoli a ordine libero (`ordinato: false`) e livello consigliato (`livello`)
+- [x] Trofei con descrizione nascosta (`spoiler`) e grado `obiettivo` per Steam/Xbox
+- [x] Progressi: `scelte` e `contatori` (compatibili con i file vecchi)
+- [x] Font Jersey 10 al posto di Pixelify Sans (leggibilità)
+
 ## Fase 4 — Validatore ✅
 - [x] `tools/valida-guida.js`: id unici, campi obbligatori, totali coerenti, riferimenti ai trofei validi
 
@@ -39,6 +47,14 @@ Stato del progetto. Aggiornare a ogni sessione di lavoro.
 - [x] Uncharted: Drake's Fortune — ricerca, verifica incrociata, salvataggio, validazione
 - [ ] Revisione dell'utente su struttura e contenuti
 - [ ] 1 punto da verificare: Gold Spanish Chalice (cap. 13), le fonti non concordano sul lato della piazza
+
+## Fase 5b — Seconda guida: Hogwarts Legacy (Steam) ✅ (in attesa di revisione dell'utente)
+- [x] 46 missioni principali + 12 compiti (6 obbligatori), 24 missioni di relazione, 58 secondarie
+- [x] 45 obiettivi Steam (nomi dalla pagina Steam, descrizioni da wiki + 3 guide)
+- [x] Contatori per Revelio (150), Prove di Merlino (95), Floo Flames (83), Demiguise (33)
+- [ ] Revisione dell'utente
+- [ ] Posizioni dei collezionabili per regione (oltre i contatori)
+- [ ] Nomi italiani ufficiali delle missioni, se trovabili in modo affidabile
 
 ## Fase 6 — Rifinitura
 - [x] Filtri: tutto / solo storia / solo opzionali / nascondi completati
@@ -52,6 +68,8 @@ Stato del progetto. Aggiornare a ogni sessione di lavoro.
 ## Idee future (non ancora decise)
 - **Barre di progressione** dentro la pagina del gioco: una per gli obiettivi principali (storia) e una per il completismo (tutto). *(richiesta dell'utente: da ignorare per ora; nella fase 3 si mostrano solo i contatori numerici)*
 - **HowLongToBeat**: controllare o integrare i dati per sapere quante ore servono per finire un gioco (storia, storia + extra, completismo). *(richiesta dell'utente: da ignorare per ora; da verificare se esiste un'API ufficiale o un modo lecito di leggere i dati)*
+- Filtri nell'indirizzo (oggi restano in memoria) e filtro per categoria
+- Barra in alto più compatta quando ci sono molti contatori (oggi occupa 2-3 righe con Hogwarts Legacy)
 - Più partite per lo stesso gioco
 - Note personali su ogni passo
 - Immagini o link a video per le posizioni dei collezionabili
