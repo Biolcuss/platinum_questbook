@@ -26,6 +26,11 @@ Stato del progetto. Aggiornare a ogni sessione di lavoro.
 - [x] Pulsante "Sono qui" + scorrimento automatico + "segna completati i precedenti" (con conferma)
 - [x] Test automatico di 20 comportamenti con Chrome (spunte, salvataggio, filtri, avvisi, trofei, ricarica)
 
+## Fase 3b — Nuovo stile ✅
+- [x] Estetica retrò/pixel ispirata a Hyprland, accessibilità verificata con le Web Interface Guidelines
+- [x] Indirizzo con la scheda (`#/gioco/<id>/trofei`)
+- [ ] Filtri nell'indirizzo (oggi restano solo in memoria)
+
 ## Fase 4 — Validatore ✅
 - [x] `tools/valida-guida.js`: id unici, campi obbligatori, totali coerenti, riferimenti ai trofei validi
 
@@ -41,7 +46,8 @@ Stato del progetto. Aggiornare a ogni sessione di lavoro.
 - [x] Banner avviso mancabili
 - [x] Contatori per categoria e trofei
 - [ ] Esporta / importa progressi (backup)
-- [ ] Decidere se `data/progress/` va nei commit di Git o in `.gitignore`
+- [x] `data/progress/` escluso da Git (decisione dell'utente)
+- [x] Restyling retrò/pixel in stile Hyprland (font locali, icone pixel, barra waybar, finestre a gradini)
 
 ## Idee future (non ancora decise)
 - **Barre di progressione** dentro la pagina del gioco: una per gli obiettivi principali (storia) e una per il completismo (tutto). *(richiesta dell'utente: da ignorare per ora; nella fase 3 si mostrano solo i contatori numerici)*

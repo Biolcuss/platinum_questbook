@@ -59,7 +59,9 @@ tools/valida-guida.js   controllo automatico delle guide
 Guide e progressi sono **separati**: i progressi fanno riferimento agli `id` dei passi.
 Un passo `tipo: "trofeo"` è salvato con l'id del **trofeo** (`passo.trofeo`), non con l'id del passo: così spuntarlo nella timeline o nella scheda Trofei è la stessa cosa.
 
-**Interfaccia (public/app.js)**: pagina tramite hash (`#/` elenco, `#/gioco/<id>` guida). Tre schede: Guida (timeline), Trofei, Info.
+**Stile (richiesta dell'utente)**: estetica retrò/pixel ispirata a Hyprland (tiling window manager): barra in alto tipo "waybar" (schede = spazi di lavoro, contatori = moduli), capitoli = finestre con angoli a gradini e ombre dure, bordo a gradiente ciano→verde sul capitolo dove sei. Font Pixelify Sans (titoli/interfaccia) + JetBrains Mono (testo), scaricati in `public/fonts/` (funziona offline). Icone pixel art disegnate in codice (`ICONE` in app.js, niente emoji). Colori e dimensioni sono variabili all'inizio di `public/style.css`. Accessibilità: skip link, focus visibile, `prefers-reduced-motion` rispettato, etichette cliccabili, tab nell'indirizzo. Se cambi lo stile, rispetta questi punti.
+
+**Interfaccia (public/app.js)**: pagina tramite hash (`#/` elenco, `#/gioco/<id>` guida). Tre schede (nell'indirizzo: `#/gioco/<id>/guida|trofei|info`): Guida (timeline), Trofei, Info.
 Dopo ogni spunta si aggiornano solo classi e testi (`aggiornaVista()`), senza ricostruire la pagina. Il testo delle guide si inserisce sempre come testo semplice, mai come HTML.
 "Sono qui" su un passo di storia propone di spuntare i passi di storia precedenti (solo storia, mai gli opzionali).
 Banner "mancabili": mostra i collezionabili `mancabile` non spuntati prima del punto "Sono qui" o nel capitolo corrente.
@@ -74,6 +76,7 @@ Dettagli completi in `docs/FORMATO-GUIDA.md`. In breve:
 6. Riepilogo all'utente: capitoli, collezionabili, trofei, punti dubbi.
 
 ## Regole importanti
+- `data/progress/` è in `.gitignore`: i progressi dell'utente **non** vanno nei commit (decisione dell'utente). Un export/import dei progressi è previsto in futuro.
 - **Mai cambiare l'`id` di un passo** in una guida già esistente: le spunte dell'utente si perderebbero. Per correggere, modificare i testi; per aggiungere passi, usare nuovi id.
 - Non modificare a mano `data/progress/` salvo richiesta esplicita dell'utente.
 - A fine di ogni sessione di lavoro aggiornare `docs/ROADMAP.md` (e questo file se cambia qualcosa).

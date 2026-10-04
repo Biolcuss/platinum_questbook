@@ -3,14 +3,125 @@
 // -----------------------------------------------------------------------------
 // Questo file costruisce la pagina nel browser. Funziona così:
 //   1. guarda l'indirizzo (la parte dopo il "#") per capire quale pagina mostrare:
-//        #/                    → elenco dei giochi
-//        #/gioco/<id-gioco>    → guida di un gioco
+//        #/                         → elenco dei giochi
+//        #/gioco/<id>               → guida di un gioco (scheda "Guida")
+//        #/gioco/<id>/trofei        → scheda "Trofei"   (oppure /info)
 //   2. chiede al server i dati (guida + progressi) con fetch();
 //   3. costruisce gli elementi HTML con la funzione el();
 //   4. quando spunti qualcosa aggiorna i progressi e li salva sul server.
 // =============================================================================
 
 const radice = document.getElementById('app');
+
+// -----------------------------------------------------------------------------
+// Icone pixel art
+// Ogni icona è una griglia di caratteri: '#' = pixel colorato, '.' = vuoto.
+// Vengono disegnate come SVG con un quadratino per pixel e prendono il colore del testo.
+// -----------------------------------------------------------------------------
+const ICONE = {
+  gemma: [
+    '..#####..',
+    '.#.###.#.',
+    '#########',
+    '.#######.',
+    '..#####..',
+    '...###...',
+    '....#....',
+  ],
+  coppa: [
+    '#########',
+    '#.#####.#',
+    '#.#####.#',
+    '.#######.',
+    '..#####..',
+    '...###...',
+    '...###...',
+    '..#####..',
+  ],
+  punto: [ // punto esclamativo, come nelle missioni dei giochi di ruolo
+    '.###.',
+    '.###.',
+    '.###.',
+    '.###.',
+    '.....',
+    '.###.',
+    '.###.',
+  ],
+  stella: [
+    '...#...',
+    '...#...',
+    '#######',
+    '.#####.',
+    '..###..',
+    '.##.##.',
+    '##...##',
+  ],
+  clessidra: [
+    '#######',
+    '#.....#',
+    '.#...#.',
+    '..#.#..',
+    '...#...',
+    '..#.#..',
+    '.#####.',
+    '#######',
+  ],
+  attenzione: [
+    '....#....',
+    '...###...',
+    '...#.#...',
+    '..##.##..',
+    '..##.##..',
+    '.#######.',
+    '.###.###.',
+    '#########',
+  ],
+  destra: [
+    '#....',
+    '##...',
+    '###..',
+    '####.',
+    '###..',
+    '##...',
+    '#....',
+  ],
+  sinistra: [
+    '....#',
+    '...##',
+    '..###',
+    '.####',
+    '..###',
+    '...##',
+    '....#',
+  ],
+};
+
+const SVG_NS = 'http://www.w3.org/2000/svg';
+
+// Crea l'icona indicata; "scala" è la grandezza di ogni pixel (numero intero, così resta nitida)
+function icona(nome, scala = 2) {
+  const righe = ICONE[nome];
+  const svg = document.createElementNS(SVG_NS, 'svg');
+  svg.setAttribute('viewBox', `0 0 ${righe[0].length} ${righe.length}`);
+  svg.setAttribute('width', righe[0].length * scala);
+  svg.setAttribute('height', righe.length * scala);
+  svg.setAttribute('class', 'icona');
+  svg.setAttribute('aria-hidden', 'true');
+  svg.setAttribute('shape-rendering', 'crispEdges');
+  svg.setAttribute('fill', 'currentColor');
+  righe.forEach((riga, y) => {
+    [...riga].forEach((carattere, x) => {
+      if (carattere !== '#') return;
+      const quadrato = document.createElementNS(SVG_NS, 'rect');
+      quadrato.setAttribute('x', x);
+      quadrato.setAttribute('y', y);
+      quadrato.setAttribute('width', 1);
+      quadrato.setAttribute('height', 1);
+      svg.append(quadrato);
+    });
+  });
+  return svg;
+}
 
 // -----------------------------------------------------------------------------
 // Funzioni di supporto
@@ -26,10 +137,15 @@ function el(tag, attributi = {}, ...figli) {
     else if (valore === true) nodo.setAttribute(nome, '');
     else if (valore !== false && valore != null) nodo.setAttribute(nome, valore);
   }
-  for (const figlio of figli.flat()) {
+  for (const figlio of figli.flat(Infinity)) { // flat(Infinity) appiattisce anche gli elenchi dentro gli elenchi
     if (figlio !== null && figlio !== undefined && figlio !== false) nodo.append(figlio);
   }
   return nodo;
+}
+
+// Una "finestra": riquadro con bordo a gradini (il bordo si colora con la variabile --bordo-finestra)
+function finestra(...contenuto) {
+  return el('div', { class: 'finestra' }, el('div', { class: 'finestra-in' }, contenuto));
 }
 
 // Mostra per qualche secondo un messaggio in basso (usato per gli errori)
@@ -54,7 +170,7 @@ async function chiediAlServer(indirizzo) {
 // -----------------------------------------------------------------------------
 let guida = null;        // la guida completa del gioco
 let progressi = null;    // { completati: { idPasso: data }, sonoQui: idPasso | null }
-let scheda = 'timeline'; // scheda aperta: 'timeline' | 'trofei' | 'info'
+let scheda = 'guida';    // scheda aperta: 'guida' | 'trofei' | 'info'
 const filtri = { tipo: 'tutto', nascondiCompletati: false }; // tipo: 'tutto' | 'storia' | 'opzionali'
 
 // Riferimenti agli elementi creati, così possiamo aggiornarli senza ricostruire tutta la pagina
@@ -114,7 +230,7 @@ async function salva() {
     });
     if (!risposta.ok) throw new Error('errore ' + risposta.status);
   } catch (errore) {
-    mostraAvviso('Impossibile salvare i progressi (' + errore.message + '). Il server è ancora acceso?');
+    mostraAvviso('Impossibile salvare i progressi (' + errore.message + '). Controlla che il server sia ancora acceso, poi riprova.');
   }
 }
 
@@ -151,46 +267,52 @@ function impostaSonoQui(passo) {
 // Pagina iniziale: elenco dei giochi
 // -----------------------------------------------------------------------------
 async function mostraElenco() {
+  guida = null;
   document.title = 'Game Tracker';
-  radice.replaceChildren(el('div', { class: 'contenitore' }, el('p', { class: 'vuoto' }, 'Caricamento…')));
+  radice.replaceChildren(el('main', { class: 'pagina', id: 'contenuto' }, el('p', { class: 'vuoto' }, 'Caricamento…')));
   let giochi;
   try {
     giochi = await chiediAlServer('/api/giochi');
   } catch (errore) {
-    radice.replaceChildren(el('div', { class: 'contenitore' },
-      el('p', { class: 'vuoto' }, 'Impossibile caricare i giochi: ' + errore.message)));
+    radice.replaceChildren(el('main', { class: 'pagina', id: 'contenuto' },
+      el('p', { class: 'vuoto' }, 'Impossibile caricare i giochi: ' + errore.message + '. Controlla che il server sia acceso.')));
     return;
   }
 
   const lista = giochi.length === 0
-    ? el('p', { class: 'vuoto' }, 'Nessuna guida presente. Chiedi a Claude di crearne una!')
+    ? el('p', { class: 'vuoto' }, 'Nessuna guida presente. Chiedi a Claude di crearne una.')
     : el('div', { class: 'elenco-giochi' }, giochi.map((gioco) =>
         el('a', { class: 'scheda-gioco', href: '#/gioco/' + gioco.id },
-          el('h2', {}, gioco.titolo),
-          el('p', {}, `${gioco.piattaforma} · Storia ${gioco.completamento.storia}% · Completamento totale ${gioco.completamento.totale}%`))));
+          finestra(
+            el('h2', {}, gioco.titolo),
+            el('p', {}, gioco.piattaforma),
+            el('div', { class: 'moduli' },
+              el('span', { class: 'modulo m-storia' }, icona('stella'), 'Storia ', el('b', {}, gioco.completamento.storia + '%')),
+              el('span', { class: 'modulo m-oro' }, icona('gemma'), 'Totale ', el('b', {}, gioco.completamento.totale + '%')))))));
 
-  radice.replaceChildren(el('div', { class: 'contenitore' },
+  radice.replaceChildren(el('main', { class: 'pagina', id: 'contenuto' },
     el('h1', { class: 'titolo-app' }, 'Game Tracker'),
-    el('p', { class: 'sottotitolo' }, 'Scegli un gioco per vedere la guida e spuntare i tuoi progressi.'),
+    el('p', { class: 'sottotitolo' }, 'Scegli un gioco per aprire la sua guida e spuntare i tuoi progressi.'),
     lista));
 }
 
 // -----------------------------------------------------------------------------
 // Pagina del gioco
 // -----------------------------------------------------------------------------
-async function mostraGioco(id) {
-  radice.replaceChildren(el('div', { class: 'contenitore' }, el('p', { class: 'vuoto' }, 'Caricamento…')));
+async function mostraGioco(id, nuovaScheda) {
+  scheda = nuovaScheda;
+  radice.replaceChildren(el('main', { class: 'pagina', id: 'contenuto' }, el('p', { class: 'vuoto' }, 'Caricamento…')));
   try {
     guida = await chiediAlServer('/api/giochi/' + id);
     progressi = await chiediAlServer('/api/progressi/' + id);
   } catch (errore) {
-    radice.replaceChildren(el('div', { class: 'contenitore' },
+    guida = null;
+    radice.replaceChildren(el('main', { class: 'pagina', id: 'contenuto' },
       el('p', { class: 'vuoto' }, 'Impossibile caricare la guida: ' + errore.message),
-      el('a', { href: '#/' }, '← Torna all\'elenco')));
+      el('a', { href: '#/' }, 'Torna all\'elenco dei giochi')));
     return;
   }
   document.title = guida.titolo + ' — Game Tracker';
-  scheda = 'timeline';
   preparaOrdine();
   disegnaGioco();
   // All'apertura vado al punto in cui ero rimasto
@@ -198,67 +320,81 @@ async function mostraGioco(id) {
   if (qui) qui.riga.scrollIntoView({ block: 'center' });
 }
 
-// Costruisce la struttura della pagina del gioco: intestazione + scheda attiva
-function disegnaGioco() {
-  contenitoreRiepilogo = el('div', { class: 'riepilogo' });
-  const bottoniSchede = [
-    ['timeline', 'Guida'],
-    ['trofei', 'Trofei'],
-    ['info', 'Info'],
-  ].map(([nome, etichetta]) =>
-    el('button', {
-      class: 'scheda' + (nome === scheda ? ' attiva' : ''),
-      onclick: () => { scheda = nome; disegnaGioco(); window.scrollTo(0, 0); },
-    }, etichetta));
+const SCHEDE = [
+  ['guida', 'Guida'],
+  ['trofei', 'Trofei'],
+  ['info', 'Info'],
+];
 
-  const intestazione = el('div', { class: 'intestazione' },
-    el('div', { class: 'riga-titolo' },
-      el('a', { href: '#/', class: 'indietro' }, '← Giochi'),
-      el('h1', {}, guida.titolo),
-      el('span', { class: 'piattaforma' }, guida.piattaforma)),
-    contenitoreRiepilogo,
-    el('div', { class: 'schede' }, bottoniSchede));
+// Costruisce la struttura della pagina del gioco: barra + titolo + scheda attiva
+function disegnaGioco() {
+  contenitoreRiepilogo = el('div', { class: 'moduli' });
+
+  const barra = el('header', { class: 'barra' },
+    el('div', { class: 'barra-in' },
+      el('a', { href: '#/', class: 'btn indietro', 'aria-label': 'Torna all\'elenco dei giochi' }, icona('sinistra'), 'Giochi'),
+      el('nav', { class: 'spazi', 'aria-label': 'Sezioni della guida' },
+        SCHEDE.map(([nome, etichetta]) =>
+          el('a', {
+            class: 'spazio',
+            href: `#/gioco/${guida.id}/${nome}`,
+            'aria-current': nome === scheda ? 'page' : false,
+          }, etichetta))),
+      contenitoreRiepilogo));
 
   let corpo;
-  if (scheda === 'timeline') corpo = costruisciTimeline();
+  if (scheda === 'guida') corpo = costruisciTimeline();
   else if (scheda === 'trofei') corpo = costruisciTrofei();
   else corpo = costruisciInfo();
 
-  radice.replaceChildren(el('div', { class: 'contenitore' }, intestazione, corpo));
+  radice.replaceChildren(el('div', { class: 'pagina' },
+    barra,
+    el('main', { id: 'contenuto' },
+      el('div', { class: 'titolo-gioco' },
+        el('h1', {}, guida.titolo),
+        el('p', {}, guida.piattaforma)),
+      corpo)));
   aggiornaVista();
 }
 
 // ------------------------------------------------------------ Scheda "Guida"
-function costruisciTimeline() {
+function azzeraRiferimenti() {
   righePassi = [];
   capitoliVista = [];
   righeTrofei = [];
+  contenitoreAvviso = null;
+}
+
+function costruisciTimeline() {
+  azzeraRiferimenti();
   contenitoreAvviso = el('div');
 
   // Filtri
-  const gruppoTipo = el('div', { class: 'gruppo' });
+  const gruppoTipo = el('div', { class: 'gruppo', role: 'group', 'aria-label': 'Cosa mostrare' });
   for (const [valore, etichetta] of [['tutto', 'Tutto'], ['storia', 'Solo storia'], ['opzionali', 'Solo opzionali']]) {
     gruppoTipo.append(el('button', {
-      class: filtri.tipo === valore ? 'attivo' : '',
+      class: 'btn',
+      'aria-pressed': String(filtri.tipo === valore),
       onclick: (e) => {
         filtri.tipo = valore;
-        for (const b of gruppoTipo.children) b.classList.toggle('attivo', b === e.currentTarget);
+        for (const b of gruppoTipo.children) b.setAttribute('aria-pressed', String(b === e.currentTarget));
         aggiornaVista();
       },
     }, etichetta));
   }
   const casellaNascondi = el('input', {
     type: 'checkbox',
+    class: 'spunta',
     onchange: (e) => { filtri.nascondiCompletati = e.target.checked; aggiornaVista(); },
   });
   casellaNascondi.checked = filtri.nascondiCompletati;
 
-  const barraFiltri = el('div', { class: 'filtri' },
+  const barraStrumenti = el('div', { class: 'strumenti' },
     gruppoTipo,
     el('label', {}, casellaNascondi, 'Nascondi completati'),
-    el('div', { class: 'spazio' },
-      el('button', { onclick: () => impostaCapitoliAperti(true) }, 'Apri tutti'),
-      el('button', { onclick: () => impostaCapitoliAperti(false) }, 'Chiudi tutti')));
+    el('div', { class: 'spazio-flex' },
+      el('button', { class: 'btn', onclick: () => impostaCapitoliAperti(true) }, 'Apri tutti'),
+      el('button', { class: 'btn', onclick: () => impostaCapitoliAperti(false) }, 'Chiudi tutti')));
 
   // Capitoli: apro quello del "Sono qui", altrimenti il primo non ancora finito
   const idCapitoloQui = progressi.sonoQui ? ordine[posizione[progressi.sonoQui]]?.capitolo.id : null;
@@ -266,63 +402,69 @@ function costruisciTimeline() {
   const idDaAprire = idCapitoloQui || (primoIncompleto && primoIncompleto.id);
 
   const capitoli = guida.capitoli.map((capitolo) => costruisciCapitolo(capitolo, capitolo.id === idDaAprire));
-  return el('div', {}, barraFiltri, contenitoreAvviso, capitoli);
+  return el('div', {}, barraStrumenti, contenitoreAvviso, capitoli);
 }
 
 function costruisciCapitolo(capitolo, aperto) {
-  const stato = el('span', { class: 'stato' });
+  const stato = el('span', { class: 'mini' });
+  const idCorpo = 'corpo-' + capitolo.id;
   const testata = el('button', {
-    class: 'testata-capitolo',
     'aria-expanded': String(aperto),
+    'aria-controls': idCorpo,
     onclick: () => {
       const apertoOra = sezione.classList.toggle('aperto');
       testata.setAttribute('aria-expanded', String(apertoOra));
     },
   },
-    el('span', { class: 'freccia' }, '▶'),
+    el('span', { class: 'freccia' }, icona('destra')),
     el('span', { class: 'numero' }, capitolo.numero + '.'),
     el('span', { class: 'nome' }, capitolo.nome),
     stato);
 
-  const corpo = el('div', { class: 'corpo-capitolo' },
+  const corpo = el('div', { class: 'corpo', id: idCorpo },
     capitolo.riepilogo ? el('p', { class: 'riepilogo-capitolo' }, capitolo.riepilogo) : null,
     capitolo.passi.map(costruisciPasso));
 
-  const sezione = el('section', { class: 'capitolo' + (aperto ? ' aperto' : ''), id: 'cap-' + capitolo.id }, testata, corpo);
+  const sezione = el('section', { class: 'capitolo' + (aperto ? ' aperto' : ''), id: 'cap-' + capitolo.id },
+    finestra(el('h2', { class: 'testata' }, testata), corpo));
   capitoliVista.push({ capitolo, sezione, stato });
   return sezione;
 }
 
-const ETICHETTE_TIPO = {
-  storia: 'Storia',
-  collezionabile: '💎 Collezionabile',
-  trofeo: '🏆 Trofeo',
-  secondaria: '📜 Missione secondaria',
+// Etichetta e icona di ogni tipo di passo (la storia non ha etichetta: è il caso normale)
+const TIPI_PASSO = {
+  collezionabile: { nome: 'Collezionabile', icona: 'gemma' },
+  trofeo: { nome: 'Trofeo', icona: 'coppa' },
+  secondaria: { nome: 'Missione secondaria', icona: 'punto' },
 };
 
 function costruisciPasso(passo) {
   const k = chiave(passo);
+  const idCasella = 'spunta-' + passo.id;
   const casella = el('input', {
     type: 'checkbox',
-    'aria-label': 'Completato: ' + passo.titolo,
+    class: 'spunta',
+    id: idCasella,
     onchange: (e) => impostaFatto(k, e.target.checked),
   });
 
   const bottoneQui = passo.tipo === 'storia'
-    ? el('button', { onclick: () => impostaSonoQui(passo) }, 'Sono qui')
+    ? el('button', { class: 'btn', onclick: () => impostaSonoQui(passo) }, 'Sono qui')
     : null;
 
+  const tipo = TIPI_PASSO[passo.tipo];
   const contenuto = el('div', { class: 'contenuto' },
-    passo.tipo !== 'storia' ? el('div', { class: 'etichetta' }, ETICHETTE_TIPO[passo.tipo]) : null,
-    el('p', { class: 'titolo-passo' }, passo.titolo),
+    tipo ? el('p', { class: 'tipo' }, icona(tipo.icona), tipo.nome) : null,
+    // L'etichetta è collegata alla casella: cliccare sul titolo spunta il passo
+    el('label', { class: 'titolo-passo', for: idCasella }, passo.titolo),
     passo.descrizione ? el('p', {}, passo.descrizione) : null,
     passo.dove ? el('p', { class: 'dove' }, el('b', {}, 'Dove: '), passo.dove) : null,
-    passo.mancabile ? el('p', { class: 'nota-mancabile' }, '⏳ Mancabile: ' + passo.notaMancabile) : null,
-    passo.daVerificare ? el('p', { class: 'nota-verifica' }, '⚠️ Da verificare: ' + passo.notaVerifica) : null,
+    passo.mancabile ? el('p', { class: 'avvertenza mancabile' }, icona('clessidra'), el('span', {}, 'Mancabile: ' + passo.notaMancabile)) : null,
+    passo.daVerificare ? el('p', { class: 'avvertenza verifica' }, icona('attenzione'), el('span', {}, 'Da verificare: ' + passo.notaVerifica)) : null,
     passo.nota ? el('p', { class: 'nota' }, el('b', {}, 'Nota: '), passo.nota) : null,
     passo.soluzione
       ? el('details', { class: 'soluzione' },
-          el('summary', {}, 'Mostra soluzione (spoiler)'),
+          el('summary', {}, 'Mostra la soluzione (spoiler)'),
           el('p', {}, passo.soluzione))
       : null,
     bottoneQui ? el('div', { class: 'azioni-passo' }, bottoneQui) : null);
@@ -335,55 +477,52 @@ function costruisciPasso(passo) {
 function impostaCapitoliAperti(aperti) {
   for (const { sezione } of capitoliVista) {
     sezione.classList.toggle('aperto', aperti);
-    sezione.querySelector('.testata-capitolo').setAttribute('aria-expanded', String(aperti));
+    sezione.querySelector('.testata button').setAttribute('aria-expanded', String(aperti));
   }
 }
 
 // ----------------------------------------------------------- Scheda "Trofei"
 function costruisciTrofei() {
-  righePassi = [];
-  capitoliVista = [];
-  righeTrofei = [];
-  contenitoreAvviso = null;
+  azzeraRiferimenti();
 
   if (!guida.trofei || guida.trofei.length === 0) {
     return el('p', { class: 'vuoto' }, 'Questa guida non ha trofei.');
   }
 
-  const righe = guida.trofei.map((trofeo) => {
+  const carte = guida.trofei.map((trofeo) => {
+    const idCasella = 'spunta-' + trofeo.id;
     const casella = el('input', {
       type: 'checkbox',
-      'aria-label': 'Ottenuto: ' + trofeo.nome,
+      class: 'spunta',
+      id: idCasella,
       onchange: (e) => impostaFatto(trofeo.id, e.target.checked),
     });
     const avanzamento = trofeo.obiettivo ? el('p', { class: 'avanzamento' }) : null;
-    const riga = el('div', { class: 'trofeo-riga' }, casella,
-      el('div', { class: 'contenuto' },
-        el('p', { class: 'titolo-passo' }, trofeo.nome, el('span', { class: 'grado ' + trofeo.grado }, trofeo.grado)),
-        el('p', {}, trofeo.descrizione),
-        trofeo.suggerimento ? el('p', { class: 'nota' }, el('b', {}, 'Consiglio: '), trofeo.suggerimento) : null,
-        trofeo.mancabile ? el('p', { class: 'nota-mancabile' }, '⏳ Mancabile: ' + trofeo.notaMancabile) : null,
-        trofeo.daVerificare ? el('p', { class: 'nota-verifica' }, '⚠️ Da verificare: ' + trofeo.notaVerifica) : null,
-        avanzamento));
+    const riga = el('div', { class: 'trofeo-card' },
+      finestra(el('div', { class: 'riga-trofeo' }, casella,
+        el('div', { class: 'contenuto' },
+          el('label', { class: 'titolo-passo', for: idCasella }, trofeo.nome, el('span', { class: 'grado ' + trofeo.grado }, trofeo.grado)),
+          el('p', {}, trofeo.descrizione),
+          trofeo.suggerimento ? el('p', { class: 'nota' }, el('b', {}, 'Consiglio: '), trofeo.suggerimento) : null,
+          trofeo.mancabile ? el('p', { class: 'avvertenza mancabile' }, icona('clessidra'), el('span', {}, 'Mancabile: ' + trofeo.notaMancabile)) : null,
+          trofeo.daVerificare ? el('p', { class: 'avvertenza verifica' }, icona('attenzione'), el('span', {}, 'Da verificare: ' + trofeo.notaVerifica)) : null,
+          avanzamento))));
     righeTrofei.push({ trofeo, riga, casella, avanzamento });
     return riga;
   });
-  return el('div', { class: 'info' }, righe);
+  return el('div', {}, carte);
 }
 
 // ------------------------------------------------------------- Scheda "Info"
 function costruisciInfo() {
-  righePassi = [];
-  capitoliVista = [];
-  righeTrofei = [];
-  contenitoreAvviso = null;
+  azzeraRiferimenti();
 
-  return el('div', { class: 'info' },
+  return el('div', { class: 'capitolo' }, finestra(el('div', { class: 'info-testo' },
     guida.introduzione ? [el('h2', {}, 'Da sapere prima di iniziare'), el('ul', {}, guida.introduzione.map((t) => el('li', {}, t)))] : null,
     guida.percorsoConsigliato ? [el('h2', {}, 'Percorso consigliato'), el('ol', {}, guida.percorsoConsigliato.map((t) => el('li', {}, t)))] : null,
     el('h2', {}, 'Fonti della guida'),
     el('ul', {}, guida.fonti.map((f) => el('li', {}, el('a', { href: f.url, target: '_blank', rel: 'noopener noreferrer' }, f.nome)))),
-    el('p', { class: 'nota' }, `Guida versione ${guida.versioneGuida}, verificata il ${guida.verificataIl}.`));
+    el('p', { class: 'nota' }, `Guida versione ${guida.versioneGuida}, verificata il ${guida.verificataIl}.`))));
 }
 
 // -----------------------------------------------------------------------------
@@ -400,7 +539,7 @@ function aggiornaVista() {
     casella.checked = completato;
     riga.classList.toggle('fatto', completato);
     riga.classList.toggle('qui', passo.id === idQui);
-    if (bottoneQui) bottoneQui.textContent = passo.id === idQui ? '📍 Sei qui' : 'Sono qui';
+    if (bottoneQui) bottoneQui.textContent = passo.id === idQui ? 'Sei qui' : 'Sono qui';
 
     const nascosto =
       (filtri.tipo === 'storia' && passo.tipo !== 'storia') ||
@@ -413,9 +552,9 @@ function aggiornaVista() {
   for (const { capitolo, sezione, stato } of capitoliVista) {
     const storia = contaInCapitolo(capitolo, (p) => p.tipo === 'storia');
     const extra = contaInCapitolo(capitolo, (p) => p.tipo !== 'storia');
-    const parti = [`storia ${storia.ok}/${storia.tot}`];
-    if (extra.tot > 0) parti.push(`extra ${extra.ok}/${extra.tot}`);
-    stato.textContent = parti.join(' · ');
+    const moduli = [el('span', { class: 'modulo' }, 'storia ', el('b', {}, `${storia.ok}/${storia.tot}`))];
+    if (extra.tot > 0) moduli.push(el('span', { class: 'modulo' }, 'extra ', el('b', {}, `${extra.ok}/${extra.tot}`)));
+    stato.replaceChildren(...moduli);
     sezione.classList.toggle('finito', storia.ok + extra.ok === storia.tot + extra.tot);
     sezione.classList.toggle('corrente', idQui !== null && ordine[indiceQui]?.capitolo.id === capitolo.id);
   }
@@ -431,7 +570,7 @@ function aggiornaVista() {
       const trovati = conta((p) => p.tipo === 'collezionabile' && p.categoria === categoria).ok;
       pronto = !ottenuto && trovati >= quantita;
       avanzamento.textContent = pronto
-        ? `✔ Hai già trovato ${trovati}: dovresti averlo ottenuto, spuntalo!`
+        ? `Hai già trovato ${trovati}: dovresti averlo ottenuto, spuntalo!`
         : `Avanzamento (secondo le tue spunte): ${Math.min(trovati, quantita)}/${quantita}`;
       avanzamento.classList.toggle('pronto', pronto);
     }
@@ -452,19 +591,19 @@ function contaInCapitolo(capitolo, condizione) {
   return { ok, tot };
 }
 
-// Contatori in alto: storia, una voce per ogni categoria di collezionabili, trofei
+// Moduli della barra: storia, una voce per ogni categoria di collezionabili, trofei
 function aggiornaRiepilogo() {
   const voci = [];
-  const aggiungi = (nome, { ok, tot }) => voci.push(
-    el('span', { class: 'contatore' + (tot > 0 && ok === tot ? ' completo' : '') },
-      nome + ' ', el('strong', {}, `${ok}/${tot}`)));
+  const aggiungi = (nome, nomeIcona, classe, { ok, tot }) => voci.push(
+    el('span', { class: 'modulo ' + classe + (tot > 0 && ok === tot ? ' completo' : '') },
+      icona(nomeIcona), nome + ' ', el('b', {}, `${ok}/${tot}`)));
 
-  aggiungi('Storia', conta((p) => p.tipo === 'storia'));
+  aggiungi('Storia', 'stella', 'm-storia', conta((p) => p.tipo === 'storia'));
   for (const categoria of guida.categorie || []) {
-    aggiungi(categoria.nome, conta((p) => p.tipo === 'collezionabile' && p.categoria === categoria.id));
+    aggiungi(categoria.nome, 'gemma', 'm-oro', conta((p) => p.tipo === 'collezionabile' && p.categoria === categoria.id));
   }
   if (guida.trofei && guida.trofei.length > 0) {
-    aggiungi('Trofei', { ok: guida.trofei.filter((t) => fatto(t.id)).length, tot: guida.trofei.length });
+    aggiungi('Trofei', 'coppa', 'm-trofeo', { ok: guida.trofei.filter((t) => fatto(t.id)).length, tot: guida.trofei.length });
   }
   contenitoreRiepilogo.replaceChildren(...voci);
 }
@@ -490,10 +629,11 @@ function aggiornaAvvisoMancabili() {
       el('a', { href: '#passo-' + passo.id, onclick: (e) => vaiAlPasso(e, passo.id) }, `${passo.titolo} (cap. ${capitolo.numero})`),
       ': ' + passo.notaMancabile)));
 
-  contenitoreAvviso.append(el('div', { class: 'box-avviso' },
-    el('h3', {}, '⏳ Attenzione ai tesori mancabili'),
-    inCorso.length > 0 ? [el('p', {}, 'Nel capitolo in cui ti trovi, da non perdere:'), lista(inCorso)] : null,
-    saltati.length > 0 ? [el('p', {}, 'Prima del punto in cui sei e non ancora spuntati (li hai saltati?):'), lista(saltati)] : null));
+  contenitoreAvviso.append(el('section', { class: 'box-avviso', 'aria-label': 'Tesori mancabili' },
+    finestra(
+      el('h2', {}, icona('clessidra'), 'Attenzione ai tesori mancabili'),
+      inCorso.length > 0 ? [el('p', {}, 'Nel capitolo in cui ti trovi, da non perdere:'), lista(inCorso)] : null,
+      saltati.length > 0 ? [el('p', {}, 'Prima del punto in cui sei e non ancora spuntati (li hai saltati?):'), lista(saltati)] : null)));
 }
 
 // Apre il capitolo del passo e ci scorre fino
@@ -502,7 +642,10 @@ function vaiAlPasso(evento, idPasso) {
   const voce = righePassi.find((r) => r.passo.id === idPasso);
   if (!voce) return;
   const capitolo = capitoliVista.find((c) => c.capitolo.id === ordine[posizione[idPasso]].capitolo.id);
-  if (capitolo) capitolo.sezione.classList.add('aperto');
+  if (capitolo) {
+    capitolo.sezione.classList.add('aperto');
+    capitolo.sezione.querySelector('.testata button').setAttribute('aria-expanded', 'true');
+  }
   voce.riga.classList.remove('nascosto');
   voce.riga.scrollIntoView({ block: 'center' });
 }
@@ -512,10 +655,22 @@ function vaiAlPasso(evento, idPasso) {
 // -----------------------------------------------------------------------------
 function instrada() {
   const indirizzo = location.hash || '#/';
-  const corrispondenza = indirizzo.match(/^#\/gioco\/([a-z0-9-]+)$/);
-  if (corrispondenza) mostraGioco(corrispondenza[1]);
-  else if (indirizzo.startsWith('#passo-')) return; // link interno agli avvisi: nessun cambio pagina
-  else mostraElenco();
+  const corrispondenza = indirizzo.match(/^#\/gioco\/([a-z0-9-]+)(?:\/(guida|trofei|info))?$/);
+  if (corrispondenza) {
+    const [, id, nuovaScheda = 'guida'] = corrispondenza;
+    if (guida && guida.id === id) {
+      // Stesso gioco, cambia solo scheda: non serve ricaricare i dati
+      scheda = nuovaScheda;
+      disegnaGioco();
+      window.scrollTo(0, 0);
+    } else {
+      mostraGioco(id, nuovaScheda);
+    }
+  } else if (indirizzo.startsWith('#passo-') || indirizzo === '#contenuto') {
+    return; // link interni (avvisi, "Vai al contenuto"): nessun cambio pagina
+  } else {
+    mostraElenco();
+  }
 }
 
 window.addEventListener('hashchange', instrada);
