@@ -17,18 +17,22 @@ Stato del progetto. Aggiornare a ogni sessione di lavoro.
 - [x] Pagina provvisoria `public/index.html` (elenco guide) in attesa della fase 3
 
 ## Fase 3 — Interfaccia
-- [ ] Guida finta di prova (2 capitoli) in `data/guides/`
 - [ ] Pagina iniziale: elenco giochi con barre di completamento
-- [ ] Pagina gioco: timeline per capitoli (comprimibili)
+- [ ] Pagina gioco: timeline per capitoli (comprimibili), con riepilogo del capitolo
+- [ ] Introduzione e percorso consigliato del gioco
+- [ ] Soluzioni degli enigmi nascoste (clic per mostrarle), note e avvisi "da verificare"
+- [ ] Elenco trofei spuntabile, con avanzamento automatico per quelli con `obiettivo`
 - [ ] Spunte salvate subito sul file
 - [ ] Pulsante "Sono qui" + scorrimento automatico + "segna completati i precedenti"
 
-## Fase 4 — Validatore
-- [ ] `tools/valida-guida.js`: id unici, campi obbligatori, totali coerenti, riferimenti ai trofei validi
+## Fase 4 — Validatore ✅
+- [x] `tools/valida-guida.js`: id unici, campi obbligatori, totali coerenti, riferimenti ai trofei validi
 
-## Fase 5 — Prima guida reale
-- [ ] Chiedere la piattaforma all'utente
-- [ ] Uncharted: Drake's Fortune — ricerca, verifica incrociata, salvataggio, validazione
+## Fase 5 — Prima guida reale ✅ (in attesa di revisione dell'utente)
+- [x] Piattaforma: PS3 (versione originale)
+- [x] Uncharted: Drake's Fortune — ricerca, verifica incrociata, salvataggio, validazione
+- [ ] Revisione dell'utente su struttura e contenuti
+- [ ] 1 punto da verificare: Gold Spanish Chalice (cap. 13), le fonti non concordano sul lato della piazza
 
 ## Fase 6 — Rifinitura
 - [ ] Filtri: tutto / solo storia / solo opzionali / nascondi completati / per categoria

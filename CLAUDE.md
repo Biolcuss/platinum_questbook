@@ -35,7 +35,7 @@ App web **locale** per seguire i progressi nei videogiochi:
 - Avvio: `node server.js` oppure doppio clic su `avvia.bat` → http://localhost:3000
 - Validare una guida: `node tools/valida-guida.js <id-gioco>`
 
-*(il validatore va ancora creato: vedi `docs/ROADMAP.md`)*
+Per le ricerche: le wiki Fandom si leggono tramite API (dettagli in `docs/FORMATO-GUIDA.md`), molti altri siti bloccano la lettura automatica.
 
 ## Architettura
 ```
@@ -78,4 +78,6 @@ Dettagli completi in `docs/FORMATO-GUIDA.md`. In breve:
   in quel caso **chiedere all'utente** se fare il commit subito o rimandarlo.
 
 ## Guide presenti
-*(nessuna per ora — la prima prevista è Uncharted: Drake's Fortune; piattaforma da chiedere)*
+| Gioco | File | Piattaforma | Stato |
+|---|---|---|---|
+| Uncharted: Drake's Fortune | `uncharted-drakes-fortune.json` | PS3 originale | v1, 22 capitoli, 60 tesori + Strange Relic, 48 trofei; 1 punto da verificare |
