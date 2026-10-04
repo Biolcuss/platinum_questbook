@@ -204,6 +204,30 @@ h1, h2, h3 { font-family: var(--font-pixel); font-weight: 600; text-wrap: balanc
 .capitolo.aperto .corpo { display: block; }
 .riepilogo-capitolo { margin: 0; padding: 12px 16px; color: var(--tenue); border-bottom: 2px dotted var(--bordo); text-wrap: pretty; }
 
+.riepilogo-capitolo p { margin: 0; max-width: 80ch; }
+.riepilogo-capitolo .mini { margin-top: 8px; flex-wrap: wrap; }
+.modulo.libero { color: var(--viola); }
+.tipo .modulo { color: var(--tenue); }
+
+/* ------------------------------------------------------ Scelte del giocatore */
+.blocco-scelte { margin-bottom: 18px; filter: var(--ombra); }
+.contenuto-scelte { padding: 14px 16px; display: grid; gap: 14px; }
+.scelta h2 { font-size: 17px; margin-bottom: 8px; }
+.scelta .nota { margin: 8px 0 0; max-width: 74ch; }
+
+/* ------------------------------------------------- Contatore delle raccolte */
+.contatore { display: flex; align-items: center; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+.contatore .btn { min-width: 38px; justify-content: center; padding: 8px 10px; }
+.contatore .num {
+  width: 5.5em; padding: 6px 8px;
+  background: var(--sfondo); color: var(--testo);
+  border: 2px solid var(--tenue); border-radius: 0;
+  font: 600 16px/1.2 var(--font-pixel); text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.contatore .num:focus-visible { outline: 2px solid var(--ciano); outline-offset: 2px; border-color: var(--ciano); }
+.contatore .su-totale { font: 500 16px/1 var(--font-pixel); color: var(--tenue); font-variant-numeric: tabular-nums; }
+
 /* ----------------------------------------------------------------------- Passi */
 .passo {
   --colore: var(--ciano);

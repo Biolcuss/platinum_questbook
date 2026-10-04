@@ -53,6 +53,27 @@ function registraId(idNuovo, dove) {
   idUsati.add(idNuovo);
 }
 
+// --- Scelte del giocatore (es. la casa) -------------------------------------
+const scelte = new Map(); // idScelta → Set di idOpzione
+for (const scelta of guida.scelte || []) {
+  richiedi(scelta, ['id', 'nome', 'opzioni'], `Scelta "${scelta.id}"`);
+  const opzioni = new Set();
+  for (const opzione of scelta.opzioni || []) {
+    richiedi(opzione, ['id', 'nome'], `Scelta "${scelta.id}", opzione`);
+    opzioni.add(opzione.id);
+  }
+  scelte.set(scelta.id, opzioni);
+}
+// Controlla che un "soloSe" faccia riferimento a scelte e opzioni esistenti
+function controllaSoloSe(oggetto, dove) {
+  for (const [idScelta, valori] of Object.entries(oggetto.soloSe || {})) {
+    if (!scelte.has(idScelta)) { errore(`${dove}: soloSe usa la scelta inesistente "${idScelta}"`); continue; }
+    for (const v of [].concat(valori)) {
+      if (!scelte.get(idScelta).has(v)) errore(`${dove}: soloSe usa l'opzione inesistente "${v}" della scelta "${idScelta}"`);
+    }
+  }
+}
+
 // --- Categorie ---------------------------------------------------------------
 const categorie = new Map(); // id → totale
 for (const cat of guida.categorie || []) {
@@ -73,20 +94,23 @@ for (const trofeo of guida.trofei || []) {
     if (totale === undefined) errore(`${dove}: categoria "${trofeo.obiettivo.categoria}" inesistente`);
     else if (trofeo.obiettivo.quantita > totale) errore(`${dove}: quantità ${trofeo.obiettivo.quantita} maggiore del totale ${totale}`);
   }
+  controllaSoloSe(trofeo, dove);
   if (trofeo.daVerificare && !trofeo.notaVerifica) errore(`${dove}: "daVerificare" senza "notaVerifica"`);
   registraId(trofeo.id, dove);
   trofei.add(trofeo.id);
 }
 
 // --- Capitoli e passi ----------------------------------------------------------
-const TIPI = ['storia', 'collezionabile', 'trofeo', 'secondaria'];
+const TIPI = ['storia', 'collezionabile', 'raccolta', 'trofeo', 'secondaria'];
 const conteggioCategorie = new Map();
-const conteggioTipi = { storia: 0, collezionabile: 0, trofeo: 0, secondaria: 0 };
+const conteggioTipi = { storia: 0, collezionabile: 0, raccolta: 0, trofeo: 0, secondaria: 0 };
 let daVerificare = 0;
 
 (guida.capitoli || []).forEach((capitolo, indice) => {
-  const doveCap = `Capitolo ${capitolo.numero ?? indice + 1}`;
-  richiedi(capitolo, ['id', 'numero', 'nome', 'passi'], doveCap);
+  const doveCap = `Capitolo ${capitolo.numero ?? indice + 1} (${capitolo.id})`;
+  richiedi(capitolo, ['id', 'nome', 'passi'], doveCap);
+  controllaSoloSe(capitolo, doveCap);
+  if (capitolo.ordinato !== undefined && typeof capitolo.ordinato !== 'boolean') errore(`${doveCap}: "ordinato" deve essere true o false`);
   registraId(capitolo.id, doveCap);
   if (!Array.isArray(capitolo.passi) || capitolo.passi.length === 0) errore(`${doveCap}: nessun passo`);
 
@@ -99,9 +123,15 @@ let daVerificare = 0;
     registraId(passo.id, dove);
 
     if (passo.tipo !== 'storia' && !passo.dove) errore(`${dove}: i passi opzionali devono avere "dove"`);
-    if (passo.tipo === 'collezionabile') {
+    controllaSoloSe(passo, dove);
+    if (passo.tipo === 'collezionabile' || passo.tipo === 'raccolta') {
       if (!categorie.has(passo.categoria)) errore(`${dove}: categoria "${passo.categoria}" inesistente`);
-      conteggioCategorie.set(passo.categoria, (conteggioCategorie.get(passo.categoria) || 0) + 1);
+      let quanti = 1;
+      if (passo.tipo === 'raccolta') {
+        if (!Number.isInteger(passo.quantita) || passo.quantita < 1) errore(`${dove}: una raccolta richiede "quantita" (numero intero maggiore di 0)`);
+        else quanti = passo.quantita;
+      }
+      conteggioCategorie.set(passo.categoria, (conteggioCategorie.get(passo.categoria) || 0) + quanti);
     }
     if (passo.tipo === 'trofeo' && !trofei.has(passo.trofeo)) errore(`${dove}: trofeo "${passo.trofeo}" inesistente`);
     if (passo.mancabile && !passo.notaMancabile) errore(`${dove}: "mancabile" senza "notaMancabile"`);
@@ -121,7 +151,7 @@ for (const [idCat, totale] of categorie) {
 // --- Risultato ---------------------------------------------------------------
 console.log(`Guida: ${guida.titolo} (${guida.piattaforma}) – versione ${guida.versioneGuida}`);
 console.log(`Capitoli: ${(guida.capitoli || []).length}`);
-console.log(`Passi: storia ${conteggioTipi.storia}, collezionabili ${conteggioTipi.collezionabile}, trofei ${conteggioTipi.trofeo}, secondarie ${conteggioTipi.secondaria}`);
+console.log(`Passi: storia ${conteggioTipi.storia}, collezionabili ${conteggioTipi.collezionabile}, raccolte ${conteggioTipi.raccolta}, trofei ${conteggioTipi.trofeo}, secondarie ${conteggioTipi.secondaria}`);
 for (const [idCat, totale] of categorie) console.log(`  - ${idCat}: ${conteggioCategorie.get(idCat) || 0}/${totale}`);
 console.log(`Trofei: ${trofei.size}`);
 console.log(`Informazioni da verificare: ${daVerificare}`);

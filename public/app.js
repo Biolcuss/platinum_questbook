@@ -177,6 +177,7 @@ const filtri = { tipo: 'tutto', nascondiCompletati: false }; // tipo: 'tutto' | 
 let righePassi = [];     // { passo, riga, casella, bottoneQui }
 let capitoliVista = [];  // { capitolo, sezione, stato }
 let righeTrofei = [];    // { trofeo, riga, casella, avanzamento }
+let barreScelte = [];    // { scelta, bottoni, aiuto }
 let contenitoreRiepilogo = null;
 let contenitoreAvviso = null;
 
@@ -198,6 +199,26 @@ function fatto(chiaveOId) {
   return Boolean(progressi.completati[chiaveOId]);
 }
 
+// Un capitolo, passo o trofeo con "soloSe" vale solo per chi ha fatto quella scelta
+// (es. soloSe: { casa: "grifondoro" }). Se la scelta non è ancora stata fatta, vale per tutti.
+function applicabile(oggetto) {
+  for (const [idScelta, valori] of Object.entries(oggetto.soloSe || {})) {
+    const fatta = progressi.scelte[idScelta];
+    if (fatta && ![].concat(valori).includes(fatta)) return false;
+  }
+  return true;
+}
+
+// Quanti oggetti ha trovato l'utente in un passo di tipo "raccolta"
+function quantiTrovati(passo) {
+  return Math.min(progressi.contatori[passo.id] || 0, passo.quantita);
+}
+
+// Un passo è completato se è spuntato; una raccolta, quando ha trovato tutto
+function passoFatto(passo) {
+  return passo.tipo === 'raccolta' ? quantiTrovati(passo) >= passo.quantita : fatto(chiave(passo));
+}
+
 function preparaOrdine() {
   ordine = [];
   posizione = {};
@@ -209,13 +230,20 @@ function preparaOrdine() {
   }
 }
 
-// Conta i passi fatti e totali che rispettano una condizione
+// Conta le "unità" fatte e totali dei passi che rispettano una condizione.
+// Un passo normale vale 1 unità; una raccolta vale tante unità quanti sono gli oggetti da trovare.
+// I passi non validi per le scelte dell'utente (altre case, ecc.) non contano.
 function conta(condizione) {
   let tot = 0, ok = 0;
-  for (const { passo } of ordine) {
-    if (!condizione(passo)) continue;
-    tot++;
-    if (fatto(chiave(passo))) ok++;
+  for (const { passo, capitolo } of ordine) {
+    if (!condizione(passo) || !applicabile(capitolo) || !applicabile(passo)) continue;
+    if (passo.tipo === 'raccolta') {
+      tot += passo.quantita;
+      ok += quantiTrovati(passo);
+    } else {
+      tot++;
+      if (fatto(chiave(passo))) ok++;
+    }
   }
   return { ok, tot };
 }
@@ -242,13 +270,31 @@ function impostaFatto(chiaveId, valore) {
   salva();
 }
 
+// Cambia il numero di oggetti trovati in un passo di tipo "raccolta" (tra 0 e il totale)
+function impostaContatore(passo, valore) {
+  const numero = Math.max(0, Math.min(passo.quantita, Math.floor(Number(valore)) || 0));
+  if (numero === 0) delete progressi.contatori[passo.id];
+  else progressi.contatori[passo.id] = numero;
+  aggiornaVista();
+  salva();
+}
+
+// Fa o toglie una scelta (es. la casa). Cliccando di nuovo sulla scelta attiva la si toglie.
+function impostaScelta(idScelta, idOpzione) {
+  if (progressi.scelte[idScelta] === idOpzione) delete progressi.scelte[idScelta];
+  else progressi.scelte[idScelta] = idOpzione;
+  aggiornaVista();
+  salva();
+}
+
 // "Sono qui" su un passo di storia
 function impostaSonoQui(passo) {
   progressi.sonoQui = passo.id;
 
   // Se prima di questo punto ci sono passi di storia non spuntati, chiedo se segnarli come fatti
   const indice = posizione[passo.id];
-  const daSegnare = ordine.filter(({ passo: p }, i) => i < indice && p.tipo === 'storia' && !fatto(chiave(p)));
+  const daSegnare = ordine.filter(({ passo: p, capitolo: c }, i) =>
+    i < indice && p.tipo === 'storia' && !fatto(chiave(p)) && applicabile(c) && applicabile(p));
   if (daSegnare.length > 0) {
     const conferma = window.confirm(
       `Vuoi segnare come completati i ${daSegnare.length} passi di storia precedenti?\n\n` +
@@ -313,6 +359,8 @@ async function mostraGioco(id, nuovaScheda) {
     return;
   }
   document.title = guida.titolo + ' — Game Tracker';
+  progressi.scelte = progressi.scelte || {};
+  progressi.contatori = progressi.contatori || {};
   preparaOrdine();
   disegnaGioco();
   // All'apertura vado al punto in cui ero rimasto
@@ -362,7 +410,42 @@ function azzeraRiferimenti() {
   righePassi = [];
   capitoliVista = [];
   righeTrofei = [];
+  barreScelte = [];
   contenitoreAvviso = null;
+}
+
+// Testo "Solo Grifondoro" per un oggetto con "soloSe" (stringa vuota se vale per tutti)
+function testoSolo(oggetto) {
+  const parti = [];
+  for (const [idScelta, valori] of Object.entries(oggetto.soloSe || {})) {
+    const scelta = (guida.scelte || []).find((s) => s.id === idScelta);
+    for (const v of [].concat(valori)) {
+      const opzione = scelta && scelta.opzioni.find((o) => o.id === v);
+      parti.push(opzione ? opzione.nome : v);
+    }
+  }
+  return parti.length ? 'Solo ' + parti.join(' / ') : '';
+}
+
+// Riquadro con le scelte del giocatore (es. la casa): serve a nascondere ciò che non lo riguarda
+function costruisciScelte() {
+  if (!guida.scelte || guida.scelte.length === 0) return null;
+  const blocchi = guida.scelte.map((scelta) => {
+    const bottoni = {};
+    const gruppo = el('div', { class: 'gruppo', role: 'group', 'aria-label': scelta.nome });
+    for (const opzione of scelta.opzioni) {
+      bottoni[opzione.id] = el('button', {
+        class: 'btn',
+        'aria-pressed': 'false',
+        onclick: () => impostaScelta(scelta.id, opzione.id),
+      }, opzione.nome);
+      gruppo.append(bottoni[opzione.id]);
+    }
+    const aiuto = scelta.descrizione ? el('p', { class: 'nota' }, scelta.descrizione) : null;
+    barreScelte.push({ scelta, bottoni, aiuto });
+    return el('div', { class: 'scelta' }, el('h2', {}, scelta.nome), gruppo, aiuto);
+  });
+  return el('div', { class: 'blocco-scelte' }, finestra(el('div', { class: 'contenuto-scelte' }, blocchi)));
 }
 
 function costruisciTimeline() {
@@ -396,13 +479,14 @@ function costruisciTimeline() {
       el('button', { class: 'btn', onclick: () => impostaCapitoliAperti(true) }, 'Apri tutti'),
       el('button', { class: 'btn', onclick: () => impostaCapitoliAperti(false) }, 'Chiudi tutti')));
 
-  // Capitoli: apro quello del "Sono qui", altrimenti il primo non ancora finito
+  // Capitoli: apro quello del "Sono qui", altrimenti il primo (in ordine) non ancora finito
   const idCapitoloQui = progressi.sonoQui ? ordine[posizione[progressi.sonoQui]]?.capitolo.id : null;
-  const primoIncompleto = guida.capitoli.find((c) => c.passi.some((p) => !fatto(chiave(p))));
+  const primoIncompleto = guida.capitoli.find((c) =>
+    c.ordinato !== false && applicabile(c) && c.passi.some((p) => applicabile(p) && !passoFatto(p)));
   const idDaAprire = idCapitoloQui || (primoIncompleto && primoIncompleto.id);
 
   const capitoli = guida.capitoli.map((capitolo) => costruisciCapitolo(capitolo, capitolo.id === idDaAprire));
-  return el('div', {}, barraStrumenti, contenitoreAvviso, capitoli);
+  return el('div', {}, costruisciScelte(), barraStrumenti, contenitoreAvviso, capitoli);
 }
 
 function costruisciCapitolo(capitolo, aperto) {
@@ -417,13 +501,24 @@ function costruisciCapitolo(capitolo, aperto) {
     },
   },
     el('span', { class: 'freccia' }, icona('destra')),
-    el('span', { class: 'numero' }, capitolo.numero + '.'),
+    capitolo.numero !== undefined ? el('span', { class: 'numero' }, capitolo.numero + '.') : null,
     el('span', { class: 'nome' }, capitolo.nome),
     stato);
 
+  // Note sotto al titolo: livello consigliato, ordine libero, valido solo per una scelta
+  const etichette = [];
+  if (capitolo.livello) etichette.push(el('span', { class: 'modulo' }, 'livello ', el('b', {}, String(capitolo.livello))));
+  if (capitolo.ordinato === false) etichette.push(el('span', { class: 'modulo libero' }, 'ordine libero'));
+  const solo = testoSolo(capitolo);
+  if (solo) etichette.push(el('span', { class: 'modulo' }, solo));
+
   const corpo = el('div', { class: 'corpo', id: idCorpo },
-    capitolo.riepilogo ? el('p', { class: 'riepilogo-capitolo' }, capitolo.riepilogo) : null,
-    capitolo.passi.map(costruisciPasso));
+    capitolo.riepilogo || etichette.length
+      ? el('div', { class: 'riepilogo-capitolo' },
+          capitolo.riepilogo ? el('p', {}, capitolo.riepilogo) : null,
+          etichette.length ? el('div', { class: 'mini' }, etichette) : null)
+      : null,
+    capitolo.passi.map((passo) => costruisciPasso(passo, capitolo)));
 
   const sezione = el('section', { class: 'capitolo' + (aperto ? ' aperto' : ''), id: 'cap-' + capitolo.id },
     finestra(el('h2', { class: 'testata' }, testata), corpo));
@@ -434,31 +529,59 @@ function costruisciCapitolo(capitolo, aperto) {
 // Etichetta e icona di ogni tipo di passo (la storia non ha etichetta: è il caso normale)
 const TIPI_PASSO = {
   collezionabile: { nome: 'Collezionabile', icona: 'gemma' },
+  raccolta: { nome: 'Raccolta', icona: 'gemma' },
   trofeo: { nome: 'Trofeo', icona: 'coppa' },
   secondaria: { nome: 'Missione secondaria', icona: 'punto' },
 };
 
-function costruisciPasso(passo) {
+// Contatore "− 12 / 236 +" per i passi di tipo "raccolta"
+function costruisciContatore(passo) {
+  const campo = el('input', {
+    type: 'number', class: 'num', min: '0', max: String(passo.quantita), inputmode: 'numeric',
+    name: 'trovati-' + passo.id, autocomplete: 'off',
+    'aria-label': 'Quanti ne hai trovati: ' + passo.titolo,
+    onchange: (e) => impostaContatore(passo, e.target.value),
+  });
+  const cambia = (delta) => impostaContatore(passo, (progressi.contatori[passo.id] || 0) + delta);
+  const nodo = el('div', { class: 'contatore' },
+    el('button', { class: 'btn', 'aria-label': 'Uno in meno: ' + passo.titolo, onclick: () => cambia(-1) }, '−'),
+    campo,
+    el('span', { class: 'su-totale' }, '/ ' + passo.quantita),
+    el('button', { class: 'btn', 'aria-label': 'Uno in più: ' + passo.titolo, onclick: () => cambia(1) }, '+'));
+  return { nodo, campo };
+}
+
+function costruisciPasso(passo, capitolo) {
   const k = chiave(passo);
+  const eRaccolta = passo.tipo === 'raccolta';
   const idCasella = 'spunta-' + passo.id;
   const casella = el('input', {
     type: 'checkbox',
     class: 'spunta',
     id: idCasella,
-    onchange: (e) => impostaFatto(k, e.target.checked),
+    // Per una raccolta, la casella significa "trovati tutti" (e toglierla azzera il contatore)
+    onchange: (e) => (eRaccolta ? impostaContatore(passo, e.target.checked ? passo.quantita : 0) : impostaFatto(k, e.target.checked)),
   });
 
   const bottoneQui = passo.tipo === 'storia'
     ? el('button', { class: 'btn', onclick: () => impostaSonoQui(passo) }, 'Sono qui')
     : null;
+  const contatore = eRaccolta ? costruisciContatore(passo) : null;
 
   const tipo = TIPI_PASSO[passo.tipo];
+  const solo = testoSolo(passo);
   const contenuto = el('div', { class: 'contenuto' },
-    tipo ? el('p', { class: 'tipo' }, icona(tipo.icona), tipo.nome) : null,
+    tipo || solo
+      ? el('p', { class: 'tipo' },
+          tipo ? [icona(tipo.icona), tipo.nome] : null,
+          solo ? el('span', { class: 'modulo' }, solo) : null,
+          passo.livello ? el('span', { class: 'modulo' }, 'livello ', el('b', {}, String(passo.livello))) : null)
+      : null,
     // L'etichetta è collegata alla casella: cliccare sul titolo spunta il passo
     el('label', { class: 'titolo-passo', for: idCasella }, passo.titolo),
     passo.descrizione ? el('p', {}, passo.descrizione) : null,
     passo.dove ? el('p', { class: 'dove' }, el('b', {}, 'Dove: '), passo.dove) : null,
+    contatore ? contatore.nodo : null,
     passo.mancabile ? el('p', { class: 'avvertenza mancabile' }, icona('clessidra'), el('span', {}, 'Mancabile: ' + passo.notaMancabile)) : null,
     passo.daVerificare ? el('p', { class: 'avvertenza verifica' }, icona('attenzione'), el('span', {}, 'Da verificare: ' + passo.notaVerifica)) : null,
     passo.nota ? el('p', { class: 'nota' }, el('b', {}, 'Nota: '), passo.nota) : null,
@@ -470,7 +593,7 @@ function costruisciPasso(passo) {
     bottoneQui ? el('div', { class: 'azioni-passo' }, bottoneQui) : null);
 
   const riga = el('div', { class: 'passo t-' + passo.tipo, id: 'passo-' + passo.id }, casella, contenuto);
-  righePassi.push({ passo, riga, casella, bottoneQui });
+  righePassi.push({ passo, capitolo, riga, casella, bottoneQui, campo: contatore ? contatore.campo : null });
   return riga;
 }
 
@@ -498,11 +621,18 @@ function costruisciTrofei() {
       onchange: (e) => impostaFatto(trofeo.id, e.target.checked),
     });
     const avanzamento = trofeo.obiettivo ? el('p', { class: 'avanzamento' }) : null;
+    const solo = testoSolo(trofeo);
+    const grado = trofeo.grado === 'obiettivo' ? null : el('span', { class: 'grado ' + trofeo.grado }, trofeo.grado);
+    // Se la descrizione contiene anticipazioni sulla storia, resta nascosta finché non la apri
+    const descrizione = trofeo.spoiler
+      ? el('details', { class: 'soluzione' }, el('summary', {}, 'Mostra la descrizione (spoiler)'), el('p', {}, trofeo.descrizione))
+      : el('p', {}, trofeo.descrizione);
     const riga = el('div', { class: 'trofeo-card' },
       finestra(el('div', { class: 'riga-trofeo' }, casella,
         el('div', { class: 'contenuto' },
-          el('label', { class: 'titolo-passo', for: idCasella }, trofeo.nome, el('span', { class: 'grado ' + trofeo.grado }, trofeo.grado)),
-          el('p', {}, trofeo.descrizione),
+          solo ? el('p', { class: 'tipo' }, el('span', { class: 'modulo' }, solo)) : null,
+          el('label', { class: 'titolo-passo', for: idCasella }, trofeo.nome, grado),
+          descrizione,
           trofeo.suggerimento ? el('p', { class: 'nota' }, el('b', {}, 'Consiglio: '), trofeo.suggerimento) : null,
           trofeo.mancabile ? el('p', { class: 'avvertenza mancabile' }, icona('clessidra'), el('span', {}, 'Mancabile: ' + trofeo.notaMancabile)) : null,
           trofeo.daVerificare ? el('p', { class: 'avvertenza verifica' }, icona('attenzione'), el('span', {}, 'Da verificare: ' + trofeo.notaVerifica)) : null,
@@ -510,7 +640,7 @@ function costruisciTrofei() {
     righeTrofei.push({ trofeo, riga, casella, avanzamento });
     return riga;
   });
-  return el('div', {}, carte);
+  return el('div', {}, costruisciScelte(), carte);
 }
 
 // ------------------------------------------------------------- Scheda "Info"
@@ -533,15 +663,24 @@ function aggiornaVista() {
   const idQui = progressi.sonoQui;
   const indiceQui = idQui !== null && posizione[idQui] !== undefined ? posizione[idQui] : -1;
 
+  // Scelte del giocatore (es. la casa)
+  for (const { scelta, bottoni, aiuto } of barreScelte) {
+    const fatta = progressi.scelte[scelta.id];
+    for (const [idOpzione, bottone] of Object.entries(bottoni)) bottone.setAttribute('aria-pressed', String(idOpzione === fatta));
+    if (aiuto) aiuto.classList.toggle('nascosto', Boolean(fatta));
+  }
+
   // Passi
-  for (const { passo, riga, casella, bottoneQui } of righePassi) {
-    const completato = fatto(chiave(passo));
+  for (const { passo, capitolo, riga, casella, bottoneQui, campo } of righePassi) {
+    const completato = passoFatto(passo);
     casella.checked = completato;
+    if (campo) campo.value = quantiTrovati(passo);
     riga.classList.toggle('fatto', completato);
     riga.classList.toggle('qui', passo.id === idQui);
     if (bottoneQui) bottoneQui.textContent = passo.id === idQui ? 'Sei qui' : 'Sono qui';
 
     const nascosto =
+      !applicabile(passo) || !applicabile(capitolo) ||
       (filtri.tipo === 'storia' && passo.tipo !== 'storia') ||
       (filtri.tipo === 'opzionali' && passo.tipo === 'storia') ||
       (filtri.nascondiCompletati && completato);
@@ -550,12 +689,14 @@ function aggiornaVista() {
 
   // Capitoli: contatori e segno "corrente/finito"
   for (const { capitolo, sezione, stato } of capitoliVista) {
+    sezione.classList.toggle('nascosto', !applicabile(capitolo));
     const storia = contaInCapitolo(capitolo, (p) => p.tipo === 'storia');
     const extra = contaInCapitolo(capitolo, (p) => p.tipo !== 'storia');
-    const moduli = [el('span', { class: 'modulo' }, 'storia ', el('b', {}, `${storia.ok}/${storia.tot}`))];
+    const moduli = [];
+    if (storia.tot > 0) moduli.push(el('span', { class: 'modulo' }, 'storia ', el('b', {}, `${storia.ok}/${storia.tot}`)));
     if (extra.tot > 0) moduli.push(el('span', { class: 'modulo' }, 'extra ', el('b', {}, `${extra.ok}/${extra.tot}`)));
     stato.replaceChildren(...moduli);
-    sezione.classList.toggle('finito', storia.ok + extra.ok === storia.tot + extra.tot);
+    sezione.classList.toggle('finito', storia.tot + extra.tot > 0 && storia.ok + extra.ok === storia.tot + extra.tot);
     sezione.classList.toggle('corrente', idQui !== null && ordine[indiceQui]?.capitolo.id === capitolo.id);
   }
 
@@ -564,14 +705,15 @@ function aggiornaVista() {
     const ottenuto = fatto(trofeo.id);
     casella.checked = ottenuto;
     riga.classList.toggle('fatto', ottenuto);
+    riga.classList.toggle('nascosto', !applicabile(trofeo));
     let pronto = false;
     if (avanzamento) {
       const { categoria, quantita } = trofeo.obiettivo;
-      const trovati = conta((p) => p.tipo === 'collezionabile' && p.categoria === categoria).ok;
-      pronto = !ottenuto && trovati >= quantita;
+      const nTrovati = conta((p) => (p.tipo === 'collezionabile' || p.tipo === 'raccolta') && p.categoria === categoria).ok;
+      pronto = !ottenuto && nTrovati >= quantita;
       avanzamento.textContent = pronto
-        ? `Hai già trovato ${trovati}: dovresti averlo ottenuto, spuntalo!`
-        : `Avanzamento (secondo le tue spunte): ${Math.min(trovati, quantita)}/${quantita}`;
+        ? `Hai già trovato ${nTrovati}: dovresti averlo ottenuto, spuntalo!`
+        : `Avanzamento (secondo le tue spunte): ${Math.min(nTrovati, quantita)}/${quantita}`;
       avanzamento.classList.toggle('pronto', pronto);
     }
     riga.classList.toggle('pronto', pronto);
@@ -581,12 +723,13 @@ function aggiornaVista() {
   aggiornaAvvisoMancabili();
 }
 
+// Conta i passi (non le unità) di un capitolo: una raccolta vale 1 passo, fatto quando ha trovato tutto
 function contaInCapitolo(capitolo, condizione) {
   let tot = 0, ok = 0;
   for (const passo of capitolo.passi) {
-    if (!condizione(passo)) continue;
+    if (!condizione(passo) || !applicabile(passo)) continue;
     tot++;
-    if (fatto(chiave(passo))) ok++;
+    if (passoFatto(passo)) ok++;
   }
   return { ok, tot };
 }
@@ -600,10 +743,12 @@ function aggiornaRiepilogo() {
 
   aggiungi('Storia', 'stella', 'm-storia', conta((p) => p.tipo === 'storia'));
   for (const categoria of guida.categorie || []) {
-    aggiungi(categoria.nome, 'gemma', 'm-oro', conta((p) => p.tipo === 'collezionabile' && p.categoria === categoria.id));
+    const conteggio = conta((p) => (p.tipo === 'collezionabile' || p.tipo === 'raccolta') && p.categoria === categoria.id);
+    if (conteggio.tot > 0) aggiungi(categoria.nome, 'gemma', 'm-oro', conteggio);
   }
   if (guida.trofei && guida.trofei.length > 0) {
-    aggiungi('Trofei', 'coppa', 'm-trofeo', { ok: guida.trofei.filter((t) => fatto(t.id)).length, tot: guida.trofei.length });
+    const validi = guida.trofei.filter(applicabile);
+    aggiungi('Trofei', 'coppa', 'm-trofeo', { ok: validi.filter((t) => fatto(t.id)).length, tot: validi.length });
   }
   contenitoreRiepilogo.replaceChildren(...voci);
 }
@@ -618,7 +763,7 @@ function aggiornaAvvisoMancabili() {
   const capitoloQui = ordine[indiceQui].capitolo.id;
   const mancanti = ordine
     .map((voce, indice) => ({ ...voce, indice }))
-    .filter(({ passo }) => passo.mancabile && !fatto(chiave(passo)));
+    .filter(({ passo, capitolo }) => passo.mancabile && applicabile(passo) && applicabile(capitolo) && !passoFatto(passo));
 
   const saltati = mancanti.filter(({ indice }) => indice < indiceQui);
   const inCorso = mancanti.filter(({ indice, capitolo }) => indice >= indiceQui && capitolo.id === capitoloQui);
@@ -626,12 +771,12 @@ function aggiornaAvvisoMancabili() {
 
   const lista = (voci) => el('ul', {}, voci.map(({ passo, capitolo }) =>
     el('li', {},
-      el('a', { href: '#passo-' + passo.id, onclick: (e) => vaiAlPasso(e, passo.id) }, `${passo.titolo} (cap. ${capitolo.numero})`),
+      el('a', { href: '#passo-' + passo.id, onclick: (e) => vaiAlPasso(e, passo.id) }, `${passo.titolo} (${capitolo.nome})`),
       ': ' + passo.notaMancabile)));
 
-  contenitoreAvviso.append(el('section', { class: 'box-avviso', 'aria-label': 'Tesori mancabili' },
+  contenitoreAvviso.append(el('section', { class: 'box-avviso', 'aria-label': 'Cose da non perdere' },
     finestra(
-      el('h2', {}, icona('clessidra'), 'Attenzione ai tesori mancabili'),
+      el('h2', {}, icona('clessidra'), 'Attenzione a ciò che si può perdere'),
       inCorso.length > 0 ? [el('p', {}, 'Nel capitolo in cui ti trovi, da non perdere:'), lista(inCorso)] : null,
       saltati.length > 0 ? [el('p', {}, 'Prima del punto in cui sei e non ancora spuntati (li hai saltati?):'), lista(saltati)] : null)));
 }

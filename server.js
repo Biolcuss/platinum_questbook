@@ -67,21 +67,46 @@ function scriviJsonSicuro(percorso, dati) {
 }
 
 // Progressi vuoti, usati quando l'utente non ha ancora iniziato un gioco
+// Forma dei progressi:
+//   completati: { idPasso: data }   passi spuntati
+//   sonoQui:    idPasso | null      posizione nella storia
+//   scelte:     { idScelta: idOpzione }   scelte del giocatore (es. la casa)
+//   contatori:  { idPasso: numero }       avanzamento dei passi di tipo "raccolta"
 function progressiVuoti() {
-  return { completati: {}, sonoQui: null };
+  return { completati: {}, sonoQui: null, scelte: {}, contatori: {} };
 }
 
+// Legge i progressi e aggiunge i campi mancanti (i file salvati con versioni precedenti non hanno scelte e contatori)
 function leggiProgressi(id) {
-  return leggiJson(path.join(CARTELLA_PROGRESSI, id + '.json')) || progressiVuoti();
+  const salvati = leggiJson(path.join(CARTELLA_PROGRESSI, id + '.json')) || {};
+  return { ...progressiVuoti(), ...salvati };
+}
+
+// Un passo (o capitolo) con "soloSe" vale solo per chi ha fatto quella scelta.
+// Se la scelta non è ancora stata fatta, vale per tutti.
+function applicabile(oggetto, scelte) {
+  for (const [idScelta, valori] of Object.entries(oggetto.soloSe || {})) {
+    const fatta = scelte[idScelta];
+    if (fatta && ![].concat(valori).includes(fatta)) return false;
+  }
+  return true;
 }
 
 // Calcola le percentuali di completamento di un gioco:
 // - storia: passi di tipo "storia" spuntati / totale passi di storia
-// - totale: tutti i passi spuntati / tutti i passi
+// - totale: tutte le "unità" fatte / tutte le unità (un passo normale è 1 unità,
+//   un passo di tipo "raccolta" ne vale tante quanti sono gli oggetti da trovare)
 function calcolaCompletamento(guida, progressi) {
   let storiaTot = 0, storiaFatti = 0, tutti = 0, tuttiFatti = 0;
   for (const capitolo of guida.capitoli || []) {
+    if (!applicabile(capitolo, progressi.scelte)) continue;
     for (const passo of capitolo.passi || []) {
+      if (!applicabile(passo, progressi.scelte)) continue;
+      if (passo.tipo === 'raccolta') {
+        tutti += passo.quantita;
+        tuttiFatti += Math.min(progressi.contatori[passo.id] || 0, passo.quantita);
+        continue;
+      }
       // Un passo di tipo "trofeo" usa come chiave l'id del trofeo (vedi docs/FORMATO-GUIDA.md)
       const chiave = passo.tipo === 'trofeo' ? passo.trofeo : passo.id;
       const fatto = Boolean(progressi.completati[chiave]);
@@ -161,12 +186,20 @@ async function apiSalvaProgressi(req, res, id) {
     return rispondiJson(res, 400, { errore: 'Dati non validi' });
   }
   // Controllo che i dati abbiano la forma giusta prima di salvarli
+  const eOggetto = (x) => typeof x === 'object' && x !== null && !Array.isArray(x);
   const formaGiusta =
-    dati && typeof dati.completati === 'object' && dati.completati !== null &&
-    (dati.sonoQui === null || typeof dati.sonoQui === 'string');
+    eOggetto(dati) && eOggetto(dati.completati) &&
+    (dati.sonoQui === null || typeof dati.sonoQui === 'string') &&
+    (dati.scelte === undefined || (eOggetto(dati.scelte) && Object.values(dati.scelte).every((v) => typeof v === 'string'))) &&
+    (dati.contatori === undefined || (eOggetto(dati.contatori) && Object.values(dati.contatori).every((v) => Number.isInteger(v) && v >= 0)));
   if (!formaGiusta) return rispondiJson(res, 400, { errore: 'Formato dei progressi non valido' });
 
-  const daSalvare = { completati: dati.completati, sonoQui: dati.sonoQui };
+  const daSalvare = {
+    completati: dati.completati,
+    sonoQui: dati.sonoQui,
+    scelte: dati.scelte || {},
+    contatori: dati.contatori || {},
+  };
   scriviJsonSicuro(path.join(CARTELLA_PROGRESSI, id + '.json'), daSalvare);
   rispondiJson(res, 200, { ok: true });
 }
