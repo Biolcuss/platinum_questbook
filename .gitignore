@@ -5,3 +5,6 @@
 Thumbs.db
 desktop.ini
 .DS_Store
+
+# Progressi personali dell'utente (non vanno nel repository)
+data/progress/
