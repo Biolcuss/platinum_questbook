@@ -966,22 +966,19 @@ function aggiornaRiepilogo() {
     barraProgresso('Completismo', 'b-totale', percentuale(totale), `${percentuale(totale)}% (${totale.ok}/${totale.tot})`));
 }
 
-// Avviso: collezionabili "mancabili" non ancora spuntati, rispetto al punto a cui sei arrivato
+// Avviso: collezionabili "mancabili" non ancora spuntati nel capitolo in cui ti trovi.
+// Una volta superato il capitolo non si può più recuperarli, quindi l'avviso sparisce.
 function aggiornaAvvisoMancabili() {
   if (!contenitoreAvviso) return;
   contenitoreAvviso.replaceChildren();
   const corrente = passoCorrente();
-  const indiceQui = corrente ? posizione[corrente.id] : ordine.length; // storia finita: tutto è "prima"
-  const capitoloQui = corrente ? ordine[indiceQui].capitolo.id : null;
-  const mancanti = ordine
-    .map((voce, indice) => ({ ...voce, indice }))
-    .filter(({ passo, capitolo }) => passo.mancabile && applicabile(passo) && applicabile(capitolo) && !passoFatto(passo));
+  if (!corrente) return; // storia finita: niente da avvisare
+  const capitoloQui = ordine[posizione[corrente.id]].capitolo.id;
+  const inCorso = ordine.filter(({ passo, capitolo }) =>
+    capitolo.id === capitoloQui && passo.mancabile && applicabile(passo) && applicabile(capitolo) && !passoFatto(passo));
+  if (inCorso.length === 0) return;
 
-  const saltati = mancanti.filter(({ indice }) => indice < indiceQui);
-  const inCorso = mancanti.filter(({ indice, capitolo }) => indice >= indiceQui && capitolo.id === capitoloQui);
-  if (saltati.length === 0 && inCorso.length === 0) return;
-
-  const lista = (voci) => el('ul', {}, voci.map(({ passo, capitolo }) =>
+  const lista = el('ul', {}, inCorso.map(({ passo, capitolo }) =>
     el('li', {},
       el('a', { href: '#passo-' + passo.id, onclick: (e) => vaiAlPasso(e, passo.id) }, `${passo.titolo} (${capitolo.nome})`),
       ': ' + passo.notaMancabile)));
@@ -989,8 +986,8 @@ function aggiornaAvvisoMancabili() {
   contenitoreAvviso.append(el('section', { class: 'box-avviso', 'aria-label': 'Cose da non perdere' },
     finestra(
       el('h2', {}, icona('clessidra'), 'Attenzione a ciò che si può perdere'),
-      inCorso.length > 0 ? [el('p', {}, 'Nel capitolo in cui ti trovi, da non perdere:'), lista(inCorso)] : null,
-      saltati.length > 0 ? [el('p', {}, 'Prima del punto in cui sei e non ancora spuntati (li hai saltati?):'), lista(saltati)] : null)));
+      el('p', {}, 'Nel capitolo in cui ti trovi, da non perdere:'),
+      lista)));
 }
 
 // Apre il capitolo del passo e ci scorre fino

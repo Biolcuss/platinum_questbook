@@ -68,7 +68,7 @@ Dopo ogni spunta si aggiornano solo classi e testi (`aggiornaVista()`), senza ri
 Nella barra degli strumenti "Apri tutti", "Chiudi tutti" e "Nascondi completati" sono pulsanti con sola icona (con `aria-label` e `title`).
 Il pulsante "Menu" (solo icona, accanto ad "Apri tutti/Chiudi tutti"; si chiude con la X in alto a destra) apre una finestra `<dialog>` per azzerare Storia, Collezionabili, Trofei o Tutto (con conferma; "Tutto" mantiene le scelte come la casa).
 Filtri della scheda Guida: Tutto/Solo storia/Solo opzionali + categoria di collezionabili (`filtri.categoria`; mostra solo i collezionabili di quella categoria e nasconde i capitoli senza). Barre di progressione "Storia Principale" e "Completismo" (`barraProgresso()`) nella barra del gioco; nelle schede dell'elenco solo icone (stella, coppa). Campo facoltativo `durata` (ore da HowLongToBeat, che non ha API: si cercano in chat e si salvano nella guida), mostrato in elenco e nella scheda Info.
-Banner "mancabili": mostra i collezionabili `mancabile` non spuntati prima del punto a cui sei arrivato o nel capitolo corrente.
+Banner "mancabili": mostra solo i collezionabili `mancabile` non spuntati nel capitolo corrente; superato il capitolo non compare più (non sono più recuperabili).
 
 ## Procedura "crea la guida per un gioco"
 Dettagli completi in `docs/FORMATO-GUIDA.md`. In breve:
