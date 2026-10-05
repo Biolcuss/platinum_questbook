@@ -93,7 +93,7 @@ Stato del progetto. Aggiornare a ogni sessione di lavoro.
 
 ## Fase 6d — Copertine ✅
 - [x] Immagini in `covers/`, cornice verticale 2:3 a sinistra nelle schede dell'elenco
-- [x] Editor (Menu → Copertina): trascinamento, zoom, reimposta; posizione salvata in `data/copertine.json`
+- [x] Editor di riposizionamento fatto e poi rimosso su richiesta dell'utente: le copertine si mostrano intere, centrate
 - [x] Copertina anche nella barra della pagina del gioco (a tutta altezza, a sinistra)
 - [ ] Copertine automatiche da un'API (IGDB/RAWG): opzionale, userebbe un'API esterna
 

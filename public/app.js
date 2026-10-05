@@ -208,24 +208,13 @@ function barraProgresso(nome, classe, percentuale, testo, nomeIcona = null) {
 
 // -----------------------------------------------------------------------------
 // Copertine
-// Una copertina è { url, x, y, zoom, ar }: x e y (0-100) dicono quale parte dell'immagine resta al centro
-// del ritaglio, zoom (1-4) quanto è ingrandita, ar il rapporto larghezza/altezza dell'immagine.
-// La cornice è verticale 2:3, come le copertine (poster) che si trovano di solito: così non vengono tagliate.
-// Se un'immagine ha un'altra forma, il pezzo che avanza si sceglie dall'editor.
+// L'immagine (da covers/) si mostra in una cornice verticale 2:3, come i poster: non viene tagliata
+// se ha quella forma, altrimenti viene centrata e ritagliata ai bordi.
 // -----------------------------------------------------------------------------
-const RAPPORTO_RITAGLIO = 2 / 3;
-
-// Larghezza dell'immagine in rapporto a quella del ritaglio, a zoom 1 (come "cover" del CSS)
-function frazioneCover(ar) {
-  return Math.max(1, ar / RAPPORTO_RITAGLIO);
-}
-
-// Applica la copertina a un elemento (come immagine di sfondo, già ritagliata)
 function applicaCopertina(nodo, c) {
-  const zoom = c.zoom || 1;
   nodo.style.backgroundImage = `url("${c.url}")`;
-  nodo.style.backgroundSize = zoom !== 1 && c.ar ? `${(frazioneCover(c.ar) * zoom * 100).toFixed(2)}% auto` : 'cover';
-  nodo.style.backgroundPosition = `${c.x ?? 50}% ${c.y ?? 50}%`;
+  nodo.style.backgroundSize = 'cover';
+  nodo.style.backgroundPosition = 'center';
 }
 
 // Mostra per qualche secondo un messaggio in basso (usato per gli errori)
@@ -437,18 +426,6 @@ function apriMenu() {
   const dialogo = el('dialog', { class: 'menu', 'aria-labelledby': 'titolo-menu' });
   const chiudi = () => dialogo.close();
 
-  const voceCopertina = el('div', { class: 'voce-menu' },
-    el('div', {},
-      el('p', { class: 'titolo-voce' }, 'Copertina'),
-      el('p', { class: 'nota' }, guida.copertina
-        ? 'Riposiziona e ingrandisci l\'immagine mostrata nell\'elenco dei giochi.'
-        : 'Nessuna immagine: metti un file in covers/ con il nome del gioco (es. ' + guida.id.replace(/-/g, '_') + '.png).')),
-    el('button', {
-      class: 'btn',
-      disabled: !guida.copertina,
-      onclick: () => { chiudi(); apriEditorCopertina(); },
-    }, 'Modifica'));
-
   const righe = AZZERAMENTI.map((voce) => {
     const quanti = voce.elementi();
     return el('div', { class: 'voce-menu' },
@@ -474,7 +451,6 @@ function apriMenu() {
       el('div', { class: 'testata-menu' },
         el('h2', { id: 'titolo-menu' }, 'Menu'),
         el('button', { class: 'btn btn-icona', 'aria-label': 'Chiudi il menu', title: 'Chiudi', onclick: chiudi }, icona('chiudi', 2))),
-      voceCopertina,
       el('p', {}, 'Azzera i progressi di questa guida. Le altre guide non vengono toccate.'),
       righe))));
 
@@ -499,115 +475,6 @@ function testoDurata(durata) {
   return el('div', { class: 'moduli durata', title: 'Ore stimate per finire il gioco' },
     icona('clessidra'),
     voce('Storia', durata.storia), voce('+ extra', durata.storiaExtra), voce('100%', durata.completista));
-}
-
-// -----------------------------------------------------------------------------
-// Editor della copertina: trascina l'immagine per spostarla, con il cursore la ingrandisci
-// -----------------------------------------------------------------------------
-function apriEditorCopertina() {
-  const c = { x: 50, y: 50, zoom: 1, ...guida.copertina };
-  const limita = (n, min, max) => Math.max(min, Math.min(max, n));
-
-  const anteprima = el('div', {
-    class: 'editor-anteprima', tabindex: '0',
-    'aria-label': 'Anteprima della copertina: trascina per spostarla, oppure usa le frecce della tastiera',
-  });
-  const cursore = el('input', { type: 'range', id: 'zoom-copertina', min: '1', max: '3', step: '0.05', value: String(c.zoom), class: 'cursore' });
-  const valoreZoom = el('span', { class: 'su-totale' });
-  const salvaBtn = el('button', { class: 'btn', disabled: true }, 'Salva');
-
-  const mostra = () => {
-    applicaCopertina(anteprima, c);
-    valoreZoom.textContent = '×' + c.zoom.toFixed(2);
-  };
-
-  // Quanto sporge l'immagine oltre il ritaglio, in pixel (serve a trasformare il trascinamento in %)
-  const eccedenza = () => {
-    const { width, height } = anteprima.getBoundingClientRect();
-    const larghezza = width * frazioneCover(c.ar) * c.zoom;
-    return { x: larghezza - width, y: larghezza / c.ar - height };
-  };
-  // dx, dy in pixel: trascinando verso destra/basso l'immagine si sposta verso destra/basso
-  const sposta = (dx, dy, base) => {
-    if (!c.ar) return; // immagine non ancora caricata
-    const ecc = eccedenza();
-    if (ecc.x > 1) c.x = limita(base.x - (dx / ecc.x) * 100, 0, 100);
-    if (ecc.y > 1) c.y = limita(base.y - (dy / ecc.y) * 100, 0, 100);
-    mostra();
-  };
-
-  let partenza = null;
-  anteprima.addEventListener('pointerdown', (e) => {
-    partenza = { px: e.clientX, py: e.clientY, x: c.x, y: c.y };
-    anteprima.setPointerCapture(e.pointerId);
-    anteprima.classList.add('trascina');
-  });
-  anteprima.addEventListener('pointermove', (e) => {
-    if (partenza) sposta(e.clientX - partenza.px, e.clientY - partenza.py, partenza);
-  });
-  const fine = () => { partenza = null; anteprima.classList.remove('trascina'); };
-  anteprima.addEventListener('pointerup', fine);
-  anteprima.addEventListener('pointercancel', fine);
-  // Tastiera: le frecce spostano l'immagine (di più con Maiusc)
-  anteprima.addEventListener('keydown', (e) => {
-    const passo = e.shiftKey ? 40 : 10;
-    const mosse = { ArrowLeft: [-passo, 0], ArrowRight: [passo, 0], ArrowUp: [0, -passo], ArrowDown: [0, passo] };
-    if (!mosse[e.key]) return;
-    e.preventDefault();
-    sposta(mosse[e.key][0], mosse[e.key][1], { x: c.x, y: c.y });
-  });
-
-  cursore.addEventListener('input', () => { c.zoom = Number(cursore.value); mostra(); });
-
-  const dialogo = el('dialog', { class: 'menu editor', 'aria-labelledby': 'titolo-editor' });
-  const chiudi = () => dialogo.close();
-  const reimposta = () => { c.x = 50; c.y = 50; c.zoom = 1; cursore.value = '1'; mostra(); };
-
-  salvaBtn.addEventListener('click', async () => {
-    salvaBtn.disabled = true;
-    try {
-      const risposta = await fetch('/api/copertine/' + guida.id, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ x: c.x, y: c.y, zoom: c.zoom, ar: c.ar }),
-      });
-      if (!risposta.ok) throw new Error('errore ' + risposta.status);
-      guida.copertina = { ...guida.copertina, ...c };
-      if (copertinaBarra) applicaCopertina(copertinaBarra, guida.copertina); // aggiorna anche l'immagine nella barra
-      chiudi();
-    } catch (errore) {
-      mostraAvviso('Impossibile salvare la copertina (' + errore.message + ').');
-      salvaBtn.disabled = false;
-    }
-  });
-
-  dialogo.append(el('div', { class: 'involucro-menu' }, finestra(
-    el('div', { class: 'corpo-menu' },
-      el('div', { class: 'testata-menu' },
-        el('h2', { id: 'titolo-editor' }, 'Copertina'),
-        el('button', { class: 'btn btn-icona', 'aria-label': 'Chiudi senza salvare', title: 'Chiudi', onclick: chiudi }, icona('chiudi', 2))),
-      el('p', { class: 'nota' }, 'Trascina l\'immagine per scegliere quale parte mostrare (o usa le frecce della tastiera). Il riquadro è il ritaglio usato nell\'elenco dei giochi.'),
-      anteprima,
-      el('div', { class: 'riga-zoom' }, el('label', { for: 'zoom-copertina' }, 'Zoom'), cursore, valoreZoom),
-      el('div', { class: 'azioni-editor' },
-        el('button', { class: 'btn', onclick: reimposta }, 'Reimposta'),
-        el('button', { class: 'btn', onclick: chiudi }, 'Annulla'),
-        salvaBtn)))));
-  dialogo.addEventListener('click', (e) => { if (e.target === dialogo) chiudi(); });
-  dialogo.addEventListener('close', () => dialogo.remove());
-  document.body.append(dialogo);
-  dialogo.showModal();
-
-  // Mi serve il rapporto larghezza/altezza dell'immagine: lo leggo caricandola (e lo salvo con la posizione)
-  const immagine = new Image();
-  immagine.onload = () => {
-    c.ar = immagine.naturalWidth / immagine.naturalHeight;
-    salvaBtn.disabled = false;
-    mostra();
-  };
-  immagine.onerror = () => mostraAvviso('Impossibile caricare l\'immagine della copertina.');
-  immagine.src = c.url;
-  mostra();
 }
 
 // -----------------------------------------------------------------------------
@@ -691,7 +558,7 @@ function disegnaGioco() {
   // Barra a tutta larghezza su due sezioni:
   //   in alto  → a sinistra "torna ai giochi", al centro titolo + versione e le schede
   //   sotto    → i contatori (storia, collezionabili, trofei…)
-  // La copertina sta a sinistra e occupa tutta l'altezza della barra (le due sezioni insieme)
+  // La copertina sta a sinistra del titolo, centrata in verticale nella barra
   copertinaBarra = null;
   if (guida.copertina) {
     copertinaBarra = el('div', { class: 'barra-copertina', 'aria-hidden': 'true' });

@@ -377,19 +377,6 @@ dialog.menu::backdrop { background: rgba(14, 12, 11, .72); }
 .testata-menu { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .btn-icona { padding: 9px 11px; justify-content: center; }
 
-/* ------------------------------------------------------ Editor della copertina */
-dialog.editor { width: min(92vw, 680px); }
-.editor-anteprima {
-  aspect-ratio: 2 / 3; width: min(100%, 300px); margin-inline: auto;
-  background-color: var(--superficie-2); background-repeat: no-repeat;
-  border: 2px solid var(--ambra); cursor: grab; touch-action: none; user-select: none;
-}
-.editor-anteprima.trascina { cursor: grabbing; }
-.riga-zoom { display: flex; align-items: center; gap: 12px; }
-.riga-zoom label { font: 400 20px/1 var(--font-pixel); }
-.cursore { flex: 1; accent-color: var(--ambra); min-width: 0; }
-.azioni-editor { display: flex; gap: 8px; justify-content: flex-end; flex-wrap: wrap; }
-
 /* ------------------------------------------------------------ Filtri e avvisi */
 .strumenti {
   display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 10px;
@@ -442,7 +429,7 @@ dialog.editor { width: min(92vw, 680px); }
 .scheda-gioco { display: block; color: inherit; text-decoration: none; filter: var(--ombra); }
 .scheda-riga { display: flex; align-items: stretch; }
 .scheda-corpo { flex: 1; min-width: 0; padding: 16px 18px; min-height: 120px; }
-/* Copertina a sinistra della scheda: cornice verticale 2:3 (vedi RAPPORTO_RITAGLIO in app.js) */
+/* Copertina a sinistra della scheda: cornice verticale 2:3 */
 .copertina {
   flex: none; width: 170px; aspect-ratio: 2 / 3; align-self: flex-start;
   background-color: var(--superficie-2); background-repeat: no-repeat;

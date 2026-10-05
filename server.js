@@ -23,7 +23,6 @@ const CARTELLA_PUBLIC = path.join(__dirname, 'public');
 const CARTELLA_GUIDE = path.join(__dirname, 'data', 'guides');
 const CARTELLA_PROGRESSI = path.join(__dirname, 'data', 'progress');
 const CARTELLA_COPERTINE = path.join(__dirname, 'covers');                 // le immagini scelte dall'utente
-const FILE_POSIZIONI_COPERTINE = path.join(__dirname, 'data', 'copertine.json'); // come ritagliare ogni copertina
 
 // Tipi di file che il server sa inviare al browser
 const TIPI_FILE = {
@@ -91,8 +90,7 @@ function leggiProgressi(id) {
 // Copertine
 // Le immagini stanno in covers/. Il nome del file deve corrispondere all'id del gioco,
 // con i trattini bassi al posto dei trattini (es. uncharted_drakes_fortune.png per
-// l'id "uncharted-drakes-fortune"). La posizione del ritaglio sta in data/copertine.json:
-//   { "<id>": { "x": 0-100, "y": 0-100, "zoom": 1-4, "ar": larghezza/altezza dell'immagine } }
+// l'id "uncharted-drakes-fortune").
 // -----------------------------------------------------------------------------
 function trovaFileCopertina(id) {
   if (!fs.existsSync(CARTELLA_COPERTINE)) return null;
@@ -105,28 +103,7 @@ function trovaFileCopertina(id) {
 // Dati della copertina di un gioco (null se non c'è l'immagine)
 function infoCopertina(id) {
   const file = trovaFileCopertina(id);
-  if (!file) return null;
-  const posizioni = leggiJson(FILE_POSIZIONI_COPERTINE) || {};
-  return { url: '/covers/' + encodeURIComponent(file), x: 50, y: 50, zoom: 1, ...(posizioni[id] || {}) };
-}
-
-// PUT /api/copertine/:id → salva la posizione del ritaglio
-async function apiSalvaCopertina(req, res, id) {
-  if (!trovaFileCopertina(id)) return rispondiJson(res, 404, { errore: 'Copertina non trovata' });
-  let dati;
-  try {
-    dati = JSON.parse(await leggiCorpo(req));
-  } catch {
-    return rispondiJson(res, 400, { errore: 'Dati non validi' });
-  }
-  const tra = (n, min, max) => typeof n === 'number' && Number.isFinite(n) && n >= min && n <= max;
-  if (!dati || !tra(dati.x, 0, 100) || !tra(dati.y, 0, 100) || !tra(dati.zoom, 1, 4) || !tra(dati.ar, 0.1, 10)) {
-    return rispondiJson(res, 400, { errore: 'Posizione della copertina non valida' });
-  }
-  const posizioni = leggiJson(FILE_POSIZIONI_COPERTINE) || {};
-  posizioni[id] = { x: dati.x, y: dati.y, zoom: dati.zoom, ar: dati.ar };
-  scriviJsonSicuro(FILE_POSIZIONI_COPERTINE, posizioni);
-  rispondiJson(res, 200, { ok: true });
+  return file ? { url: '/covers/' + encodeURIComponent(file) } : null;
 }
 
 // Un passo (o capitolo) con "soloSe" vale solo per chi ha fatto quella scelta.
@@ -289,7 +266,6 @@ async function gestisciRichiesta(req, res) {
       if (risorsa === 'giochi' && id && req.method === 'GET') return apiGuida(res, id);
       if (risorsa === 'progressi' && id && req.method === 'GET') return apiLeggiProgressi(res, id);
       if (risorsa === 'progressi' && id && req.method === 'PUT') return await apiSalvaProgressi(req, res, id);
-      if (risorsa === 'copertine' && id && req.method === 'PUT') return await apiSalvaCopertina(req, res, id);
       return rispondiJson(res, 404, { errore: 'API non trovata' });
     }
     if (req.method === 'GET' && parti[0] === 'covers') return serviFileStatico(res, url.pathname.slice('/covers'.length), CARTELLA_COPERTINE);
