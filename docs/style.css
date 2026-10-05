@@ -390,7 +390,7 @@ dialog.menu::backdrop { background: rgba(14, 12, 11, .72); }
 .corpo-menu h2 { font-size: 30px; }
 .corpo-menu p { margin: 0; }
 .voce-menu { display: flex; gap: 16px; align-items: center; justify-content: space-between; padding-top: 12px; border-top: 2px dotted var(--bordo); }
-.voce-menu .titolo-voce { font: 400 22px/1.2 var(--font-pixel); }
+.corpo-menu .titolo-voce { font: 400 22px/1.2 var(--font-pixel); }
 .voce-menu .nota { margin-top: 2px; }
 .btn[disabled] { opacity: .4; cursor: not-allowed; }
 .btn[disabled]:hover { background: var(--superficie-2); color: var(--testo); }
