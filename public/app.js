@@ -479,7 +479,7 @@ function apriMenu() {
 
   const voceSalvataggio = el('div', { class: 'voce-menu' },
     el('div', {},
-      el('p', { class: 'titolo-voce' }, 'Salvataggio'),
+      el('p', { class: 'titolo-voce' }, 'Esporta progressi'),
       el('p', { class: 'nota' }, 'Esporta o importa i progressi (per usarli su un altro dispositivo).')),
     el('button', { class: 'btn', onclick: () => { chiudi(); apriSalvataggio(); } }, 'Apri'));
 
@@ -658,7 +658,7 @@ function apriSalvataggio() {
   dialogo.append(el('div', { class: 'involucro-menu' }, finestra(
     el('div', { class: 'corpo-menu' },
       el('div', { class: 'testata-menu' },
-        el('h2', { id: 'titolo-salvataggio' }, 'Salvataggio'),
+        el('h2', { id: 'titolo-salvataggio' }, 'Esporta progressi'),
         el('button', { class: 'btn btn-icona', 'aria-label': 'Chiudi', title: 'Chiudi', onclick: chiudi }, icona('chiudi', 2))),
       el('p', {}, 'I progressi stanno su questo dispositivo. Per usarli su un altro, esportali in un file e importalo là.'),
       el('div', { class: 'voce-menu' },
@@ -729,7 +729,7 @@ async function mostraElenco() {
       el('div', {},
         el('h1', { class: 'titolo-app' }, 'Platinum Questbook'),
         el('p', { class: 'slogan' }, 'Game guides & progress tracker')),
-      el('button', { class: 'btn', onclick: apriSalvataggio, 'aria-haspopup': 'dialog' }, icona('disco', 2), 'Salvataggio')),
+      el('button', { class: 'btn', onclick: apriSalvataggio, 'aria-haspopup': 'dialog' }, icona('disco', 2), 'Esporta progressi')),
     el('p', { class: 'sottotitolo' }, 'Scegli un gioco per aprire la sua guida e spuntare i tuoi progressi.'),
     lista));
 }

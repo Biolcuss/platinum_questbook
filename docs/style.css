@@ -479,7 +479,7 @@ dialog.menu::backdrop { background: rgba(14, 12, 11, .72); }
 /* Sottotitolo del progetto, sotto il nome */
 .slogan { margin: 0; font: 400 24px/1.2 var(--font-pixel); color: var(--ambra-chiaro); }
 .testata-elenco .titolo-app { margin-bottom: 0; }
-.sottotitolo { margin: 0 0 28px; color: var(--tenue); max-width: 60ch; }
+.sottotitolo { margin: 0 0 28px; color: var(--tenue); }
 /* Nell'elenco la pagina è più larga (le schede hanno la copertina di lato) */
 .pagina.larga { max-width: 1240px; }
 /* Nella Guida la barra degli strumenti sta subito sotto la barra in alto, senza spazio in mezzo */
@@ -538,6 +538,14 @@ dialog.menu::backdrop { background: rgba(14, 12, 11, .72); }
   .barra-centro h1 { font-size: 30px; }
   .titolo-app { font-size: 36px; }
   .slogan { font-size: 20px; }
+  /* Elenco dei giochi su telefono: titolo, descrizione, pulsante "Esporta progressi", poi i giochi */
+  .pagina.larga { display: flex; flex-direction: column; }
+  .testata-elenco { display: contents; }
+  .testata-elenco > div { order: 1; }
+  .sottotitolo { order: 2; margin-bottom: 14px; }
+  .testata-elenco > .btn { order: 3; align-self: flex-start; margin-bottom: 22px; }
+  .elenco-giochi { order: 4; }
+  .pagina.larga > .vuoto { order: 4; }
   .moduli { margin-left: 0; }
   .testata .mini { width: 100%; padding-left: 30px; }
   .passo, .riga-trofeo { padding-left: 12px; padding-right: 12px; gap: 10px; }
