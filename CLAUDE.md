@@ -30,7 +30,7 @@ App web **locale** per seguire i progressi nei videogiochi:
 
 ## Ambiente
 - Windows 11, Node.js v24, Python 3.14, Git.
-- Cartella: `D:\Biolcuss\Progetti\Game Tracker`
+- Cartella: quella in cui è clonato il progetto (il percorso cambia da PC a PC)
 
 ## Comandi
 - Avvio: `node server.js` oppure doppio clic su `GameTracker.bat` → http://localhost:3000
