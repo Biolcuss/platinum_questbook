@@ -110,6 +110,12 @@ Stato del progetto. Aggiornare a ogni sessione di lavoro.
 - [x] Copertina predefinita `covers/default.*` per i giochi senza immagine
 - [x] Pulsante menu sulla copertina (elenco e pagina del gioco) → carica un'immagine, che sostituisce quella vecchia
 
+## Fase 9 — Sito online (GitHub Pages) ✅
+- `public/archivio.js`: due modi, scelti da soli. Con il server locale usa le API; online (nessun server) legge i file JSON e salva i progressi nel `localStorage` del browser (separati per dispositivo). Esporta/Importa il salvataggio funzionano in entrambi i modi (è così che si spostano i progressi tra PC e telefono).
+- `tools/genera-sito.js` crea `_site/` (interfaccia + guide + `indice.json`, l'elenco dei giochi ricavato dalle guide: ogni nuova guida compare da sola).
+- `.github/workflows/pubblica-sito.yml` pubblica `_site/` ad ogni push su `main`.
+- Online non si caricano copertine e compaiono solo quelle versionate in Git (la predefinita).
+
 ## Idee future (non ancora decise)
 - Filtri nell'indirizzo (oggi restano in memoria)
 - **Opzionali (idee valutate con l'utente):**

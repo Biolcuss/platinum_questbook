@@ -29,6 +29,7 @@ App web **locale** per seguire i progressi nei videogiochi:
 | Piattaforma | Indicata **per ogni gioco** (chiederla sempre prima di creare una guida). |
 | Ore di gioco | Campo `durata` nella guida, riempito da Claude in chat (HowLongToBeat non ha API ufficiale; niente chiamate dal vivo). |
 | Partite | **Una partita per gioco** (più partite = possibile estensione futura). |
+| Uso online | **GitHub Pages** (sito statico, solo per l'utente: PC + telefono). Online i progressi stanno nel `localStorage` del browser, separati per dispositivo; si spostano a mano con Salvataggio (esporta/importa). Le guide si aggiungono sul PC e con `git push` compaiono online. |
 
 ## Ambiente
 - Windows 11, Node.js v24, Python 3.14, Git.
@@ -39,6 +40,14 @@ App web **locale** per seguire i progressi nei videogiochi:
 - Validare una guida: `node tools/valida-guida.js <id-gioco>`
 
 Per le ricerche: le wiki Fandom si leggono tramite API (dettagli in `docs/FORMATO-GUIDA.md`), molti altri siti bloccano la lettura automatica.
+
+## Sito online (GitHub Pages)
+- Il sito è generato da `node tools/genera-sito.js` (cartella `_site/`, in `.gitignore`) e pubblicato dal workflow `.github/workflows/pubblica-sito.yml` ad ogni push su `main`. In Settings → Pages la sorgente deve essere **GitHub Actions**.
+- `public/archivio.js` sceglie da solo il modo: **server** (API, file in `data/progress/`) o **sito** (file statici + `localStorage`, chiavi `platinum-questbook:progressi:<id>`). `app.js` non chiama più `fetch` per guide/progressi/salvataggio: usa `archivio.*`. Gli indirizzi sono **relativi** (niente `/` iniziale), perché Pages sta in una sottocartella.
+- L'elenco dei giochi online è `indice.json`, creato dallo script a partire da `data/guides/`: dopo aver aggiunto una guida basta committare e fare push.
+- La logica di completamento/unione dei progressi esiste sia in `server.js` che in `archivio.js` (modo sito): se si cambia una, **cambiare anche l'altra**.
+- Online le copertine caricate dall'utente (non versionate) non ci sono: si vede `covers/default.*`. Il caricamento copertine è nascosto (`archivio.copertineModificabili`).
+- Per provare il sito in locale: `node tools/genera-sito.js` e servire `_site/` con un server statico (es. `python -m http.server`).
 
 ## Architettura
 ```
@@ -52,6 +61,9 @@ data/guides/            una guida per gioco (scritte da Claude)
 data/progress/          progressi dell'utente (scritti dall'app)
 covers/                 immagini di copertina messe dall'utente (nome = id del gioco con `_` al posto di `-`)
 tools/valida-guida.js   controllo automatico delle guide
+tools/genera-sito.js    crea _site/ per GitHub Pages
+public/archivio.js      accesso ai dati: server locale oppure file + localStorage
+.github/workflows/      pubblicazione automatica del sito
 ```
 
 **API del server**

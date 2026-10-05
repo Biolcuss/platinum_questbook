@@ -14,3 +14,6 @@ data/progress/
 covers/*
 !covers/README.md
 !covers/default.*
+
+# Sito generato da tools/genera-sito.js (per GitHub Pages)
+_site/

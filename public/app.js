@@ -6,9 +6,9 @@
 //        #/                         → elenco dei giochi
 //        #/gioco/<id>               → guida di un gioco (scheda "Guida")
 //        #/gioco/<id>/trofei        → scheda "Trofei"   (oppure /info)
-//   2. chiede al server i dati (guida + progressi) con fetch();
+//   2. chiede i dati (guida + progressi) a archivio.js (server locale oppure file + browser);
 //   3. costruisce gli elementi HTML con la funzione el();
-//   4. quando spunti qualcosa aggiorna i progressi e li salva sul server.
+//   4. quando spunti qualcosa aggiorna i progressi e li salva (archivio.salva).
 // =============================================================================
 
 const radice = document.getElementById('app');
@@ -252,13 +252,6 @@ function mostraAvviso(testo) {
   timerAvviso = setTimeout(() => box.classList.add('nascosto'), 6000);
 }
 
-// Chiede dati al server e li restituisce come oggetto
-async function chiediAlServer(indirizzo) {
-  const risposta = await fetch(indirizzo);
-  if (!risposta.ok) throw new Error('Il server ha risposto con errore ' + risposta.status);
-  return risposta.json();
-}
-
 // -----------------------------------------------------------------------------
 // Stato della pagina del gioco (le variabili che cambiano mentre usi l'app)
 // -----------------------------------------------------------------------------
@@ -373,17 +366,12 @@ function conta(condizione) {
   return { ok, tot };
 }
 
-// Salva i progressi sul server. Se fallisce avvisa l'utente.
+// Salva i progressi (sul server o nel browser, vedi archivio.js). Se fallisce avvisa l'utente.
 async function salva() {
   try {
-    const risposta = await fetch('/api/progressi/' + guida.id, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(progressi),
-    });
-    if (!risposta.ok) throw new Error('errore ' + risposta.status);
+    await archivio.salva(guida.id, progressi);
   } catch (errore) {
-    mostraAvviso('Impossibile salvare i progressi (' + errore.message + '). Controlla che il server sia ancora acceso, poi riprova.');
+    mostraAvviso('Impossibile salvare i progressi (' + errore.message + '). Se usi il server, controlla che sia ancora acceso, poi riprova.');
   }
 }
 
@@ -567,7 +555,7 @@ function creaMenuCopertina(idGioco, titoloGioco, alCambio) {
     if (!tipo) return mostraAvviso('Formato non supportato: usa un\'immagine PNG, JPG o WebP.');
     if (scelto.size > 10 * 1024 * 1024) return mostraAvviso('Immagine troppo grande (massimo 10 MB).');
     try {
-      const risposta = await fetch('/api/copertine/' + idGioco, { method: 'POST', headers: { 'Content-Type': tipo }, body: scelto });
+      const risposta = await fetch('api/copertine/' + idGioco, { method: 'POST', headers: { 'Content-Type': tipo }, body: scelto });
       const dati = await risposta.json();
       if (!risposta.ok) throw new Error(dati.errore || 'errore ' + risposta.status);
       alCambio(dati.copertina);
@@ -609,13 +597,7 @@ function apriSalvataggio() {
     if (modo === 'sostituisci' && !window.confirm('Sostituire i progressi attuali con quelli del file? I giochi presenti nel file perdono i progressi attuali.')) return;
     importa.disabled = true;
     try {
-      const risposta = await fetch('/api/salvataggio?modo=' + modo, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: await file.files[0].text(),
-      });
-      const dati = await risposta.json();
-      if (!risposta.ok) throw new Error(dati.errore || 'errore ' + risposta.status);
+      const dati = await archivio.importa(await file.files[0].text(), modo);
       importato = true;
       const ignorati = dati.ignorati.length ? ` Ignorati (guida non presente o dati non validi): ${dati.ignorati.join(', ')}.` : '';
       mostraEsito(dati.importati.length
@@ -637,7 +619,7 @@ function apriSalvataggio() {
         el('div', {},
           el('p', { class: 'titolo-voce' }, 'Esporta'),
           el('p', { class: 'nota' }, 'Scarica un file con i progressi di tutti i giochi.')),
-        el('a', { class: 'btn', href: '/api/salvataggio', download: '' }, 'Esporta')),
+        el('button', { class: 'btn', onclick: () => archivio.esporta().catch((errore) => mostraEsito('Esportazione non riuscita: ' + errore.message, true)) }, 'Esporta')),
       el('div', { class: 'blocco-importa' },
         el('p', { class: 'titolo-voce' }, 'Importa'),
         el('label', { for: 'file-salvataggio', class: 'nota' }, 'Scegli un file di salvataggio esportato dal Platinum Questbook:'),
@@ -667,10 +649,10 @@ async function mostraElenco() {
   radice.replaceChildren(el('main', { class: 'pagina', id: 'contenuto' }, el('p', { class: 'vuoto' }, 'Caricamento…')));
   let giochi;
   try {
-    giochi = await chiediAlServer('/api/giochi');
+    giochi = await archivio.elenco();
   } catch (errore) {
     radice.replaceChildren(el('main', { class: 'pagina', id: 'contenuto' },
-      el('p', { class: 'vuoto' }, 'Impossibile caricare i giochi: ' + errore.message + '. Controlla che il server sia acceso.')));
+      el('p', { class: 'vuoto' }, 'Impossibile caricare i giochi: ' + errore.message + '. Se usi il server, controlla che sia acceso.')));
     return;
   }
 
@@ -690,7 +672,7 @@ async function mostraElenco() {
                   barraProgresso('Storia Principale', 'b-storia', gioco.completamento.storia, gioco.completamento.storia + '%', 'stella'),
                   barraProgresso('Completismo', 'b-totale', gioco.completamento.totale, gioco.completamento.totale + '%', 'coppa')),
                 testoDurata(gioco.durata))))),
-          creaMenuCopertina(gioco.id, gioco.titolo, (c) => applicaCopertina(nodoCopertina, c)));
+          archivio.copertineModificabili ? creaMenuCopertina(gioco.id, gioco.titolo, (c) => applicaCopertina(nodoCopertina, c)) : null);
       }));
 
   radice.replaceChildren(el('main', { class: 'pagina larga', id: 'contenuto' },
@@ -710,8 +692,8 @@ async function mostraGioco(id, nuovaScheda) {
   scheda = nuovaScheda;
   radice.replaceChildren(el('main', { class: 'pagina', id: 'contenuto' }, el('p', { class: 'vuoto' }, 'Caricamento…')));
   try {
-    guida = await chiediAlServer('/api/giochi/' + id);
-    progressi = await chiediAlServer('/api/progressi/' + id);
+    guida = await archivio.guida(id);
+    progressi = await archivio.progressi(id);
   } catch (errore) {
     guida = null;
     radice.replaceChildren(el('main', { class: 'pagina', id: 'contenuto' },
@@ -753,7 +735,7 @@ function disegnaGioco() {
   let copertinaTelefono = null;
   copertinaBarra = el('div', { class: 'barra-copertina' });
   if (guida.copertina) applicaCopertina(copertinaBarra, guida.copertina);
-  copertinaBarra.append(creaMenuCopertina(guida.id, guida.titolo, (c) => {
+  if (archivio.copertineModificabili) copertinaBarra.append(creaMenuCopertina(guida.id, guida.titolo, (c) => {
     guida.copertina = c;
     applicaCopertina(copertinaBarra, c);
     if (copertinaTelefono) applicaCopertina(copertinaTelefono, c);
@@ -1386,4 +1368,4 @@ function instrada() {
 }
 
 window.addEventListener('hashchange', instrada);
-instrada();
+avviaArchivio().then(instrada); // prima si sceglie il modo (server o sito), poi si mostra la pagina
