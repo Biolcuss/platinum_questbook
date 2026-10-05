@@ -1,0 +1,556 @@
+/* =============================================================================
+   Platinum Questbook — stile "desktop retrò"
+   Idea: un tiling window manager (alla Hyprland) in versione pixel art.
+   - la barra in alto è la "waybar": spazi di lavoro a sinistra, contatori a destra
+   - ogni capitolo è una finestra con bordo a gradini; quella attiva ha il bordo a gradiente
+   - angoli a gradini e ombre dure: niente sfumature morbide
+   Le variabili (--nome) sono i colori: cambiandole qui cambiano ovunque.
+   ============================================================================= */
+
+@font-face {
+  font-family: "Jersey 10";
+  src: url("fonts/jersey-10.woff2") format("woff2");
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "JetBrains Mono";
+  src: url("fonts/jetbrains-mono.woff2") format("woff2");
+  font-weight: 100 800;
+  font-display: swap;
+}
+
+:root {
+  color-scheme: dark;
+  font-synthesis-weight: none;   /* il font pixel ha un solo peso: niente grassetto finto */
+
+  /* Base: grigio caldo scuro */
+  --sfondo: #1c1917;
+  --punti: rgba(255, 232, 200, .07);
+  --superficie: #292524;
+  --superficie-2: #35302d;
+  --superficie-3: #47403b;
+  --bordo: #4d4540;
+  --testo: #f1ebe3;
+  --tenue: #b5aba0;
+  --inchiostro: #1a1511;      /* testo scuro sopra i colori pieni */
+
+  /* Colore principale: ambra (selezione, link, capitolo corrente) */
+  --ambra: #ff9f1c;
+  --ambra-chiaro: #ffc857;
+
+  /* Colori delle icone (invariati) */
+  --ciano: #33ccff;
+  --ok: var(--ambra);          /* le spunte completate usano il colore principale */
+  --magenta: #ff79c6;
+  --viola: #b794f6;
+  --arancio: #ff9e64;
+
+  --gradiente: linear-gradient(45deg, var(--ambra), var(--ambra-chiaro));
+
+  --font-pixel: "Jersey 10", "Courier New", monospace;
+  --font-testo: "JetBrains Mono", ui-monospace, Consolas, monospace;
+
+  /* Angolo a gradini: 2 "pixel" per lato, ogni pixel è --s */
+  --s: 3px;
+  --pixel: polygon(
+    calc(var(--s) * 2) 0, calc(100% - var(--s) * 2) 0,
+    calc(100% - var(--s) * 2) var(--s), calc(100% - var(--s)) var(--s),
+    calc(100% - var(--s)) calc(var(--s) * 2), 100% calc(var(--s) * 2),
+    100% calc(100% - var(--s) * 2), calc(100% - var(--s)) calc(100% - var(--s) * 2),
+    calc(100% - var(--s)) calc(100% - var(--s)), calc(100% - var(--s) * 2) calc(100% - var(--s)),
+    calc(100% - var(--s) * 2) 100%, calc(var(--s) * 2) 100%,
+    calc(var(--s) * 2) calc(100% - var(--s)), var(--s) calc(100% - var(--s)),
+    var(--s) calc(100% - var(--s) * 2), 0 calc(100% - var(--s) * 2),
+    0 calc(var(--s) * 2), var(--s) calc(var(--s) * 2),
+    var(--s) var(--s), calc(var(--s) * 2) var(--s)
+  );
+  --ombra: drop-shadow(4px 4px 0 #0e0c0b);
+}
+
+* { box-sizing: border-box; }
+
+html {
+  /* Altezze degli elementi fissi in alto, misurate da app.js (barra, strumenti, titolo del capitolo): ciò a cui si scorre non deve finire sotto di loro */
+  --alt-barra: 0px; --alt-strumenti: 0px; --alt-testata: 0px;
+  scroll-padding-top: calc(var(--alt-barra) + var(--alt-strumenti) + var(--alt-testata) + 12px);
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background-color: var(--sfondo);
+  background-image: radial-gradient(circle, var(--punti) 1.5px, transparent 1.5px);
+  background-size: 18px 18px;
+  color: var(--testo);
+  font: 14px/1.7 var(--font-testo);
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+a { color: var(--ambra-chiaro); }
+.nascosto { display: none !important; }
+
+h1, h2, h3 { font-family: var(--font-pixel); font-weight: 400; text-wrap: balance; margin: 0; }
+
+.salta {
+  position: absolute; left: 12px; top: -60px; z-index: 100;
+  background: var(--ambra); color: var(--inchiostro); padding: 8px 14px; font-family: var(--font-pixel);
+}
+.salta:focus { top: 12px; }
+
+:focus-visible { outline: 2px solid var(--ambra); outline-offset: 2px; }
+
+.icona { display: inline-block; vertical-align: -1px; flex: none; image-rendering: pixelated; }
+/* L'icona del trofeo è sempre ambra, ovunque (più specifica delle regole dei moduli e delle barre) */
+svg.icona.icona-coppa { color: var(--ambra); }
+
+.pagina {
+  max-width: 940px;
+  margin: 24px auto 0;
+  padding: 0 max(16px, env(safe-area-inset-right)) 96px max(16px, env(safe-area-inset-left));
+}
+
+/* ------------------------------------------------------------------ Pulsanti */
+.btn {
+  --s: 2px;
+  font: 400 18px/1 var(--font-pixel);
+  color: var(--testo);
+  background: var(--superficie-2);
+  border: 0;
+  padding: 9px 14px;
+  cursor: pointer;
+  clip-path: var(--pixel);
+  text-decoration: none;
+  display: inline-flex; align-items: center; gap: 8px;
+}
+.btn:hover { background: var(--superficie-3); color: #fff; }
+.btn:focus-visible { outline-offset: -5px; }
+.btn[aria-pressed="true"] { background: var(--gradiente); color: var(--inchiostro); }
+
+/* ------------------------------------------------------------- Barra (waybar) */
+.barra {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: var(--superficie);
+  border-bottom: 3px solid var(--bordo);
+  box-shadow: 0 4px 0 #0e0c0b;       /* ombra dura sotto la barra */
+}
+/* Allineamento con la colonna della guida (940px, centrata): --testo-x è il punto da cui parte il testo della barra,
+   lo stesso dei filtri (Tutto, Solo storia...) sotto. Con la copertina, lei sta subito a sinistra del testo. */
+.barra {
+  --margine: max(0px, calc((100vw - 940px) / 2));
+  --testo-x: calc(var(--margine) + max(16px, env(safe-area-inset-left)));
+}
+.barra.con-copertina { --testo-x: max(calc(var(--margine) + 16px), 128px); }  /* 128 = copertina 112 + spazio 16 */
+.barra-riga { padding: 14px max(16px, env(safe-area-inset-right)) 14px var(--testo-x); }
+/* Sezione in alto: indietro a sinistra, titolo e schede al centro */
+.barra-alto {
+  display: flex; flex-wrap: wrap; align-items: center;
+  gap: 8px 24px;
+}
+/* "Giochi" (indietro): su schermi larghi sta in alto a sinistra, a sinistra della copertina; su quelli stretti prima del titolo */
+.barra-alto { position: relative; }
+@media (min-width: 1400px) {
+  .barra-alto .indietro { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); }
+}
+/* Titolo a sinistra, schede (Guida, Trofei, Info) a destra: finiscono dove finiscono i pulsanti dei filtri sotto (colonna da 940px) */
+.barra-centro { flex: 1; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 6px 24px; }
+.barra-alto { padding-right: calc(var(--margine) + max(16px, env(safe-area-inset-right))); }
+.barra-centro h1 { font-size: 34px; line-height: 1; display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.barra-centro .versione { font: 400 18px/1 var(--font-pixel); color: var(--tenue); }
+/* Copertina a sinistra del testo, centrata in verticale con un margine sopra e sotto; la larghezza segue l'altezza (2:3) */
+.barra-copertina {
+  position: absolute; top: 14px; bottom: 14px; right: calc(100% - var(--testo-x) + 16px);
+  aspect-ratio: 2 / 3;
+  background-color: var(--superficie-2); background-repeat: no-repeat;
+  border: 2px solid var(--bordo);
+}
+/* Copertina in fila nella riga del titolo: solo su telefono */
+.copertina-telefono { display: none; }
+/* Sezione sotto: i contatori */
+.barra-sotto { border-top: 2px dotted var(--bordo); background: var(--sfondo); }
+.barra-sotto .moduli { justify-content: flex-start; }
+.spazi { display: flex; gap: 4px; }
+.spazio {
+  --s: 2px;
+  font: 400 20px/1 var(--font-pixel);
+  color: var(--tenue);
+  text-decoration: none;
+  padding: 8px 12px;
+  clip-path: var(--pixel);
+}
+.spazio:hover { color: var(--testo); background: var(--superficie-2); }
+.spazio[aria-current="page"] { background: var(--gradiente); color: var(--inchiostro); }
+.spazio:focus-visible { outline-offset: -5px; }
+
+.moduli { display: flex; flex-wrap: wrap; gap: 6px; }
+.modulo {
+  --s: 2px;
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--superficie-2);
+  clip-path: var(--pixel);
+  padding: 5px 10px;
+  font: 400 18px/1.2 var(--font-pixel);
+  color: var(--tenue);
+  white-space: nowrap;
+}
+.modulo b { color: var(--testo); font-variant-numeric: tabular-nums; font-weight: 600; }
+.modulo.completo b { color: var(--ok); }
+.modulo .icona { color: var(--colore-modulo, var(--tenue)); }
+/* Voce con sottocategorie (Storia, Secondarie, Collezionabili): contatore + freccia + pannello */
+.gruppo-pannello { position: relative; display: inline-flex; gap: 2px; }
+button.modulo.freccia-filtro { padding: 5px 8px; }
+button.modulo.freccia-filtro[aria-expanded="true"] { background: var(--superficie-3); color: var(--ambra-chiaro); }
+.modulo .parziale { color: inherit; opacity: .8; }
+.pannello-categorie { position: absolute; top: calc(100% + 6px); left: 0; z-index: 30; width: min(320px, calc(100vw - 32px)); filter: var(--ombra); }
+.contenuto-pannello { padding: 12px 14px; display: grid; gap: 8px; }
+.contenuto-pannello .nota { margin: 0 0 2px; }
+.riga-categoria { display: flex; align-items: center; gap: 10px; cursor: pointer; font: 400 20px/1.3 var(--font-pixel); padding: 2px 0; }
+.riga-categoria .nome-categoria { flex: 1; min-width: 0; }
+.riga-categoria b { color: var(--tenue); font-variant-numeric: tabular-nums; font-weight: 400; }
+/* Contatore usato come pulsante-filtro (toggle) */
+button.modulo { border: 0; cursor: pointer; font-family: var(--font-pixel); font-size: 18px; line-height: 1.2; }
+button.modulo:hover { background: var(--superficie-3); color: var(--testo); }
+button.modulo:focus-visible { outline-offset: -4px; }
+button.modulo[aria-pressed="true"] { background: var(--gradiente); color: var(--inchiostro); }
+button.modulo[aria-pressed="true"] b, button.modulo[aria-pressed="true"] .icona { color: var(--inchiostro); }
+.m-storia { --colore-modulo: var(--ciano); }
+.m-oro { --colore-modulo: var(--magenta); }
+.m-trofeo { --colore-modulo: var(--magenta); }
+.m-secondaria { --colore-modulo: var(--viola); }
+
+
+/* ------------------------------------------------------ Barre di progressione */
+.barre { display: grid; gap: 6px; }
+/* Le due barre stanno una accanto all'altra (su schermi stretti una sotto l'altra) */
+.barra-sotto .barre { margin: 18px 0 0; width: 50%; min-width: 560px; max-width: 100%; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px 20px; } /* metà della larghezza, centrate */
+.progresso { --colore-barra: var(--ciano); display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 10px; font: 400 18px/1.2 var(--font-pixel); color: var(--tenue); }
+.progresso.b-totale { --colore-barra: var(--magenta); }
+.progresso-barra { height: 14px; background: var(--sfondo); border: 2px solid var(--bordo); padding: 2px; }
+/* Il riempimento è a tacche (una ogni 6px), come una barra pixel */
+.progresso-riempi {
+  height: 100%;
+  background: repeating-linear-gradient(90deg, var(--colore-barra) 0 4px, transparent 4px 6px);
+}
+.progresso.completo .progresso-riempi { background: var(--colore-barra); }
+.progresso-valore { color: var(--testo); font-variant-numeric: tabular-nums; text-align: right; min-width: 3.5em; }
+/* Nell'elenco dei giochi: solo l'icona al posto del nome */
+.progresso.solo-icona { grid-template-columns: 20px minmax(0, 1fr) auto; }
+.progresso.solo-icona .progresso-nome { color: var(--colore-barra); display: flex; }
+.scheda-gioco .barre { margin-top: 6px; }
+.scheda-gioco .durata { margin-top: 12px; align-items: center; color: var(--tenue); }
+.info-testo .durata { align-items: center; }
+@media (max-width: 760px) {
+  .barra-sotto .barre { grid-template-columns: 1fr; width: 100%; min-width: 0; }
+}
+@media (max-width: 640px) {
+  /* Su telefono nome, barra (più corta) e percentuale restano sulla stessa riga */
+  .progresso { grid-template-columns: 7.2em minmax(0, 1fr) auto; gap: 8px; font-size: 16px; }  /* colonna del nome fissa: le due barre iniziano allo stesso punto */
+  .progresso.solo-icona { grid-template-columns: 20px minmax(0, 1fr) auto; }
+  .progresso-valore { min-width: 0; }
+}
+
+/* -------------------------------------------------------------------- Finestre */
+.finestra { --bordo-finestra: var(--bordo); background: var(--bordo-finestra); padding: 2px; clip-path: var(--pixel); }
+.finestra-in { background: var(--superficie); clip-path: var(--pixel); }
+/* L'ombra dura dei capitoli e dei trofei è un riquadro scuro dietro (pseudo-elemento) e non "filter: drop-shadow":
+   quel filtro, su capitoli molto lunghi, faceva ridisegnare tutto a ogni scorrimento e la pagina appariva a pezzi. */
+.capitolo, .trofeo-card { position: relative; }
+.capitolo::before, .trofeo-card::before {
+  content: ""; position: absolute; inset: 4px -4px -4px 4px;
+  background: #0e0c0b; clip-path: var(--pixel);
+}
+.capitolo > .finestra, .trofeo-card > .finestra { position: relative; }
+.capitolo { margin-bottom: 18px; }
+.capitolo.corrente .finestra { --bordo-finestra: var(--gradiente); }
+
+.testata {
+  font-size: 24px;
+  /* Il titolo del capitolo resta fisso sotto la barra e gli strumenti finché scorri i suoi passi */
+  position: sticky; top: calc(var(--alt-barra) + var(--alt-strumenti)); z-index: 10;
+  background: var(--superficie);
+}
+.capitolo.aperto .testata { border-bottom: 2px solid var(--bordo); }
+.testata button {
+  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+  width: 100%;
+  background: none; border: 0; color: inherit; font: inherit; text-align: left;
+  padding: 14px 16px;
+  cursor: pointer;
+}
+.testata button:hover { background: var(--superficie-2); }
+.testata button:focus-visible { outline-offset: -4px; }
+.testata .freccia { color: var(--tenue); }
+.capitolo.aperto .freccia { transform: rotate(90deg); }
+.testata .numero { color: var(--tenue); font-variant-numeric: tabular-nums; }
+.testata .nome { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.testata .mini { display: flex; gap: 6px; }
+.mini .modulo { font-size: 17px; padding: 3px 8px; background: var(--superficie-3); }
+/* Segni di completamento del capitolo (ambra = storia, rosa = collezionabili/trofei, viola = secondarie) */
+.tick {
+  display: none; width: 16px; height: 12px; margin-left: 10px; vertical-align: baseline;
+  background: var(--ambra);
+  -webkit-mask: var(--spunta) center / contain no-repeat; mask: var(--spunta) center / contain no-repeat;
+}
+.tick.on { display: inline-block; }
+.tick-raccolta { background: var(--magenta); }
+.tick-secondaria { background: var(--viola); }
+
+.corpo { display: none; border-top: 2px solid var(--bordo); }
+.capitolo.aperto .corpo { display: block; }
+.riepilogo-capitolo { margin: 0; padding: 12px 16px; color: var(--tenue); border-bottom: 2px dotted var(--bordo); text-wrap: pretty; }
+
+.riepilogo-capitolo p { margin: 0; max-width: 80ch; }
+.riepilogo-capitolo .mini { margin-top: 8px; flex-wrap: wrap; }
+.modulo.libero { color: var(--viola); }
+.tipo .modulo { color: var(--tenue); }
+
+/* ------------------------------------------------------ Scelte del giocatore */
+.blocco-scelte { margin-bottom: 18px; filter: var(--ombra); }
+.contenuto-scelte { padding: 14px 16px; display: grid; gap: 14px; }
+.scelta h2 { font-size: 24px; margin-bottom: 8px; }
+.scelta .nota { margin: 8px 0 0; max-width: 74ch; }
+
+/* ------------------------------------------------- Contatore delle raccolte */
+.contatore { display: flex; align-items: center; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+.contatore .btn { min-width: 38px; justify-content: center; padding: 8px 10px; }
+.contatore .num {
+  width: 5.5em; padding: 6px 8px;
+  background: var(--sfondo); color: var(--testo);
+  border: 2px solid var(--tenue); border-radius: 0;
+  font: 400 22px/1.2 var(--font-pixel); text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.contatore .num:focus-visible { outline: 2px solid var(--ambra); outline-offset: 2px; border-color: var(--ambra); }
+.contatore .su-totale { font: 400 22px/1 var(--font-pixel); color: var(--tenue); font-variant-numeric: tabular-nums; }
+
+/* ----------------------------------------------------------------------- Passi */
+.passo {
+  --colore: var(--ambra);
+  display: grid;
+  grid-template-columns: 22px minmax(0, 1fr);
+  gap: 14px;
+  padding: 14px 16px 14px 18px;
+  border-bottom: 2px dotted var(--bordo);
+  box-shadow: inset 4px 0 0 var(--colore);
+}
+.passo:last-child { border-bottom: 0; }
+.passo.t-collezionabile, .passo.t-raccolta { --colore: var(--magenta); }
+.passo.t-trofeo { --colore: var(--magenta); }
+.passo.t-secondaria { --colore: var(--viola); }
+.passo.fatto .contenuto { opacity: .55; }
+.passo.fatto .titolo-passo { text-decoration: line-through; text-decoration-thickness: 2px; }
+.passo.qui {
+  background: rgba(255, 159, 28, .1);
+  box-shadow: inset 4px 0 0 var(--colore), inset 0 0 0 2px var(--ambra);
+}
+
+.spunta {
+  appearance: none; -webkit-appearance: none;
+  width: 22px; height: 22px; margin: 2px 0 0;
+  background: var(--sfondo);
+  border: 2px solid var(--tenue);
+  border-radius: 0;
+  cursor: pointer;
+}
+.spunta:hover { border-color: var(--ambra); }
+.spunta:checked {
+  background: var(--ok) var(--spunta-scura) center / 12px no-repeat;
+  border-color: var(--ok);
+}
+
+.contenuto { min-width: 0; }
+.contenuto p { margin: 6px 0 0; max-width: 74ch; overflow-wrap: anywhere; }
+.tipo { display: flex; align-items: center; gap: 8px; color: var(--colore); font: 400 18px/1.2 var(--font-pixel); margin: 0 0 4px !important; }
+.titolo-passo { display: block; font: 400 23px/1.25 var(--font-pixel); cursor: pointer; text-wrap: pretty; }
+.passo:not(.t-storia) .titolo-passo { font-weight: 500; }
+.dove b, .nota b { color: var(--tenue); font-weight: 700; }
+.avvertenza { display: flex; gap: 8px; align-items: flex-start; font-size: 13px; }
+.avvertenza .icona { margin-top: 4px; }
+.avvertenza.mancabile, .avvertenza.verifica { color: var(--arancio); }
+.nota { font-size: 13px; color: var(--tenue); }
+
+details.soluzione { margin-top: 10px; max-width: 74ch; background: var(--superficie-2); padding: 8px 12px; border-left: 4px solid var(--viola); }
+details.soluzione summary { cursor: pointer; font: 400 18px/1.4 var(--font-pixel); color: var(--viola); }
+details.soluzione p { margin: 8px 0 2px; }
+
+/* Pulsante "Sono qui": a destra del passo di storia */
+.passo.con-azione { grid-template-columns: 22px minmax(0, 1fr) auto; }
+.azione-passo { align-self: start; font-size: 17px; padding: 6px 12px; white-space: nowrap; }
+.passo.fatto .azione-passo { opacity: .55; }
+
+/* ------------------------------------------------------- Menu (finestrella) */
+dialog.menu { border: 0; padding: 0; background: transparent; color: var(--testo); width: min(92vw, 560px); max-width: none; overflow: visible; }
+dialog.menu::backdrop { background: rgba(14, 12, 11, .72); }
+.involucro-menu { filter: var(--ombra); }
+.corpo-menu { padding: 18px 20px; display: grid; gap: 14px; }
+.corpo-menu h2 { font-size: 30px; }
+.corpo-menu p { margin: 0; }
+.voce-menu { display: flex; gap: 16px; align-items: center; justify-content: space-between; padding-top: 12px; border-top: 2px dotted var(--bordo); }
+.voce-menu .titolo-voce { font: 400 22px/1.2 var(--font-pixel); }
+.voce-menu .nota { margin-top: 2px; }
+.btn[disabled] { opacity: .4; cursor: not-allowed; }
+.btn[disabled]:hover { background: var(--superficie-2); color: var(--testo); }
+.btn.pericolo { color: var(--arancio); }
+.testata-menu { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.btn-icona { padding: 9px 11px; justify-content: center; }
+
+/* ------------------------------------------------- Menu della copertina (al passaggio del mouse) */
+.scheda-wrap { position: relative; min-width: 0; }
+.menu-copertina { position: absolute; left: 8px; top: 8px; z-index: 5; opacity: 0; transition: none; }
+.barra-copertina .menu-copertina { left: 4px; top: 4px; }
+.barra-copertina { overflow: visible; }
+/* Compare passando sulla copertina (o sul pulsante), oppure quando ha il focus da tastiera o la tendina è aperta */
+.scheda-wrap:has(.copertina:hover) .menu-copertina,
+.barra-copertina:hover .menu-copertina,
+.menu-copertina:hover, .menu-copertina:focus-within { opacity: 1; }
+/* Su schermi senza mouse (telefono) il pulsante è sempre visibile, ma discreto */
+@media (hover: none) { .menu-copertina { opacity: .85; } }
+.btn-mini { padding: 4px 6px; background: rgba(28, 25, 23, .85); }
+.tendina-copertina { position: absolute; top: calc(100% + 4px); left: 0; min-width: 190px; background: var(--superficie); border: 2px solid var(--bordo); filter: var(--ombra); padding: 4px; }
+.voce-tendina { display: block; width: 100%; text-align: left; font: 400 19px/1.2 var(--font-pixel); color: var(--testo); background: none; border: 0; padding: 8px 10px; cursor: pointer; }
+.voce-tendina:hover, .voce-tendina:focus-visible { background: var(--gradiente); color: var(--inchiostro); outline: none; }
+
+/* ---------------------------------------------------------- Finestra Salvataggio */
+.testata-elenco { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.blocco-importa { display: grid; gap: 8px; padding-top: 12px; border-top: 2px dotted var(--bordo); }
+.campo-file { color: var(--testo); font: 13px var(--font-testo); max-width: 100%; }
+.campo-file::file-selector-button { font: 400 18px/1 var(--font-pixel); color: var(--testo); background: var(--superficie-2); border: 0; padding: 8px 12px; margin-right: 10px; cursor: pointer; }
+.gruppo-opzioni { display: grid; gap: 6px; }
+.opzione { display: flex; gap: 10px; align-items: flex-start; cursor: pointer; }
+.opzione input { accent-color: var(--ambra); margin-top: 5px; }
+.esito { margin: 0; min-height: 1.2em; color: var(--ambra-chiaro); }
+.esito.errore { color: var(--arancio); }
+
+/* ------------------------------------------------------------ Filtri e avvisi */
+.strumenti {
+  display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 10px;
+  /* Fissi sotto la barra: filtri e pulsanti restano sempre a portata */
+  position: sticky; top: var(--alt-barra); z-index: 15;
+  background: var(--sfondo); padding: 8px 8px; margin-inline: -8px;
+  border-bottom: 2px dotted var(--bordo);
+}
+.gruppo { display: inline-flex; gap: 4px; flex-wrap: wrap; }
+.strumenti label { display: inline-flex; gap: 10px; align-items: center; cursor: pointer; color: var(--tenue); }
+.strumenti label:hover { color: var(--testo); }
+.strumenti .spazio-flex { margin-left: auto; display: flex; gap: 4px; }
+
+.box-avviso { margin: 0 0 18px; filter: var(--ombra); }
+.box-avviso .finestra { --bordo-finestra: var(--arancio); }
+.box-avviso .finestra-in { padding: 12px 16px; }
+.box-avviso h2 { font-size: 24px; color: var(--arancio); display: flex; gap: 8px; align-items: center; }
+.box-avviso p { margin: 8px 0 2px; }
+.box-avviso ul { margin: 4px 0 8px; padding-left: 20px; }
+
+/* ----------------------------------------------------------------------- Trofei */
+.sezione-trofei { margin-top: 28px; }
+.sezione-trofei h2 { font-size: 28px; display: flex; align-items: center; gap: 10px; margin-bottom: 4px; }
+.sezione-trofei > .nota { margin: 0 0 16px; }
+.riga-trofeo { display: grid; grid-template-columns: 22px minmax(0, 1fr); gap: 14px; padding: 14px 16px; }
+.trofeo-card { margin-bottom: 14px; }
+.trofeo-card.fatto .contenuto { opacity: .55; }
+.trofeo-card.pronto .finestra { --bordo-finestra: var(--ok); }
+.grado { display: inline-block; font: 400 17px/1 var(--font-pixel); padding: 3px 8px; margin-left: 10px; color: var(--inchiostro); vertical-align: 2px; }
+.grado.platino { background: #bfe3ff; }
+.grado.oro { background: #ffd166; }
+.grado.argento { background: #d5d9e6; }
+.grado.bronzo { background: #e0955f; }
+.grado.obiettivo { background: #9ad1ff; }
+.avanzamento { font-size: 13px; color: var(--tenue); }
+.avanzamento.pronto { color: var(--ok); font-weight: 700; }
+
+/* -------------------------------------------------------------------------- Info */
+.info-testo { padding: 18px 20px; }
+.info-testo h2 { font-size: 28px; margin: 22px 0 8px; color: var(--ambra-chiaro); }
+.info-testo h2:first-child { margin-top: 0; }
+.info-testo ul, .info-testo ol { padding-left: 22px; max-width: 74ch; }
+.info-testo li { margin-bottom: 8px; }
+.info-testo li::marker { color: var(--ambra); }
+
+/* ------------------------------------------------------------------------- Home */
+.titolo-app { font-size: 60px; line-height: 1.05; margin: 40px 0 8px; }
+.titolo-app::before { content: "> "; color: var(--ambra); }
+/* Sottotitolo del progetto, sotto il nome */
+.slogan { margin: 0; font: 400 24px/1.2 var(--font-pixel); color: var(--ambra-chiaro); }
+.testata-elenco .titolo-app { margin-bottom: 0; }
+.sottotitolo { margin: 0 0 28px; color: var(--tenue); max-width: 60ch; }
+/* Nell'elenco la pagina è più larga (le schede hanno la copertina di lato) */
+.pagina.larga { max-width: 1240px; }
+/* Nella Guida la barra degli strumenti sta subito sotto la barra in alto, senza spazio in mezzo */
+.pagina.con-strumenti { margin-top: 0; }
+.elenco-giochi { display: grid; gap: 18px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 560px), 1fr)); }
+.scheda-gioco { display: block; color: inherit; text-decoration: none; filter: var(--ombra); }
+.scheda-riga { display: flex; align-items: stretch; }
+.scheda-corpo { flex: 1; min-width: 0; padding: 16px 18px; min-height: 120px; }
+/* Copertina a sinistra della scheda: cornice verticale 2:3 */
+.copertina {
+  flex: none; width: 170px; aspect-ratio: 2 / 3; align-self: flex-start;
+  background-color: var(--superficie-2); background-repeat: no-repeat;
+  border-right: 2px solid var(--bordo);
+}
+.scheda-gioco:hover .finestra, .scheda-gioco:focus-visible .finestra { --bordo-finestra: var(--gradiente); }
+.scheda-gioco:focus-visible { outline: none; }
+.scheda-gioco h2 { font-size: 30px; overflow-wrap: anywhere; }
+.scheda-gioco p { margin: 4px 0 12px; color: var(--tenue); }
+.scheda-gioco .moduli { margin-left: 0; }
+
+.vuoto { color: var(--tenue); padding: 24px 0; }
+
+/* --------------------------------------------------------------- Avvisi in basso */
+.avviso {
+  position: fixed; left: 50%; bottom: max(20px, env(safe-area-inset-bottom)); transform: translateX(-50%);
+  background: #5a2036; border: 2px solid var(--magenta); color: #fff;
+  padding: 10px 16px; z-index: 50; max-width: 92vw;
+}
+
+/* ----------------------------------------------------------------- Dettagli vari */
+:root {
+  /* pixel art della spunta, usata come immagine (mask o sfondo) */
+  --spunta: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 7 5' shape-rendering='crispEdges'%3E%3Cpath d='M6 0h1v1H6zM5 1h1v1H5zM0 2h1v1H0zM4 2h1v1H4zM1 3h1v1H1zM3 3h1v1H3zM2 4h1v1H2z'/%3E%3C/svg%3E");
+  --spunta-scura: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 7 5' shape-rendering='crispEdges'%3E%3Cpath fill='%230e0b1c' d='M6 0h1v1H6zM5 1h1v1H5zM0 2h1v1H0zM4 2h1v1H4zM1 3h1v1H1zM3 3h1v1H3zM2 4h1v1H2z'/%3E%3C/svg%3E");
+}
+
+/* Movimento: solo se l'utente non ha chiesto di ridurlo */
+@media (prefers-reduced-motion: no-preference) {
+  .capitolo .freccia { transition: transform .12s steps(3); }
+}
+
+
+@media (max-width: 640px) {
+  .strumenti { position: static; }  /* su telefono la barra occupa troppo spazio per restare fissa */
+  .barra { position: static; }
+  .barra-copertina { display: none; }   /* la copertina assoluta della barra non c'è su telefono... */
+  .barra.con-copertina { --testo-x: calc(var(--margine) + max(16px, env(safe-area-inset-left))); }
+  /* ...al suo posto ce n'è una piccola in fila, tra "Giochi" e il titolo */
+  .barra-alto { flex-wrap: nowrap; gap: 12px; }
+  .barra-alto .barra-centro { min-width: 0; gap: 4px 12px; }
+  .copertina-telefono {
+    display: block; flex: none; height: 88px; aspect-ratio: 2 / 3;
+    background-color: var(--superficie-2); background-repeat: no-repeat; border: 2px solid var(--bordo);
+  }
+  .barra-centro h1 { flex-wrap: wrap; gap: 2px 8px; }
+  .barra-centro h1 { font-size: 30px; }
+  .titolo-app { font-size: 36px; }
+  .slogan { font-size: 20px; }
+  .moduli { margin-left: 0; }
+  .testata .mini { width: 100%; padding-left: 30px; }
+  .passo, .riga-trofeo { padding-left: 12px; padding-right: 12px; gap: 10px; }
+  .passo.con-azione { grid-template-columns: 22px minmax(0, 1fr); }
+  .azione-passo { grid-column: 2; justify-self: start; }
+  .voce-menu { flex-direction: column; align-items: stretch; }
+  /* Elenco dei giochi: copertina alta quanto la capsula, info rimpicciolite per stare in una riga */
+  .pagina.larga { padding-left: 12px; padding-right: 12px; }
+  .scheda-gioco { min-width: 0; }
+  .copertina { width: 28vw; max-width: 130px; aspect-ratio: auto; align-self: stretch; background-size: cover; }
+  .scheda-corpo { padding: 10px 12px; min-height: 0; }
+  .scheda-gioco h2 { font-size: 22px; }
+  .scheda-gioco p { margin: 2px 0 8px; font-size: 12px; }
+  .scheda-gioco .barre { gap: 4px; margin-top: 4px; }
+  .scheda-gioco .progresso { font-size: 15px; gap: 6px; }
+  .scheda-gioco .durata { flex-wrap: nowrap; gap: 4px; margin-top: 8px; }
+  .scheda-gioco .durata .icona { display: none; }
+  .scheda-gioco .durata .modulo { font-size: min(13px, 3.2vw); padding: 2px .45em; gap: 3px; }
+}

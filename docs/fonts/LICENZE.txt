@@ -1,0 +1,4 @@
+Font usati dall'interfaccia, entrambi con licenza SIL Open Font License 1.1 (uso libero):
+- Jersey 10 (Sarah Cadigan-Fried) - https://fonts.google.com/specimen/Jersey+10
+- JetBrains Mono (JetBrains) - https://www.jetbrains.com/lp/mono/
+File scaricati dal sottoinsieme "latin" di Google Fonts.

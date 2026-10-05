@@ -42,13 +42,14 @@ App web **locale** per seguire i progressi nei videogiochi:
 Per le ricerche: le wiki Fandom si leggono tramite API (dettagli in `docs/FORMATO-GUIDA.md`), molti altri siti bloccano la lettura automatica.
 
 ## Sito online (GitHub Pages)
-- Il sito è generato da `node tools/genera-sito.js` (cartella `_site/`, in `.gitignore`) e pubblicato dal workflow `.github/workflows/pubblica-sito.yml` ad ogni push su `main`. In Settings → Pages la sorgente deve essere **GitHub Actions**.
+- Il sito è la cartella **`docs/`**, generata da `node tools/genera-sito.js` e **committata** (GitHub Pages: Settings → Pages → Deploy from a branch → `main` / `/docs`; niente GitHub Actions, scelta dell'utente). `docs/` contiene anche ROADMAP.md e FORMATO-GUIDA.md: lo script cancella solo i file che genera.
+- **Dopo ogni modifica a guide, `public/` o `data/guides/` rieseguire `node tools/genera-sito.js` e includere `docs/` nel commit**, altrimenti il sito online resta vecchio. Poi `git push` (si pubblica da solo in ~1 minuto).
 - `public/archivio.js` sceglie da solo il modo: **server** (API, file in `data/progress/`) o **sito** (file statici + `localStorage`, chiavi `platinum-questbook:progressi:<id>`). `app.js` non chiama più `fetch` per guide/progressi/salvataggio: usa `archivio.*`. Gli indirizzi sono **relativi** (niente `/` iniziale), perché Pages sta in una sottocartella.
 - L'elenco dei giochi online è `indice.json`, creato dallo script a partire da `data/guides/`: dopo aver aggiunto una guida basta committare e fare push.
 - La logica di completamento/unione dei progressi esiste sia in `server.js` che in `archivio.js` (modo sito): se si cambia una, **cambiare anche l'altra**.
 - Online le copertine caricate dall'utente (non versionate) non ci sono: si vede `covers/default.*`. Il caricamento copertine è nascosto (`archivio.copertineModificabili`).
 - **Salvataggio con copertine**: l'esportazione può includere le copertine (`copertine: { id: { tipo, dati base64 } }`; `GET /api/salvataggio?copertine=1` in modo server). L'importazione le scrive in `covers/` (server, `scriviCopertina()`) oppure in IndexedDB (modo sito, deposito `copertine`, hanno la precedenza sulla predefinita). Il server accetta file di salvataggio fino a 100 MB.
-- Per provare il sito in locale: `node tools/genera-sito.js` e servire `_site/` con un server statico (es. `python -m http.server`).
+- Per provare il sito in locale: `node tools/genera-sito.js` e servire `docs/` con un server statico (es. `python -m http.server`). Nella cartella `docs/` va solo la copertina predefinita, mai le altre (copyright).
 
 ## Architettura
 ```
@@ -62,9 +63,9 @@ data/guides/            una guida per gioco (scritte da Claude)
 data/progress/          progressi dell'utente (scritti dall'app)
 covers/                 immagini di copertina messe dall'utente (nome = id del gioco con `_` al posto di `-`)
 tools/valida-guida.js   controllo automatico delle guide
-tools/genera-sito.js    crea _site/ per GitHub Pages
+tools/genera-sito.js    crea il sito in docs/ per GitHub Pages
 public/archivio.js      accesso ai dati: server locale oppure file + localStorage
-.github/workflows/      pubblicazione automatica del sito
+docs/                   documenti del progetto + sito generato (index.html, app.js, data/, ... non modificare a mano)
 ```
 
 **API del server**

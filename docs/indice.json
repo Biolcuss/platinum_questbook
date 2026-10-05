@@ -1,0 +1,42 @@
+[
+  {
+    "id": "hogwarts-legacy",
+    "titolo": "Hogwarts Legacy",
+    "piattaforma": "PC (Steam)",
+    "durata": {
+      "storia": "25-30",
+      "storiaExtra": "35-40",
+      "completista": "70-90",
+      "daVerificare": true,
+      "nota": "Stime ricavate da siti di terze parti, non letti direttamente da HowLongToBeat. Confronta con la sua pagina.",
+      "fonte": {
+        "nome": "HowLongToBeat (da controllare)",
+        "url": "https://howlongtobeat.com/?q=Hogwarts+Legacy"
+      }
+    },
+    "copertina": {
+      "url": "covers/default.png",
+      "predefinita": true
+    }
+  },
+  {
+    "id": "uncharted-drakes-fortune",
+    "titolo": "Uncharted: Drake's Fortune",
+    "piattaforma": "PS3 (versione originale)",
+    "durata": {
+      "storia": "8-9",
+      "storiaExtra": "10-12",
+      "completista": "18-20",
+      "daVerificare": true,
+      "nota": "Stime ricavate da siti di terze parti (le fonti discordano: un altro dà 7-8 / 9-10 / 12-15). Confronta con la pagina di HowLongToBeat.",
+      "fonte": {
+        "nome": "HowLongToBeat (da controllare)",
+        "url": "https://howlongtobeat.com/?q=Uncharted%3A+Drake%27s+Fortune"
+      }
+    },
+    "copertina": {
+      "url": "covers/default.png",
+      "predefinita": true
+    }
+  }
+]

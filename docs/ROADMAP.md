@@ -112,9 +112,8 @@ Stato del progetto. Aggiornare a ogni sessione di lavoro.
 
 ## Fase 9 — Sito online (GitHub Pages) ✅
 - `public/archivio.js`: due modi, scelti da soli. Con il server locale usa le API; online (nessun server) legge i file JSON e salva i progressi nel `localStorage` del browser (separati per dispositivo). Esporta/Importa il salvataggio funzionano in entrambi i modi (è così che si spostano i progressi tra PC e telefono).
-- `tools/genera-sito.js` crea `_site/` (interfaccia + guide + `indice.json`, l'elenco dei giochi ricavato dalle guide: ogni nuova guida compare da sola).
-- `.github/workflows/pubblica-sito.yml` pubblica `_site/` ad ogni push su `main`.
-- Online non si caricano copertine e compaiono solo quelle versionate in Git (la predefinita).
+- `tools/genera-sito.js` crea il sito in `docs/` (interfaccia + guide + `indice.json`, l'elenco dei giochi ricavato dalle guide). Va rieseguito e committato dopo ogni modifica; GitHub Pages pubblica `main` / `/docs` (niente GitHub Actions).
+- Online non si caricano copertine e compare solo la copertina predefinita.
 - Il Salvataggio può includere le copertine (checkbox "Includi anche le copertine"): per portarle dal PC al telefono, dove restano nel browser (IndexedDB).
 
 ## Idee future (non ancora decise)
