@@ -13,7 +13,7 @@ Stato del progetto. Aggiornare a ogni sessione di lavoro.
 - [x] `server.js`: serve i file di `public/`
 - [x] API `GET /api/giochi`, `GET /api/giochi/:id`
 - [x] API `GET` / `PUT /api/progressi/:id` con scrittura sicura
-- [x] `avvia.bat` (avvia il server e apre il browser)
+- [x] `GameTracker.bat` (avvia il server e apre il browser)
 - [x] Pagina provvisoria `public/index.html` (elenco guide) in attesa della fase 3
 
 ## Fase 3 — Interfaccia ✅
@@ -77,7 +77,7 @@ Stato del progetto. Aggiornare a ogni sessione di lavoro.
 - [x] Barre di progressione (Storia e Totale) nella barra della pagina del gioco e nelle schede dell'elenco
 - [x] Banner avviso mancabili
 - [x] Contatori per categoria e trofei
-- [ ] Esporta / importa progressi (backup)
+- [x] Esporta / importa progressi (Salvataggio: unisci o sostituisci)
 - [x] `data/progress/` escluso da Git (decisione dell'utente)
 - [x] Restyling retrò/pixel in stile Hyprland (font locali, icone pixel, barra waybar, finestre a gradini)
 
@@ -100,6 +100,11 @@ Stato del progetto. Aggiornare a ogni sessione di lavoro.
 ## Fase 6e — Sottocategorie di missioni ✅
 - [x] Pannello a casella per Storia e Secondarie, come per i collezionabili (`sottocategorie` nella guida)
 - [x] Hogwarts Legacy: storia = missioni principali / compiti; secondarie = secondarie / relazioni / compiti facoltativi (classificate con le categorie della wiki)
+
+## Fase 7 — Pubblicazione ✅
+- [x] README, licenza MIT, copertine fuori da Git (`covers/` ignorata, istruzioni in `covers/README.md`)
+- [x] Salvataggio (esporta/importa) per usare i progressi su più dispositivi, senza account
+- [ ] Opzionali: cartella dati configurabile (per sincronizzarla con un cloud), profili multipli per installazione
 
 ## Idee future (non ancora decise)
 - Filtri nell'indirizzo (oggi restano in memoria)

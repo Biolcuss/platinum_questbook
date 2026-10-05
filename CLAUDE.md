@@ -33,7 +33,7 @@ App web **locale** per seguire i progressi nei videogiochi:
 - Cartella: `D:\Biolcuss\Progetti\Game Tracker`
 
 ## Comandi
-- Avvio: `node server.js` oppure doppio clic su `avvia.bat` → http://localhost:3000
+- Avvio: `node server.js` oppure doppio clic su `GameTracker.bat` → http://localhost:3000
 - Validare una guida: `node tools/valida-guida.js <id-gioco>`
 
 Per le ricerche: le wiki Fandom si leggono tramite API (dettagli in `docs/FORMATO-GUIDA.md`), molti altri siti bloccano la lettura automatica.
@@ -44,7 +44,7 @@ CLAUDE.md               documento di contesto (questo file)
 docs/ROADMAP.md         fasi del progetto, stato, idee future
 docs/FORMATO-GUIDA.md   schema JSON delle guide + procedura di ricerca dettagliata
 server.js               server Node: serve public/ e le API
-avvia.bat               avvio con doppio clic
+GameTracker.bat               avvio con doppio clic
 public/                 interfaccia: index.html (guscio vuoto), style.css, app.js (costruisce tutta la pagina)
 data/guides/            una guida per gioco (scritte da Claude)
 data/progress/          progressi dell'utente (scritti dall'app)
@@ -92,7 +92,9 @@ Dettagli completi in `docs/FORMATO-GUIDA.md`. In breve:
 - I nomi italiani ufficiali di capitoli/missioni non sono stati trovati in modo affidabile: restano in inglese.
 
 ## Regole importanti
-- `data/progress/` è in `.gitignore`: i progressi dell'utente **non** vanno nei commit (decisione dell'utente). Un export/import dei progressi è previsto in futuro.
+- `data/progress/` è in `.gitignore`: i progressi dell'utente **non** vanno nei commit (decisione dell'utente). Per spostarli tra dispositivi c'è il **Salvataggio** (esporta/importa un file: `GET /api/salvataggio`, `POST /api/salvataggio?modo=unisci|sostituisci`, funzione `apriSalvataggio()` in app.js). Niente account: ognuno usa la sua copia locale.
+- `covers/` è in `.gitignore` (tranne `covers/README.md`): le copertine sono artwork dei giochi, le mette l'utente a mano. L'app deve funzionare anche senza copertine.
+- Il progetto è **pubblico** (licenza MIT, `README.md`): niente dati personali, immagini protette da copyright o percorsi del PC nei file versionati.
 - **Mai cambiare l'`id` di un passo** in una guida già esistente: le spunte dell'utente si perderebbero. Per correggere, modificare i testi; per aggiungere passi, usare nuovi id.
 - I file del progetto possono avere terminazioni di riga Windows (CRLF): negli script di modifica normalizzare `
 ` prima di cercare/sostituire testo.

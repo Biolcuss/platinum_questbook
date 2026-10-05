@@ -8,3 +8,8 @@ desktop.ini
 
 # Progressi personali dell'utente (non vanno nel repository)
 data/progress/
+
+# Copertine: sono immagini dei giochi (protette da copyright), le sceglie e le mette ogni utente.
+# Si ignora tutto tranne le istruzioni.
+covers/*
+!covers/README.md
