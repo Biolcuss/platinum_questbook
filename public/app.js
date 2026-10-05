@@ -697,7 +697,7 @@ function disegnaGioco() {
     copertinaBarra = el('div', { class: 'barra-copertina', 'aria-hidden': 'true' });
     applicaCopertina(copertinaBarra, guida.copertina);
   }
-  const barra = el('header', { class: 'barra' },
+  const barra = el('header', { class: 'barra' + (copertinaBarra ? ' con-copertina' : '') },
     copertinaBarra,
     el('div', { class: 'barra-contenuto' },
       el('div', { class: 'barra-riga barra-alto' },

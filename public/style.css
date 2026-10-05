@@ -138,9 +138,13 @@ svg.icona.icona-coppa { color: var(--ambra); }
   border-bottom: 3px solid var(--bordo);
   box-shadow: 0 4px 0 #0e0c0b;       /* ombra dura sotto la barra */
 }
+/* --margine: su schermi larghi il contenuto della barra (copertina compresa) si ferma a 1240px e resta verso il centro */
+.barra { --margine: max(0px, calc((100vw - 1240px) / 2)); }
 .barra-riga {
-  padding: 10px max(16px, env(safe-area-inset-right)) 10px max(16px, env(safe-area-inset-left));
+  padding: 10px calc(var(--margine) + max(16px, env(safe-area-inset-right))) 10px calc(var(--margine) + max(16px, env(safe-area-inset-left)));
 }
+/* Con la copertina, il testo parte dopo di lei */
+.barra.con-copertina .barra-riga { padding-left: calc(var(--margine) + 96px + 16px); }
 /* Sezione in alto: indietro a sinistra, titolo e schede al centro */
 .barra-alto {
   display: flex; flex-wrap: wrap; align-items: center;
@@ -151,10 +155,8 @@ svg.icona.icona-coppa { color: var(--ambra); }
 .barra-centro h1 { font-size: 34px; line-height: 1; display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
 .barra-centro .versione { font: 400 18px/1 var(--font-pixel); color: var(--tenue); }
 /* Copertina a sinistra: occupa tutta l'altezza della barra (titolo + statistiche) */
-.barra { display: flex; align-items: stretch; }
-.barra-contenuto { flex: 1; min-width: 0; }
 .barra-copertina {
-  flex: none; width: 96px;
+  position: absolute; top: 0; bottom: 0; left: var(--margine); width: 96px;
   background-color: var(--superficie-2); background-repeat: no-repeat;
   border-right: 3px solid var(--bordo);
 }
@@ -469,7 +471,8 @@ dialog.editor { width: min(92vw, 680px); }
 @media (max-width: 640px) {
   .strumenti { position: static; }  /* su telefono la barra occupa troppo spazio per restare fissa */
   .barra { position: static; }
-  .barra-copertina { display: none; }   /* su telefono la copertina nella barra non c'è: toglierebbe troppo spazio */  /* su telefono la barra occupa troppo spazio per restare fissa */
+  .barra-copertina { display: none; }
+  .barra.con-copertina .barra-riga { padding-left: max(16px, env(safe-area-inset-left)); }   /* su telefono la copertina nella barra non c'è: toglierebbe troppo spazio */  /* su telefono la barra occupa troppo spazio per restare fissa */
   .barra-centro h1 { font-size: 30px; }
   .titolo-app { font-size: 44px; }
   .moduli { margin-left: 0; }
