@@ -200,6 +200,18 @@ svg.icona.icona-coppa { color: var(--ambra); }
 .modulo b { color: var(--testo); font-variant-numeric: tabular-nums; font-weight: 600; }
 .modulo.completo b { color: var(--ok); }
 .modulo .icona { color: var(--colore-modulo, var(--tenue)); }
+/* Voce "Collezionabili": contatore + freccia + pannello delle sottocategorie */
+.gruppo-collezionabili { position: relative; display: inline-flex; gap: 2px; }
+button.modulo.freccia-filtro { padding: 5px 8px; }
+button.modulo.freccia-filtro[aria-expanded="true"] { background: var(--superficie-3); color: var(--ambra-chiaro); }
+.modulo .parziale { color: inherit; opacity: .8; }
+.pannello-categorie { position: absolute; top: calc(100% + 6px); left: 0; z-index: 30; width: min(320px, calc(100vw - 32px)); filter: var(--ombra); }
+.contenuto-pannello { padding: 12px 14px; display: grid; gap: 8px; }
+.contenuto-pannello .nota { margin: 0 0 2px; }
+.riga-categoria { display: flex; align-items: center; gap: 10px; cursor: pointer; font: 400 20px/1.3 var(--font-pixel); padding: 2px 0; }
+.riga-categoria .nome-categoria { flex: 1; min-width: 0; }
+.riga-categoria b { color: var(--tenue); font-variant-numeric: tabular-nums; font-weight: 400; }
+.azioni-pannello { display: flex; gap: 6px; margin-top: 4px; }
 /* Contatore usato come pulsante-filtro (toggle) */
 button.modulo { border: 0; cursor: pointer; font-family: var(--font-pixel); font-size: 18px; line-height: 1.2; }
 button.modulo:hover { background: var(--superficie-3); color: var(--testo); }

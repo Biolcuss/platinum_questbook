@@ -130,6 +130,12 @@ const ICONE = {
     '.#.....#.',
     '..#####..',
   ],
+  giu: [ // piccola freccia verso il basso, per aprire un pannello
+    '#.....#',
+    '.#...#.',
+    '..#.#..',
+    '...#...',
+  ],
   indietro: [ // freccia verso sinistra, per tornare all'elenco dei giochi
     '...#....',
     '..##....',
@@ -262,6 +268,7 @@ let contenitoreRiepilogo = null;
 let contenitoreBarre = null;
 let copertinaBarra = null;   // l'immagine di copertina nella barra in alto (null se il gioco non ne ha)
 let contenitoreAvviso = null;
+let pannelloCollezionabiliAperto = false; // il pannello delle sottocategorie dei collezionabili (nella barra in alto)
 let sezioneTrofei = null;    // in fondo alla Guida: i trofei che non sono legati a un punto della timeline (visibile col filtro Trofei)
 
 // Tutti i passi della guida in ordine di timeline, con la loro posizione
@@ -557,6 +564,7 @@ async function mostraGioco(id, nuovaScheda) {
   progressi.contatori = progressi.contatori || {};
   preparaOrdine();
   filtri.gruppi.clear(); // i pulsanti-filtro di un altro gioco non valgono qui
+  pannelloCollezionabiliAperto = false;
   disegnaGioco();
   // All'apertura vado al prossimo passo da fare (solo se hai già completato qualcosa)
   const prossimo = passoCorrente();
@@ -574,6 +582,7 @@ const SCHEDE = [
 
 // Costruisce la struttura della pagina del gioco: barra (titolo, schede, contatori) + scheda attiva
 function disegnaGioco() {
+  pannelloCollezionabiliAperto = false;
   contenitoreRiepilogo = el('div', { class: 'moduli' });
   contenitoreBarre = el('div', { class: 'barre' });
 
@@ -1001,8 +1010,9 @@ function contaInCapitolo(capitolo, condizione) {
   return { ok, tot };
 }
 
-// Moduli della barra, in quest'ordine: storia, secondarie (se ci sono), una voce per ogni categoria di collezionabili, trofei.
-// Nella scheda Guida sono anche pulsanti-filtro (toggle): attivandone uno, la guida mostra solo quel gruppo.
+// Moduli della barra, in quest'ordine: storia, secondarie (se ci sono), collezionabili (se ci sono, con il pannello
+// delle sottocategorie), trofei. Nella scheda Guida sono anche pulsanti-filtro (toggle): attivandone uno, la guida
+// mostra solo quel gruppo.
 function aggiornaRiepilogo() {
   const voci = [];
   const interattivo = scheda === 'guida';
@@ -1011,7 +1021,7 @@ function aggiornaRiepilogo() {
     const filtrabile = interattivo && (gruppo === 'trofei' || ordine.some(({ passo }) => gruppoDi(passo) === gruppo));
     const attributi = {
       class: 'modulo ' + classe + (tot > 0 && ok === tot ? ' completo' : '') + (filtrabile ? ' filtro' : ''),
-      'data-gruppo': gruppo,
+      'data-focus': gruppo,
     };
     if (filtrabile) {
       attributi.type = 'button';
@@ -1031,18 +1041,16 @@ function aggiornaRiepilogo() {
   aggiungi('storia', 'Storia', 'stella', 'm-storia', conta((p) => p.tipo === 'storia'));
   const secondarie = conta((p) => p.tipo === 'secondaria');
   if (secondarie.tot > 0) aggiungi('secondarie', 'Secondarie', 'punto', 'm-secondaria', secondarie);
-  for (const categoria of guida.categorie || []) {
-    const conteggio = conta((p) => (p.tipo === 'collezionabile' || p.tipo === 'raccolta') && p.categoria === categoria.id);
-    if (conteggio.tot > 0) aggiungi('cat:' + categoria.id, categoria.nome, 'gemma', 'm-oro', conteggio);
-  }
+  const voceCollezionabili = creaVoceCollezionabili(interattivo);
+  if (voceCollezionabili) voci.push(voceCollezionabili);
   if (guida.trofei && guida.trofei.length > 0) {
     const validi = guida.trofei.filter(applicabile);
     aggiungi('trofei', 'Trofei', 'coppa', 'm-trofeo', { ok: validi.filter((t) => fatto(t.id)).length, tot: validi.length });
   }
   // I pulsanti vengono ricreati a ogni aggiornamento: rimetto il focus su quello che l'aveva (tastiera)
-  const gruppoConFocus = document.activeElement?.dataset?.gruppo;
+  const conFocus = document.activeElement?.dataset?.focus;
   contenitoreRiepilogo.replaceChildren(...voci);
-  if (gruppoConFocus) contenitoreRiepilogo.querySelector(`button[data-gruppo="${gruppoConFocus}"]`)?.focus();
+  if (conFocus) contenitoreRiepilogo.querySelector(`[data-focus="${conFocus}"]`)?.focus();
 
   // Barre di progressione: storia e completismo (tutto: storia + extra + trofei)
   const percentuale = ({ ok, tot }) => (tot === 0 ? 0 : Math.round((ok / tot) * 100));
@@ -1052,6 +1060,96 @@ function aggiornaRiepilogo() {
     barraProgresso('Storia Principale', 'b-storia', percentuale(storia), `${percentuale(storia)}% (${storia.ok}/${storia.tot})`),
     barraProgresso('Completismo', 'b-totale', percentuale(totale), `${percentuale(totale)}% (${totale.ok}/${totale.tot})`));
 }
+
+// Voce "Collezionabili": un solo contatore (somma di tutte le categorie) che fa da pulsante-filtro, più una freccia che apre
+// un pannello per scegliere le sottocategorie (le categorie della guida, es. Treasures / Strange Relic).
+// Il filtro è l'insieme dei gruppi 'cat:<id>' in filtri.gruppi. Restituisce null se la guida non ha collezionabili.
+function creaVoceCollezionabili(interattivo) {
+  const categorie = (guida.categorie || [])
+    .map((categoria) => ({ categoria, gruppo: 'cat:' + categoria.id, conteggio: conta((p) => gruppoDi(p) === 'cat:' + categoria.id) }))
+    .filter(({ conteggio }) => conteggio.tot > 0);
+  if (categorie.length === 0) return null;
+
+  const totale = categorie.reduce((somma, { conteggio }) => ({ ok: somma.ok + conteggio.ok, tot: somma.tot + conteggio.tot }), { ok: 0, tot: 0 });
+  const attive = categorie.filter(({ gruppo }) => filtri.gruppi.has(gruppo));
+  const aggiornaDopo = (apriCapitoli) => {
+    if (apriCapitoli) impostaCapitoliAperti(true);
+    aggiornaVista();
+  };
+
+  const principale = el(interattivo ? 'button' : 'span', {
+    class: 'modulo m-oro' + (totale.ok === totale.tot ? ' completo' : '') + (interattivo ? ' filtro' : ''),
+    'data-focus': 'collezionabili',
+    ...(interattivo ? {
+      type: 'button',
+      'aria-pressed': String(attive.length > 0),
+      title: 'Mostra solo i collezionabili',
+      // Se c'è già qualche categoria attiva le spegne tutte, altrimenti le accende tutte
+      onclick: () => {
+        for (const { gruppo } of categorie) filtri.gruppi.delete(gruppo);
+        if (attive.length === 0) for (const { gruppo } of categorie) filtri.gruppi.add(gruppo);
+        aggiornaDopo(attive.length === 0);
+      },
+    } : {}),
+  }, icona('gemma'), 'Collezionabili ', el('b', {}, `${totale.ok}/${totale.tot}`),
+    // Se è attiva solo una parte delle categorie lo dico accanto al contatore
+    attive.length > 0 && attive.length < categorie.length ? el('span', { class: 'parziale' }, ` (${attive.length}/${categorie.length})`) : null);
+
+  // Senza la scheda Guida o con una sola categoria non serve il pannello
+  if (!interattivo || categorie.length < 2) return principale;
+
+  const freccia = el('button', {
+    type: 'button',
+    class: 'modulo filtro freccia-filtro',
+    'data-focus': 'freccia-collezionabili',
+    'aria-expanded': String(pannelloCollezionabiliAperto),
+    'aria-controls': 'pannello-collezionabili',
+    'aria-label': 'Scegli le categorie di collezionabili',
+    title: 'Scegli le categorie',
+    'aria-pressed': 'false',
+    onclick: () => { pannelloCollezionabiliAperto = !pannelloCollezionabiliAperto; aggiornaVista(); },
+  }, icona('giu', 2));
+
+  const pannello = el('div', {
+    class: 'pannello-categorie' + (pannelloCollezionabiliAperto ? '' : ' nascosto'),
+    id: 'pannello-collezionabili', role: 'group', 'aria-label': 'Categorie di collezionabili',
+  }, finestra(el('div', { class: 'contenuto-pannello' },
+    el('p', { class: 'nota' }, 'Scegli quali collezionabili mostrare nella guida:'),
+    categorie.map(({ categoria, gruppo, conteggio }) => {
+      const id = 'cat-' + categoria.id;
+      const casella = el('input', {
+        type: 'checkbox', class: 'spunta', id, 'data-focus': 'cat-' + categoria.id,
+        onchange: (e) => {
+          if (e.target.checked) filtri.gruppi.add(gruppo); else filtri.gruppi.delete(gruppo);
+          aggiornaDopo(e.target.checked && attive.length === 0);
+        },
+      });
+      casella.checked = filtri.gruppi.has(gruppo);
+      return el('label', { class: 'riga-categoria', for: id }, casella, el('span', { class: 'nome-categoria' }, categoria.nome),
+        el('b', {}, `${conteggio.ok}/${conteggio.tot}`));
+    }),
+    el('div', { class: 'azioni-pannello' },
+      el('button', { type: 'button', class: 'btn', onclick: () => { for (const { gruppo } of categorie) filtri.gruppi.add(gruppo); aggiornaDopo(true); } }, 'Tutte'),
+      el('button', { type: 'button', class: 'btn', onclick: () => { for (const { gruppo } of categorie) filtri.gruppi.delete(gruppo); aggiornaDopo(false); } }, 'Nessuna'))
+  )));
+
+  return el('div', { class: 'gruppo-collezionabili' }, principale, freccia, pannello);
+}
+
+// Il pannello delle categorie si chiude cliccando fuori o con Esc
+document.addEventListener('click', (e) => {
+  if (pannelloCollezionabiliAperto && !e.target.closest('.gruppo-collezionabili')) {
+    pannelloCollezionabiliAperto = false;
+    if (guida) aggiornaVista();
+  }
+});
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && pannelloCollezionabiliAperto) {
+    pannelloCollezionabiliAperto = false;
+    aggiornaVista();
+    document.querySelector('[data-focus="freccia-collezionabili"]')?.focus();
+  }
+});
 
 // Avviso: collezionabili "mancabili" non ancora spuntati nel capitolo in cui ti trovi.
 // Una volta superato il capitolo non si può più recuperarli, quindi l'avviso sparisce.
