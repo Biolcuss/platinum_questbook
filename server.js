@@ -106,10 +106,68 @@ function trovaFileCopertina(id) {
   return cercaImmagine(id) || cercaImmagine('default');
 }
 
-// Dati della copertina di un gioco (null se non c'è l'immagine)
+// Dati della copertina di un gioco (null se non c'è nessuna immagine, nemmeno la predefinita).
+// L'indirizzo contiene la data di modifica del file (?v=...): quando l'immagine viene sostituita il browser la ricarica.
 function infoCopertina(id) {
   const file = trovaFileCopertina(id);
-  return file ? { url: '/covers/' + encodeURIComponent(file) } : null;
+  if (!file) return null;
+  const versione = Math.round(fs.statSync(path.join(CARTELLA_COPERTINE, file)).mtimeMs);
+  return { url: '/covers/' + encodeURIComponent(file) + '?v=' + versione, predefinita: !cercaImmagine(id) };
+}
+
+// Tipi di immagine accettati per la copertina: tipo → estensione, e i primi byte che il file deve avere davvero
+const IMMAGINI_COPERTINA = { 'image/png': '.png', 'image/jpeg': '.jpg', 'image/webp': '.webp' };
+const LIMITE_COPERTINA = 10 * 1024 * 1024; // 10 MB
+function formatoImmagineValido(tipo, byte) {
+  if (tipo === 'image/png') return byte.subarray(0, 4).equals(Buffer.from([0x89, 0x50, 0x4e, 0x47]));
+  if (tipo === 'image/jpeg') return byte.subarray(0, 3).equals(Buffer.from([0xff, 0xd8, 0xff]));
+  if (tipo === 'image/webp') return byte.subarray(0, 4).toString('latin1') === 'RIFF' && byte.subarray(8, 12).toString('latin1') === 'WEBP';
+  return false;
+}
+
+// Legge il corpo di una richiesta come byte (per i file), con un limite di grandezza
+function leggiCorpoBinario(req, limite) {
+  return new Promise((resolve, reject) => {
+    const pezzi = [];
+    let totale = 0;
+    req.on('data', (pezzo) => {
+      totale += pezzo.length;
+      if (totale > limite) { reject(new Error('File troppo grande')); req.destroy(); return; }
+      pezzi.push(pezzo);
+    });
+    req.on('end', () => resolve(Buffer.concat(pezzi)));
+    req.on('error', reject);
+  });
+}
+
+// POST /api/copertine/:id → salva l'immagine inviata come copertina del gioco (sostituisce quella vecchia)
+// Il file diventa covers/<id con "_" al posto di "-">.<estensione>
+async function apiSalvaCopertina(req, res, id) {
+  if (!fs.existsSync(path.join(CARTELLA_GUIDE, id + '.json'))) return rispondiJson(res, 404, { errore: 'Guida non trovata' });
+  const tipo = (req.headers['content-type'] || '').split(';')[0].trim().toLowerCase();
+  if (!IMMAGINI_COPERTINA[tipo]) return rispondiJson(res, 415, { errore: 'Formato non supportato: usa PNG, JPG o WebP' });
+  let byte;
+  try {
+    byte = await leggiCorpoBinario(req, LIMITE_COPERTINA);
+  } catch (errore) {
+    return rispondiJson(res, 413, { errore: 'Immagine troppo grande (massimo 10 MB)' });
+  }
+  if (byte.length === 0 || !formatoImmagineValido(tipo, byte)) {
+    return rispondiJson(res, 400, { errore: 'Il file non è un\'immagine valida' });
+  }
+  // Prima scrivo il nuovo file, poi tolgo i vecchi di questo gioco (anche con un'altra estensione): se qualcosa va storto non si perde niente
+  const nomeFile = id.replace(/-/g, '_') + IMMAGINI_COPERTINA[tipo];
+  fs.mkdirSync(CARTELLA_COPERTINE, { recursive: true });
+  const temporaneo = path.join(CARTELLA_COPERTINE, nomeFile + '.tmp');
+  fs.writeFileSync(temporaneo, byte);
+  fs.renameSync(temporaneo, path.join(CARTELLA_COPERTINE, nomeFile));
+  for (const altro of fs.readdirSync(CARTELLA_COPERTINE)) {
+    const { name, ext } = path.parse(altro);
+    if (altro !== nomeFile && ['.png', '.jpg', '.jpeg', '.webp'].includes(ext.toLowerCase()) && name.toLowerCase().replace(/_/g, '-') === id) {
+      fs.unlinkSync(path.join(CARTELLA_COPERTINE, altro));
+    }
+  }
+  rispondiJson(res, 200, { ok: true, copertina: infoCopertina(id) });
 }
 
 // Un passo (o capitolo) con "soloSe" vale solo per chi ha fatto quella scelta.
@@ -343,6 +401,7 @@ async function gestisciRichiesta(req, res) {
       if (risorsa === 'salvataggio' && !id && req.method === 'POST') return await apiImportaSalvataggio(req, res, url);
       if (risorsa === 'progressi' && id && req.method === 'GET') return apiLeggiProgressi(res, id);
       if (risorsa === 'progressi' && id && req.method === 'PUT') return await apiSalvaProgressi(req, res, id);
+      if (risorsa === 'copertine' && id && req.method === 'POST') return await apiSalvaCopertina(req, res, id);
       return rispondiJson(res, 404, { errore: 'API non trovata' });
     }
     if (req.method === 'GET' && parti[0] === 'covers') return serviFileStatico(res, url.pathname.slice('/covers'.length), CARTELLA_COPERTINE);

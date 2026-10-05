@@ -398,6 +398,22 @@ dialog.menu::backdrop { background: rgba(14, 12, 11, .72); }
 .testata-menu { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .btn-icona { padding: 9px 11px; justify-content: center; }
 
+/* ------------------------------------------------- Menu della copertina (al passaggio del mouse) */
+.scheda-wrap { position: relative; min-width: 0; }
+.menu-copertina { position: absolute; left: 8px; top: 8px; z-index: 5; opacity: 0; transition: none; }
+.barra-copertina .menu-copertina { left: 4px; top: 4px; }
+.barra-copertina { overflow: visible; }
+/* Compare passando sulla copertina (o sul pulsante), oppure quando ha il focus da tastiera o la tendina è aperta */
+.scheda-wrap:has(.copertina:hover) .menu-copertina,
+.barra-copertina:hover .menu-copertina,
+.menu-copertina:hover, .menu-copertina:focus-within { opacity: 1; }
+/* Su schermi senza mouse (telefono) il pulsante è sempre visibile, ma discreto */
+@media (hover: none) { .menu-copertina { opacity: .85; } }
+.btn-mini { padding: 4px 6px; background: rgba(28, 25, 23, .85); }
+.tendina-copertina { position: absolute; top: calc(100% + 4px); left: 0; min-width: 190px; background: var(--superficie); border: 2px solid var(--bordo); filter: var(--ombra); padding: 4px; }
+.voce-tendina { display: block; width: 100%; text-align: left; font: 400 19px/1.2 var(--font-pixel); color: var(--testo); background: none; border: 0; padding: 8px 10px; cursor: pointer; }
+.voce-tendina:hover, .voce-tendina:focus-visible { background: var(--gradiente); color: var(--inchiostro); outline: none; }
+
 /* ---------------------------------------------------------- Finestra Salvataggio */
 .testata-elenco { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
 .blocco-importa { display: grid; gap: 8px; padding-top: 12px; border-top: 2px dotted var(--bordo); }

@@ -106,6 +106,10 @@ Stato del progetto. Aggiornare a ogni sessione di lavoro.
 - [x] Salvataggio (esporta/importa) per usare i progressi su più dispositivi, senza account
 - [ ] Opzionali: cartella dati configurabile (per sincronizzarla con un cloud), profili multipli per installazione
 
+## Fase 8 — Caricare le copertine dall'app ✅
+- [x] Copertina predefinita `covers/default.*` per i giochi senza immagine
+- [x] Pulsante menu sulla copertina (elenco e pagina del gioco) → carica un'immagine, che sostituisce quella vecchia
+
 ## Idee future (non ancora decise)
 - Filtri nell'indirizzo (oggi restano in memoria)
 - **Opzionali (idee valutate con l'utente):**

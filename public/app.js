@@ -276,7 +276,7 @@ let righeTrofei = [];    // { trofeo, riga, casella, avanzamento }
 let barreScelte = [];    // { scelta, bottoni, aiuto }
 let contenitoreRiepilogo = null;
 let contenitoreBarre = null;
-let copertinaBarra = null;   // l'immagine di copertina nella barra in alto (null se il gioco non ne ha)
+let copertinaBarra = null;   // la cornice della copertina nella barra in alto
 let contenitoreAvviso = null;
 let pannelloAperto = null;   // id del pannello delle sottocategorie aperto nella barra in alto (storia, secondarie, collezionabili) o null
 let sezioneTrofei = null;    // in fondo alla Guida: i trofei che non sono legati a un punto della timeline (visibile col filtro Trofei)
@@ -523,10 +523,59 @@ function apriMenu() {
 }
 
 // Immagine di copertina in cima alla scheda del gioco (decorativa: il titolo è scritto sotto)
+// (se non c'è nessuna immagine resta la cornice vuota, così si può comunque caricarne una)
 function copertinaScheda(c) {
   const nodo = el('div', { class: 'copertina', 'aria-hidden': 'true' });
-  applicaCopertina(nodo, c);
+  if (c) applicaCopertina(nodo, c);
   return nodo;
+}
+
+// Pulsante-menu che compare passando il mouse sulla copertina: permette di caricare un'immagine da usare come copertina.
+// Il file viene inviato al server, che lo salva in covers/ al posto di quello vecchio. "alCambio(copertina)" aggiorna l'immagine mostrata.
+function creaMenuCopertina(idGioco, titoloGioco, alCambio) {
+  const file = el('input', { type: 'file', accept: 'image/png,image/jpeg,image/webp,.png,.jpg,.jpeg,.webp', class: 'nascosto', tabindex: '-1', 'aria-hidden': 'true' });
+  const tendina = el('div', { class: 'tendina-copertina nascosto', role: 'menu' },
+    el('button', { type: 'button', class: 'voce-tendina', role: 'menuitem', onclick: () => { chiudi(); file.click(); } }, 'Carica immagine…'));
+  const pulsante = el('button', {
+    type: 'button', class: 'btn btn-icona btn-mini',
+    'aria-label': 'Menu della copertina: ' + titoloGioco, title: 'Copertina',
+    'aria-haspopup': 'menu', 'aria-expanded': 'false',
+    onclick: () => (tendina.classList.contains('nascosto') ? apri() : chiudi()),
+  }, icona('menu', 2));
+  const contenitore = el('div', { class: 'menu-copertina' }, pulsante, tendina, file);
+
+  function apri() {
+    tendina.classList.remove('nascosto');
+    pulsante.setAttribute('aria-expanded', 'true');
+    tendina.querySelector('button').focus();
+  }
+  function chiudi() {
+    tendina.classList.add('nascosto');
+    pulsante.setAttribute('aria-expanded', 'false');
+  }
+  // La tendina si chiude cliccando altrove o con Esc
+  document.addEventListener('click', (e) => { if (!contenitore.contains(e.target)) chiudi(); });
+  contenitore.addEventListener('keydown', (e) => { if (e.key === 'Escape') { chiudi(); pulsante.focus(); } });
+
+  file.addEventListener('change', async () => {
+    const scelto = file.files[0];
+    file.value = ''; // così si può scegliere di nuovo lo stesso file
+    if (!scelto) return;
+    // Il tipo lo deduco anche dall'estensione, perché alcuni sistemi non lo indicano
+    const tipi = { png: 'image/png', jpg: 'image/jpeg', jpeg: 'image/jpeg', webp: 'image/webp' };
+    const tipo = Object.values(tipi).includes(scelto.type) ? scelto.type : tipi[scelto.name.split('.').pop().toLowerCase()];
+    if (!tipo) return mostraAvviso('Formato non supportato: usa un\'immagine PNG, JPG o WebP.');
+    if (scelto.size > 10 * 1024 * 1024) return mostraAvviso('Immagine troppo grande (massimo 10 MB).');
+    try {
+      const risposta = await fetch('/api/copertine/' + idGioco, { method: 'POST', headers: { 'Content-Type': tipo }, body: scelto });
+      const dati = await risposta.json();
+      if (!risposta.ok) throw new Error(dati.errore || 'errore ' + risposta.status);
+      alCambio(dati.copertina);
+    } catch (errore) {
+      mostraAvviso('Impossibile salvare la copertina: ' + errore.message);
+    }
+  });
+  return contenitore;
 }
 
 // Riga con le ore per finire il gioco (dal campo "durata" della guida). Null se la guida non lo ha.
@@ -627,17 +676,22 @@ async function mostraElenco() {
 
   const lista = giochi.length === 0
     ? el('p', { class: 'vuoto' }, 'Nessuna guida presente. Chiedi a Claude di crearne una.')
-    : el('div', { class: 'elenco-giochi' }, giochi.map((gioco) =>
-        el('a', { class: 'scheda-gioco', href: '#/gioco/' + gioco.id },
-          finestra(el('div', { class: 'scheda-riga' },
-            gioco.copertina ? copertinaScheda(gioco.copertina) : null,
-            el('div', { class: 'scheda-corpo' },
-              el('h2', {}, gioco.titolo),
-              el('p', {}, gioco.piattaforma),
-              el('div', { class: 'barre' },
-                barraProgresso('Storia Principale', 'b-storia', gioco.completamento.storia, gioco.completamento.storia + '%', 'stella'),
-                barraProgresso('Completismo', 'b-totale', gioco.completamento.totale, gioco.completamento.totale + '%', 'coppa')),
-              testoDurata(gioco.durata)))))));
+    : el('div', { class: 'elenco-giochi' }, giochi.map((gioco) => {
+        const nodoCopertina = copertinaScheda(gioco.copertina);
+        // Il menu della copertina sta accanto al link (un pulsante dentro un link non è valido) e si sovrappone alla copertina
+        return el('div', { class: 'scheda-wrap' },
+          el('a', { class: 'scheda-gioco', href: '#/gioco/' + gioco.id },
+            finestra(el('div', { class: 'scheda-riga' },
+              nodoCopertina,
+              el('div', { class: 'scheda-corpo' },
+                el('h2', {}, gioco.titolo),
+                el('p', {}, gioco.piattaforma),
+                el('div', { class: 'barre' },
+                  barraProgresso('Storia Principale', 'b-storia', gioco.completamento.storia, gioco.completamento.storia + '%', 'stella'),
+                  barraProgresso('Completismo', 'b-totale', gioco.completamento.totale, gioco.completamento.totale + '%', 'coppa')),
+                testoDurata(gioco.durata))))),
+          creaMenuCopertina(gioco.id, gioco.titolo, (c) => applicaCopertina(nodoCopertina, c)));
+      }));
 
   radice.replaceChildren(el('main', { class: 'pagina larga', id: 'contenuto' },
     el('div', { class: 'testata-elenco' },
@@ -694,18 +748,20 @@ function disegnaGioco() {
   //   in alto  → a sinistra "torna ai giochi", al centro titolo + versione e le schede
   //   sotto    → i contatori (storia, collezionabili, trofei…)
   // La copertina sta a sinistra del titolo, centrata in verticale nella barra
-  copertinaBarra = null;
-  if (guida.copertina) {
-    copertinaBarra = el('div', { class: 'barra-copertina', 'aria-hidden': 'true' });
-    applicaCopertina(copertinaBarra, guida.copertina);
-  }
-  // Su telefono la copertina della barra (assoluta) non c'è: ne uso una in fila, tra "Giochi" e il titolo
   let copertinaTelefono = null;
+  copertinaBarra = el('div', { class: 'barra-copertina' });
+  if (guida.copertina) applicaCopertina(copertinaBarra, guida.copertina);
+  copertinaBarra.append(creaMenuCopertina(guida.id, guida.titolo, (c) => {
+    guida.copertina = c;
+    applicaCopertina(copertinaBarra, c);
+    if (copertinaTelefono) applicaCopertina(copertinaTelefono, c);
+  }));
+  // Su telefono la copertina della barra (assoluta) non c'è: ne uso una in fila, tra "Giochi" e il titolo
   if (guida.copertina) {
     copertinaTelefono = el('div', { class: 'copertina-telefono', 'aria-hidden': 'true' });
     applicaCopertina(copertinaTelefono, guida.copertina);
   }
-  const barra = el('header', { class: 'barra' + (copertinaBarra ? ' con-copertina' : '') },
+  const barra = el('header', { class: 'barra con-copertina' },
     copertinaBarra,
     el('div', { class: 'barra-contenuto' },
       el('div', { class: 'barra-riga barra-alto' },

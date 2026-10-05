@@ -35,7 +35,8 @@ I progressi sono solo tuoi: stanno in `data/progress/` (ignorata da Git). Chi cl
 
 ## Copertine
 
-Le immagini dei giochi non sono incluse. Per aggiungerne una vedi [covers/README.md](covers/README.md):
+Le immagini dei giochi non sono incluse. Per aggiungerne una passa il mouse sulla copertina di un gioco, premi il pulsante
+menu e scegli *Carica immagine…* (sostituisce quella vecchia). In alternativa vedi [covers/README.md](covers/README.md):
 basta salvare un'immagine verticale in `covers/` con il nome dell'id del gioco. I giochi senza copertina usano `covers/default.png`; senza nemmeno quella l'app funziona lo stesso.
 
 ## Aggiungere un gioco
