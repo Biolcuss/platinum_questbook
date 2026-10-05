@@ -422,6 +422,7 @@ dialog.menu::backdrop { background: rgba(14, 12, 11, .72); }
 .gruppo-opzioni { display: grid; gap: 6px; }
 .opzione { display: flex; gap: 10px; align-items: flex-start; cursor: pointer; }
 .opzione input { accent-color: var(--ambra); margin-top: 5px; }
+.azioni-editor { display: flex; justify-content: flex-end; }
 .opzione.spenta { opacity: .5; cursor: default; }
 .opzione.sotto-opzione { margin-left: 28px; }
 .esito { margin: 0; min-height: 1.2em; color: var(--ambra-chiaro); }
@@ -543,11 +544,11 @@ dialog.menu::backdrop { background: rgba(14, 12, 11, .72); }
   .passo.con-azione { grid-template-columns: 22px minmax(0, 1fr); }
   .azione-passo { grid-column: 2; justify-self: start; }
   .voce-menu { flex-direction: column; align-items: stretch; }
-  /* Elenco dei giochi: copertina alta quanto la capsula, info rimpicciolite per stare in una riga */
+  /* Elenco dei giochi: la scheda è alta almeno quanto la copertina intera (2:3, così non si taglia); info rimpicciolite per stare in una riga */
   .pagina.larga { padding-left: 12px; padding-right: 12px; }
   .scheda-gioco { min-width: 0; }
-  .copertina { width: 28vw; max-width: 130px; aspect-ratio: auto; align-self: stretch; background-size: cover; }
-  .scheda-corpo { padding: 10px 12px; min-height: 0; }
+  .copertina { width: min(28vw, 130px); }   /* resta 2:3: la scheda cresce in altezza quanto serve alla copertina intera */
+  .scheda-corpo { padding: 10px 12px; min-height: 0; align-self: center; }
   .scheda-gioco h2 { font-size: 22px; }
   .scheda-gioco p { margin: 2px 0 8px; font-size: 12px; }
   .scheda-gioco .barre { gap: 4px; margin-top: 4px; }
