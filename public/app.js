@@ -429,18 +429,21 @@ function completaStoriaFinoA(passo) {
 }
 
 // -----------------------------------------------------------------------------
-// Menu: azzera i progressi (storia, collezionabili, trofei, tutto)
+// Menu: azzera i progressi (si spuntano le parti da azzerare: storia, secondarie, collezionabili, trofei)
 // -----------------------------------------------------------------------------
 const AZZERAMENTI = [
   {
-    id: 'storia', nome: 'Azzera la storia',
-    descrizione: 'Toglie le spunte dai passi della storia.',
+    id: 'storia', nome: 'Storia',
     elementi: () => ordine.filter(({ passo }) => passo.tipo === 'storia' && fatto(chiave(passo))).length,
     azzera: () => { for (const { passo } of ordine) if (passo.tipo === 'storia') delete progressi.completati[chiave(passo)]; },
   },
   {
-    id: 'collezionabili', nome: 'Azzera i collezionabili',
-    descrizione: 'Toglie le spunte dai collezionabili e azzera i contatori.',
+    id: 'secondarie', nome: 'Missioni secondarie',
+    elementi: () => ordine.filter(({ passo }) => passo.tipo === 'secondaria' && fatto(chiave(passo))).length,
+    azzera: () => { for (const { passo } of ordine) if (passo.tipo === 'secondaria') delete progressi.completati[chiave(passo)]; },
+  },
+  {
+    id: 'collezionabili', nome: 'Collezionabili (e contatori)',
     elementi: () => ordine.filter(({ passo }) =>
       (passo.tipo === 'collezionabile' && fatto(chiave(passo))) || (passo.tipo === 'raccolta' && quantiTrovati(passo) > 0)).length,
     azzera: () => {
@@ -451,16 +454,9 @@ const AZZERAMENTI = [
     },
   },
   {
-    id: 'trofei', nome: 'Azzera i trofei',
-    descrizione: 'Toglie la spunta da tutti i trofei e obiettivi.',
+    id: 'trofei', nome: 'Trofei e obiettivi',
     elementi: () => (guida.trofei || []).filter((t) => fatto(t.id)).length,
     azzera: () => { for (const t of guida.trofei || []) delete progressi.completati[t.id]; },
-  },
-  {
-    id: 'tutto', nome: 'Azzera tutto', pericolo: true,
-    descrizione: 'Cancella ogni progresso di questo gioco, comprese le missioni secondarie. La scelta (es. la casa) resta.',
-    elementi: () => Object.keys(progressi.completati).length + Object.keys(progressi.contatori).length,
-    azzera: () => { progressi.completati = {}; progressi.contatori = {}; progressi.sonoQui = null; },
   },
 ];
 
@@ -474,25 +470,31 @@ function apriMenu() {
       el('p', { class: 'nota' }, 'Esporta o importa i progressi (per usarli su un altro dispositivo).')),
     el('button', { class: 'btn', onclick: () => { chiudi(); apriSalvataggio(); } }, 'Apri'));
 
-  const righe = AZZERAMENTI.map((voce) => {
+  // Una casella per ogni parte azzerabile (disattivata se non c'è niente da azzerare)
+  const caselle = AZZERAMENTI.map((voce) => {
     const quanti = voce.elementi();
-    return el('div', { class: 'voce-menu' },
-      el('div', {},
-        el('p', { class: 'titolo-voce' }, voce.nome),
-        el('p', { class: 'nota' }, voce.descrizione + (quanti === 0 ? ' Non c\'è niente da azzerare.' : ' Hai ' + quanti + ' elementi con progressi.'))),
-      el('button', {
-        class: 'btn' + (voce.pericolo ? ' pericolo' : ''),
-        disabled: quanti === 0,
-        onclick: () => {
-          const conferma = window.confirm(`${voce.nome}? Hai ${quanti} elementi con progressi.\n\nL'operazione non si può annullare.`);
-          if (!conferma) return;
-          voce.azzera();
-          aggiornaVista();
-          salva();
-          chiudi();
-        },
-      }, 'Azzera'));
+    const casella = el('input', { type: 'checkbox', disabled: quanti === 0 });
+    casella.addEventListener('change', aggiornaPulsante);
+    return { voce, quanti, casella, riga: el('label', { class: 'opzione' + (quanti === 0 ? ' spenta' : '') },
+      casella, `${voce.nome} — ${quanti === 0 ? 'niente da azzerare' : quanti + ' elementi con progressi'}`) };
   });
+  const pulsante = el('button', { class: 'btn pericolo', disabled: true }, 'Azzera selezionati');
+  function aggiornaPulsante() { pulsante.disabled = !caselle.some((c) => c.casella.checked); }
+  pulsante.addEventListener('click', () => {
+    const scelte = caselle.filter((c) => c.casella.checked);
+    const elenco = scelte.map((c) => `- ${c.voce.nome} (${c.quanti})`).join('\n');
+    if (!window.confirm(`Azzerare questi progressi?\n\n${elenco}\n\nL'operazione non si può annullare.`)) return;
+    for (const { voce } of scelte) voce.azzera();
+    aggiornaVista();
+    salva();
+    chiudi();
+  });
+
+  const voceAzzera = el('div', { class: 'blocco-importa' },
+    el('p', { class: 'titolo-voce' }, 'Azzera progressi'),
+    el('p', { class: 'nota' }, 'Spunta le parti da azzerare di questa guida. Le altre guide e le scelte (es. la casa) non vengono toccate.'),
+    el('div', { class: 'gruppo-opzioni' }, caselle.map((c) => c.riga)),
+    el('div', { class: 'azioni-editor' }, pulsante));
 
   dialogo.append(el('div', { class: 'involucro-menu' }, finestra(
     el('div', { class: 'corpo-menu' },
@@ -500,8 +502,7 @@ function apriMenu() {
         el('h2', { id: 'titolo-menu' }, 'Menu'),
         el('button', { class: 'btn btn-icona', 'aria-label': 'Chiudi il menu', title: 'Chiudi', onclick: chiudi }, icona('chiudi', 2))),
       voceSalvataggio,
-      el('p', {}, 'Azzera i progressi di questa guida. Le altre guide non vengono toccate.'),
-      righe))));
+      voceAzzera))));
 
   // Cliccando fuori dalla finestra (sullo sfondo scuro) il menu si chiude
   dialogo.addEventListener('click', (e) => { if (e.target === dialogo) chiudi(); });

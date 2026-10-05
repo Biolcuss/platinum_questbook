@@ -422,6 +422,7 @@ dialog.menu::backdrop { background: rgba(14, 12, 11, .72); }
 .gruppo-opzioni { display: grid; gap: 6px; }
 .opzione { display: flex; gap: 10px; align-items: flex-start; cursor: pointer; }
 .opzione input { accent-color: var(--ambra); margin-top: 5px; }
+.opzione.spenta { opacity: .5; cursor: default; }
 .esito { margin: 0; min-height: 1.2em; color: var(--ambra-chiaro); }
 .esito.errore { color: var(--arancio); }
 

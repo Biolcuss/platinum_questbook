@@ -29,7 +29,7 @@ Poi apri **http://localhost:3000**. Su Windows puoi anche fare doppio clic su `P
   gruppo; la freccia accanto apre le sottocategorie (es. missioni principali / compiti, tipi di collezionabili).
   Gli altri pulsanti nascondono i completati e aprono o chiudono tutti i capitoli.
 - **Trofei** e **Info** (fonti e consigli) sono nelle schede in alto.
-- **Menu** (nella pagina del gioco): azzera storia, collezionabili, trofei o tutto, e apre il Salvataggio.
+- **Menu** (nella pagina del gioco): azzera i progressi (spunti storia, missioni secondarie, collezionabili e/o trofei) e apre il Salvataggio.
 - **Salvataggio** (anche nella pagina iniziale): **Esporta** scarica un file con i progressi di tutti i giochi,
   **Importa** lo carica su un altro dispositivo (*Unisci* aggiunge senza perdere nulla, *Sostituisci* usa solo il file).
   Spuntando "Includi anche le copertine" l'esportazione contiene anche le tue copertine; importandole sostituiscono quelle del dispositivo.
