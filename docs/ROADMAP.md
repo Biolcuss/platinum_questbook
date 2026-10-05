@@ -61,6 +61,7 @@ Stato del progetto. Aggiornare a ogni sessione di lavoro.
 - [x] Uncharted: Drake's Fortune — ricerca, verifica incrociata, salvataggio, validazione
 - [ ] Revisione dell'utente su struttura e contenuti
 - [ ] 1 punto da verificare: Gold Spanish Chalice (cap. 13), le fonti non concordano sul lato della piazza
+- [ ] Rivedere le soluzioni degli altri enigmi (cap. 5, 6, 13, 14, 15) con la regola "specifiche e passo per passo"; enigma del pozzo (cap. 2) riscritto, resta da verificare il punto di vista destra/sinistra
 
 ## Fase 5b — Seconda guida: Hogwarts Legacy (Steam) ✅ (in attesa di revisione dell'utente)
 - [x] 46 missioni principali + 12 compiti (6 obbligatori), 24 missioni di relazione, 58 secondarie
@@ -85,6 +86,10 @@ Stato del progetto. Aggiornare a ogni sessione di lavoro.
 - [x] `durata` mostrata nell'elenco giochi e nella scheda Info; controllata dal validatore
 - [ ] Le ore di Uncharted e Hogwarts Legacy sono stime di siti terzi (`daVerificare`): da confrontare con HowLongToBeat
 - [x] Barre rinominate "Storia Principale" e "Completismo"; nell'elenco solo icone (stella, coppa)
+
+## Fase 6c — Scorrimento e barre fisse ✅
+- [x] Scorrimento a scatti: tolto `drop-shadow` dai capitoli (ombra con pseudo-elemento)
+- [x] Titolo del capitolo e barra degli strumenti fissi in alto mentre si scorre
 
 ## Idee future (non ancora decise)
 - Filtri nell'indirizzo (oggi restano in memoria)

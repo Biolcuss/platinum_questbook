@@ -463,6 +463,8 @@ function testoDurata(durata) {
 // -----------------------------------------------------------------------------
 async function mostraElenco() {
   guida = null;
+  if (osservatore) osservatore.disconnect();
+  document.documentElement.style.cssText = '';
   document.title = 'Game Tracker';
   radice.replaceChildren(el('main', { class: 'pagina', id: 'contenuto' }, el('p', { class: 'vuoto' }, 'Caricamento…')));
   let giochi;
@@ -556,6 +558,28 @@ function disegnaGioco() {
 
   radice.replaceChildren(barra, el('div', { class: 'pagina' }, el('main', { id: 'contenuto' }, corpo)));
   aggiornaVista();
+  osservaElementiFissi();
+}
+
+// Misura l'altezza degli elementi che restano fissi in alto (barra, strumenti, titolo del capitolo) e la
+// passa al CSS: serve a posizionarli uno sotto l'altro e a non coprire ciò a cui si scorre.
+// Se il CSS li ha resi non fissi (telefono) l'altezza vale 0.
+let osservatore = null;
+function misuraElementiFissi() {
+  const altezza = (selettore) => {
+    const nodo = document.querySelector(selettore);
+    return nodo && getComputedStyle(nodo).position === 'sticky' ? Math.round(nodo.getBoundingClientRect().height) : 0;
+  };
+  const stile = document.documentElement.style;
+  stile.setProperty('--alt-barra', altezza('.barra') + 'px');
+  stile.setProperty('--alt-strumenti', altezza('.strumenti') + 'px');
+  stile.setProperty('--alt-testata', altezza('.testata') + 'px');
+}
+function osservaElementiFissi() {
+  if (osservatore) osservatore.disconnect();
+  osservatore = new ResizeObserver(misuraElementiFissi); // si riesegue se barra o strumenti cambiano altezza
+  for (const nodo of document.querySelectorAll('.barra, .strumenti, .testata')) osservatore.observe(nodo);
+  misuraElementiFissi();
 }
 
 // ------------------------------------------------------------ Scheda "Guida"

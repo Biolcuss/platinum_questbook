@@ -12,6 +12,13 @@ Esempio reale completo: `data/guides/uncharted-drakes-fortune.json`.
 3. **Niente spoiler di trama**: i passi descrivono cosa fare (dove andare, chi combattere), non cosa succede
    nella storia. Evitare nomi di personaggi quando rivelano colpi di scena (es. "il tuo alleato").
 4. **Le soluzioni degli enigmi vanno nel campo `soluzione`**: l'app le nasconde finché l'utente non le apre.
+   **Devono essere specifiche e chiare, passo per passo** (l'utente deve poterle eseguire senza indovinare):
+   - dire **dove** è l'enigma e **cosa** si manipola (es. "quattro blocchi di pietra sulle pareti", non "i simboli");
+   - dire **come** si interagisce (azione o tasto) e dove prendere l'indizio (es. il diario);
+   - **numerare i passi** e indicare l'**ordine esatto**, con un riferimento non ambiguo (da dove si guarda per "destra/sinistra", punti cardinali, numeri);
+   - dire **cosa succede** quando è risolto, così l'utente capisce se ha funzionato;
+   - se le fonti non specificano un dettaglio (es. il punto di vista), non inventarlo: `daVerificare` + `notaVerifica`.
+   Una `descrizione` breve del passo spiega la situazione (cosa si vede nella stanza), la `soluzione` dà i passi.
 5. **Testi in italiano, nomi propri in inglese originale** (capitoli, collezionabili, trofei, armi).
 6. **Ogni informazione deve essere verificata** con almeno 2 fonti; se non è possibile → `daVerificare`.
 7. **Non inventare mai un ordine**: se un contenuto non ha un punto fisso nella storia (mondo aperto), va in un capitolo con `"ordinato": false`, non sparso a caso nella timeline.

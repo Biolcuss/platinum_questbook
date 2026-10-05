@@ -68,6 +68,7 @@ Dopo ogni spunta si aggiornano solo classi e testi (`aggiornaVista()`), senza ri
 Nella barra degli strumenti "Apri tutti", "Chiudi tutti" e "Nascondi completati" sono pulsanti con sola icona (con `aria-label` e `title`).
 Il pulsante "Menu" (solo icona, accanto ad "Apri tutti/Chiudi tutti"; si chiude con la X in alto a destra) apre una finestra `<dialog>` per azzerare Storia, Collezionabili, Trofei o Tutto (con conferma; "Tutto" mantiene le scelte come la casa).
 Filtri della scheda Guida: Tutto/Solo storia/Solo opzionali + categoria di collezionabili (`filtri.categoria`; mostra solo i collezionabili di quella categoria e nasconde i capitoli senza). Barre di progressione "Storia Principale" e "Completismo" (`barraProgresso()`) nella barra del gioco; nelle schede dell'elenco solo icone (stella, coppa). Campo facoltativo `durata` (ore da HowLongToBeat, che non ha API: si cercano in chat e si salvano nella guida), mostrato in elenco e nella scheda Info.
+Gli elementi fissi in alto (barra, strumenti con filtri/pulsanti, titolo del capitolo aperto) sono `position: sticky` e le loro altezze sono misurate da `misuraElementiFissi()` e passate al CSS (`--alt-barra`, `--alt-strumenti`, `--alt-testata`). Le ombre dei capitoli e dei trofei sono pseudo-elementi, NON `filter: drop-shadow` (rallentava lo scorrimento). Su telefono barra e strumenti non sono fissi.
 Banner "mancabili": mostra solo i collezionabili `mancabile` non spuntati nel capitolo corrente; superato il capitolo non compare più (non sono più recuperabili).
 
 ## Procedura "crea la guida per un gioco"
@@ -102,5 +103,5 @@ Dettagli completi in `docs/FORMATO-GUIDA.md`. In breve:
 ## Guide presenti
 | Gioco | File | Piattaforma | Stato |
 |---|---|---|---|
-| Uncharted: Drake's Fortune | `uncharted-drakes-fortune.json` | PS3 originale | v1, 22 capitoli, 60 tesori + Strange Relic, 48 trofei; 1 punto da verificare |
+| Uncharted: Drake's Fortune | `uncharted-drakes-fortune.json` | PS3 originale | v2, 22 capitoli, 60 tesori + Strange Relic, 48 trofei; 2 punti da verificare (Gold Spanish Chalice, punto di vista dell'enigma del pozzo cap. 2) |
 | Hogwarts Legacy | `hogwarts-legacy.json` | PC (Steam) | v1, 54 capitoli (46 missioni principali + 12 compiti, 4 raccolte con contatore, 24 relazioni, 58 secondarie), 45 obiettivi Steam; 9 punti da verificare. Collezionabili solo come contatori (vedi limiti) |

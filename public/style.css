@@ -71,7 +71,9 @@
 * { box-sizing: border-box; }
 
 html {
-  scroll-padding-top: 190px;  /* la barra fissa in alto (anche con i contatori su due righe) non deve coprire ciò a cui si scorre */
+  /* Altezze degli elementi fissi in alto, misurate da app.js (barra, strumenti, titolo del capitolo): ciò a cui si scorre non deve finire sotto di loro */
+  --alt-barra: 0px; --alt-strumenti: 0px; --alt-testata: 0px;
+  scroll-padding-top: calc(var(--alt-barra) + var(--alt-strumenti) + var(--alt-testata) + 12px);
   -webkit-text-size-adjust: 100%;
 }
 
@@ -213,10 +215,24 @@ svg.icona.icona-coppa { color: var(--ambra); }
 /* -------------------------------------------------------------------- Finestre */
 .finestra { --bordo-finestra: var(--bordo); background: var(--bordo-finestra); padding: 2px; clip-path: var(--pixel); }
 .finestra-in { background: var(--superficie); clip-path: var(--pixel); }
-.capitolo { margin-bottom: 18px; filter: var(--ombra); }
+/* L'ombra dura dei capitoli e dei trofei è un riquadro scuro dietro (pseudo-elemento) e non "filter: drop-shadow":
+   quel filtro, su capitoli molto lunghi, faceva ridisegnare tutto a ogni scorrimento e la pagina appariva a pezzi. */
+.capitolo, .trofeo-card { position: relative; }
+.capitolo::before, .trofeo-card::before {
+  content: ""; position: absolute; inset: 4px -4px -4px 4px;
+  background: #0e0c0b; clip-path: var(--pixel);
+}
+.capitolo > .finestra, .trofeo-card > .finestra { position: relative; }
+.capitolo { margin-bottom: 18px; }
 .capitolo.corrente .finestra { --bordo-finestra: var(--gradiente); }
 
-.testata { font-size: 24px; }
+.testata {
+  font-size: 24px;
+  /* Il titolo del capitolo resta fisso sotto la barra e gli strumenti finché scorri i suoi passi */
+  position: sticky; top: calc(var(--alt-barra) + var(--alt-strumenti)); z-index: 10;
+  background: var(--superficie);
+}
+.capitolo.aperto .testata { border-bottom: 2px solid var(--bordo); }
 .testata button {
   display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
   width: 100%;
@@ -279,7 +295,6 @@ svg.icona.icona-coppa { color: var(--ambra); }
   padding: 14px 16px 14px 18px;
   border-bottom: 2px dotted var(--bordo);
   box-shadow: inset 4px 0 0 var(--colore);
-  scroll-margin-top: 190px;
 }
 .passo:last-child { border-bottom: 0; }
 .passo.t-collezionabile, .passo.t-raccolta { --colore: var(--magenta); }
@@ -343,7 +358,13 @@ dialog.menu::backdrop { background: rgba(14, 12, 11, .72); }
 .btn-icona { padding: 9px 11px; justify-content: center; }
 
 /* ------------------------------------------------------------ Filtri e avvisi */
-.strumenti { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 18px; }
+.strumenti {
+  display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 10px;
+  /* Fissi sotto la barra: filtri e pulsanti restano sempre a portata */
+  position: sticky; top: var(--alt-barra); z-index: 15;
+  background: var(--sfondo); padding: 8px 8px; margin-inline: -8px;
+  border-bottom: 2px dotted var(--bordo);
+}
 .gruppo { display: inline-flex; gap: 4px; flex-wrap: wrap; }
 .strumenti label { display: inline-flex; gap: 10px; align-items: center; cursor: pointer; color: var(--tenue); }
 .strumenti label:hover { color: var(--testo); }
@@ -358,7 +379,7 @@ dialog.menu::backdrop { background: rgba(14, 12, 11, .72); }
 
 /* ----------------------------------------------------------------------- Trofei */
 .riga-trofeo { display: grid; grid-template-columns: 22px minmax(0, 1fr); gap: 14px; padding: 14px 16px; }
-.trofeo-card { margin-bottom: 14px; filter: var(--ombra); }
+.trofeo-card { margin-bottom: 14px; }
 .trofeo-card.fatto .contenuto { opacity: .55; }
 .trofeo-card.pronto .finestra { --bordo-finestra: var(--ok); }
 .grado { display: inline-block; font: 400 17px/1 var(--font-pixel); padding: 3px 8px; margin-left: 10px; color: var(--inchiostro); vertical-align: 2px; }
@@ -419,8 +440,7 @@ dialog.menu::backdrop { background: rgba(14, 12, 11, .72); }
 }
 
 @media (max-width: 640px) {
-  html { scroll-padding-top: 16px; }
-  .passo { scroll-margin-top: 16px; }
+  .strumenti { position: static; }  /* su telefono la barra occupa troppo spazio per restare fissa */
   .barra { position: static; }  /* su telefono la barra occupa troppo spazio per restare fissa */
   .barra-centro h1 { font-size: 30px; }
   .titolo-app { font-size: 44px; }
