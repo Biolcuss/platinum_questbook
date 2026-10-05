@@ -168,6 +168,8 @@ svg.icona.icona-coppa { color: var(--ambra); }
   background-color: var(--superficie-2); background-repeat: no-repeat;
   border: 2px solid var(--bordo);
 }
+/* Copertina in fila nella riga del titolo: solo su telefono */
+.copertina-telefono { display: none; }
 /* Sezione sotto: i contatori */
 .barra-sotto { border-top: 2px dotted var(--bordo); background: var(--sfondo); }
 .barra-sotto .moduli { justify-content: flex-start; }
@@ -227,9 +229,10 @@ svg.icona.icona-coppa { color: var(--ambra); }
   .barra-sotto .barre { grid-template-columns: 1fr; width: 100%; min-width: 0; }
 }
 @media (max-width: 640px) {
-  .progresso { grid-template-columns: 9em minmax(0, 1fr); }
-  .progresso.solo-icona { grid-template-columns: 20px minmax(0, 1fr); }
-  .progresso-valore { grid-column: 1 / -1; text-align: left; }
+  /* Su telefono nome, barra (più corta) e percentuale restano sulla stessa riga */
+  .progresso { grid-template-columns: 7.2em minmax(0, 1fr) auto; gap: 8px; font-size: 16px; }  /* colonna del nome fissa: le due barre iniziano allo stesso punto */
+  .progresso.solo-icona { grid-template-columns: 20px minmax(0, 1fr) auto; }
+  .progresso-valore { min-width: 0; }
 }
 
 /* -------------------------------------------------------------------- Finestre */
@@ -466,8 +469,16 @@ dialog.menu::backdrop { background: rgba(14, 12, 11, .72); }
 @media (max-width: 640px) {
   .strumenti { position: static; }  /* su telefono la barra occupa troppo spazio per restare fissa */
   .barra { position: static; }
-  .barra-copertina { display: none; }
-  .barra.con-copertina { --testo-x: calc(var(--margine) + max(16px, env(safe-area-inset-left))); }   /* su telefono la copertina nella barra non c'è: toglierebbe troppo spazio */  /* su telefono la barra occupa troppo spazio per restare fissa */
+  .barra-copertina { display: none; }   /* la copertina assoluta della barra non c'è su telefono... */
+  .barra.con-copertina { --testo-x: calc(var(--margine) + max(16px, env(safe-area-inset-left))); }
+  /* ...al suo posto ce n'è una piccola in fila, tra "Giochi" e il titolo */
+  .barra-alto { flex-wrap: nowrap; gap: 12px; }
+  .barra-alto .barra-centro { min-width: 0; gap: 4px 12px; }
+  .copertina-telefono {
+    display: block; flex: none; height: 88px; aspect-ratio: 2 / 3;
+    background-color: var(--superficie-2); background-repeat: no-repeat; border: 2px solid var(--bordo);
+  }
+  .barra-centro h1 { flex-wrap: wrap; gap: 2px 8px; }
   .barra-centro h1 { font-size: 30px; }
   .titolo-app { font-size: 44px; }
   .moduli { margin-left: 0; }
@@ -476,5 +487,16 @@ dialog.menu::backdrop { background: rgba(14, 12, 11, .72); }
   .passo.con-azione { grid-template-columns: 22px minmax(0, 1fr); }
   .azione-passo { grid-column: 2; justify-self: start; }
   .voce-menu { flex-direction: column; align-items: stretch; }
-  .copertina { width: 110px; }
+  /* Elenco dei giochi: copertina alta quanto la capsula, info rimpicciolite per stare in una riga */
+  .pagina.larga { padding-left: 12px; padding-right: 12px; }
+  .scheda-gioco { min-width: 0; }
+  .copertina { width: 28vw; max-width: 130px; aspect-ratio: auto; align-self: stretch; background-size: cover; }
+  .scheda-corpo { padding: 10px 12px; min-height: 0; }
+  .scheda-gioco h2 { font-size: 22px; }
+  .scheda-gioco p { margin: 2px 0 8px; font-size: 12px; }
+  .scheda-gioco .barre { gap: 4px; margin-top: 4px; }
+  .scheda-gioco .progresso { font-size: 15px; gap: 6px; }
+  .scheda-gioco .durata { flex-wrap: nowrap; gap: 4px; margin-top: 8px; }
+  .scheda-gioco .durata .icona { display: none; }
+  .scheda-gioco .durata .modulo { font-size: min(13px, 3.2vw); padding: 2px .45em; gap: 3px; }
 }

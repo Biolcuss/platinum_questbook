@@ -564,11 +564,18 @@ function disegnaGioco() {
     copertinaBarra = el('div', { class: 'barra-copertina', 'aria-hidden': 'true' });
     applicaCopertina(copertinaBarra, guida.copertina);
   }
+  // Su telefono la copertina della barra (assoluta) non c'è: ne uso una in fila, tra "Giochi" e il titolo
+  let copertinaTelefono = null;
+  if (guida.copertina) {
+    copertinaTelefono = el('div', { class: 'copertina-telefono', 'aria-hidden': 'true' });
+    applicaCopertina(copertinaTelefono, guida.copertina);
+  }
   const barra = el('header', { class: 'barra' + (copertinaBarra ? ' con-copertina' : '') },
     copertinaBarra,
     el('div', { class: 'barra-contenuto' },
       el('div', { class: 'barra-riga barra-alto' },
         el('a', { href: '#/', class: 'btn indietro', 'aria-label': 'Torna all\'elenco dei giochi' }, icona('sinistra'), 'Giochi'),
+        copertinaTelefono,
         el('div', { class: 'barra-centro' },
           el('h1', {}, guida.titolo, el('span', { class: 'versione' }, guida.piattaforma)),
           el('nav', { class: 'spazi', 'aria-label': 'Sezioni della guida' },
