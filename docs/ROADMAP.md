@@ -88,6 +88,11 @@ Stato del progetto. Aggiornare a ogni sessione di lavoro.
 
 ## Idee future (non ancora decise)
 - Filtri nell'indirizzo (oggi restano in memoria)
+- **Opzionali (idee valutate con l'utente):**
+  - Statistiche e cronologia (grafici dai dati delle spunte, ritmo di gioco)
+  - Ricerca di testo nella guida
+  - Uso dal telefono (stessa rete Wi-Fi; attenzione alla sicurezza)
+  - Copertine dei giochi (es. IGDB o RAWG: userebbero un'API esterna)
 - Più partite per lo stesso gioco
 - Note personali su ogni passo
 - Immagini o link a video per le posizioni dei collezionabili

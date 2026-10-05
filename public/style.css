@@ -101,6 +101,8 @@ h1, h2, h3 { font-family: var(--font-pixel); font-weight: 400; text-wrap: balanc
 :focus-visible { outline: 2px solid var(--ambra); outline-offset: 2px; }
 
 .icona { display: inline-block; vertical-align: -1px; flex: none; image-rendering: pixelated; }
+/* L'icona del trofeo è sempre ambra, ovunque (più specifica delle regole dei moduli e delle barre) */
+svg.icona.icona-coppa { color: var(--ambra); }
 
 .pagina {
   max-width: 940px;
@@ -197,14 +199,14 @@ h1, h2, h3 { font-family: var(--font-pixel); font-weight: 400; text-wrap: balanc
 .progresso.completo .progresso-riempi { background: var(--colore-barra); }
 .progresso-valore { color: var(--testo); font-variant-numeric: tabular-nums; text-align: right; min-width: 3.5em; }
 /* Nell'elenco dei giochi: solo l'icona al posto del nome */
-.progresso.solo-icona { grid-template-columns: 24px minmax(0, 1fr) auto; }
+.progresso.solo-icona { grid-template-columns: 20px minmax(0, 1fr) auto; }
 .progresso.solo-icona .progresso-nome { color: var(--colore-barra); display: flex; }
 .scheda-gioco .barre { margin-top: 6px; }
 .scheda-gioco .durata { margin-top: 12px; align-items: center; color: var(--tenue); }
 .info-testo .durata { align-items: center; }
 @media (max-width: 640px) {
   .progresso { grid-template-columns: 9em minmax(0, 1fr); }
-  .progresso.solo-icona { grid-template-columns: 24px minmax(0, 1fr); }
+  .progresso.solo-icona { grid-template-columns: 20px minmax(0, 1fr); }
   .progresso-valore { grid-column: 1 / -1; text-align: left; }
 }
 

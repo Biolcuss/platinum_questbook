@@ -101,6 +101,35 @@ const ICONE = {
     '##...',
     '#....',
   ],
+  espandi: [ // due frecce in giù: apri tutti i capitoli
+    '#.....#',
+    '.#...#.',
+    '..#.#..',
+    '...#...',
+    '.......',
+    '#.....#',
+    '.#...#.',
+    '..#.#..',
+    '...#...',
+  ],
+  comprimi: [ // due frecce in su: chiudi tutti i capitoli
+    '...#...',
+    '..#.#..',
+    '.#...#.',
+    '#.....#',
+    '.......',
+    '...#...',
+    '..#.#..',
+    '.#...#.',
+    '#.....#',
+  ],
+  occhio: [ // per mostrare/nascondere i passi completati
+    '..#####..',
+    '.#.....#.',
+    '#...#...#',
+    '.#.....#.',
+    '..#####..',
+  ],
   sinistra: [
     '....#',
     '...##',
@@ -121,7 +150,7 @@ function icona(nome, scala = 2) {
   svg.setAttribute('viewBox', `0 0 ${righe[0].length} ${righe.length}`);
   svg.setAttribute('width', righe[0].length * scala);
   svg.setAttribute('height', righe.length * scala);
-  svg.setAttribute('class', 'icona');
+  svg.setAttribute('class', 'icona icona-' + nome); // la classe permette di colorare una singola icona dal CSS
   svg.setAttribute('aria-hidden', 'true');
   svg.setAttribute('shape-rendering', 'crispEdges');
   svg.setAttribute('fill', 'currentColor');
@@ -169,7 +198,7 @@ function finestra(...contenuto) {
 // Se "nomeIcona" è indicato, al posto del nome scritto compare l'icona (il nome resta per i lettori di schermo).
 function barraProgresso(nome, classe, percentuale, testo, nomeIcona = null) {
   return el('div', { class: 'progresso ' + classe + (nomeIcona ? ' solo-icona' : '') + (percentuale >= 100 ? ' completo' : '') },
-    nomeIcona ? el('span', { class: 'progresso-nome', title: nome }, icona(nomeIcona, 3)) : el('span', { class: 'progresso-nome' }, nome),
+    nomeIcona ? el('span', { class: 'progresso-nome', title: nome }, icona(nomeIcona, 2)) : el('span', { class: 'progresso-nome' }, nome),
     el('div', {
       class: 'progresso-barra', role: 'progressbar', 'aria-label': nome,
       'aria-valuemin': '0', 'aria-valuemax': '100', 'aria-valuenow': String(percentuale),
@@ -607,20 +636,26 @@ function costruisciTimeline() {
       }, etichetta));
     }
   }
-  const casellaNascondi = el('input', {
-    type: 'checkbox',
-    class: 'spunta',
-    onchange: (e) => { filtri.nascondiCompletati = e.target.checked; aggiornaVista(); },
-  });
-  casellaNascondi.checked = filtri.nascondiCompletati;
+  // "Nascondi completati": pulsante con solo l'icona; acceso (ambra) quando i completati sono nascosti
+  const bottoneNascondi = el('button', {
+    class: 'btn btn-icona',
+    'aria-label': 'Nascondi completati',
+    title: 'Nascondi completati',
+    'aria-pressed': String(filtri.nascondiCompletati),
+    onclick: (e) => {
+      filtri.nascondiCompletati = !filtri.nascondiCompletati;
+      e.currentTarget.setAttribute('aria-pressed', String(filtri.nascondiCompletati));
+      aggiornaVista();
+    },
+  }, icona('occhio', 3));
 
   const barraStrumenti = el('div', { class: 'strumenti' },
     gruppoTipo,
     gruppoCategoria,
-    el('label', {}, casellaNascondi, 'Nascondi completati'),
+    bottoneNascondi,
     el('div', { class: 'spazio-flex' },
-      el('button', { class: 'btn', onclick: () => impostaCapitoliAperti(true) }, 'Apri tutti'),
-      el('button', { class: 'btn', onclick: () => impostaCapitoliAperti(false) }, 'Chiudi tutti'),
+      el('button', { class: 'btn btn-icona', 'aria-label': 'Apri tutti i capitoli', title: 'Apri tutti', onclick: () => impostaCapitoliAperti(true) }, icona('espandi', 2)),
+      el('button', { class: 'btn btn-icona', 'aria-label': 'Chiudi tutti i capitoli', title: 'Chiudi tutti', onclick: () => impostaCapitoliAperti(false) }, icona('comprimi', 2)),
       el('button', { class: 'btn btn-icona', 'aria-label': 'Menu', title: 'Menu', 'aria-haspopup': 'dialog', onclick: apriMenu }, icona('menu', 3))));
 
   // Capitoli: apro quello del prossimo passo di storia da fare
