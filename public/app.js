@@ -1127,10 +1127,7 @@ function creaVoceCollezionabili(interattivo) {
       casella.checked = filtri.gruppi.has(gruppo);
       return el('label', { class: 'riga-categoria', for: id }, casella, el('span', { class: 'nome-categoria' }, categoria.nome),
         el('b', {}, `${conteggio.ok}/${conteggio.tot}`));
-    }),
-    el('div', { class: 'azioni-pannello' },
-      el('button', { type: 'button', class: 'btn', onclick: () => { for (const { gruppo } of categorie) filtri.gruppi.add(gruppo); aggiornaDopo(true); } }, 'Tutte'),
-      el('button', { type: 'button', class: 'btn', onclick: () => { for (const { gruppo } of categorie) filtri.gruppi.delete(gruppo); aggiornaDopo(false); } }, 'Nessuna'))
+    })
   )));
 
   return el('div', { class: 'gruppo-collezionabili' }, principale, freccia, pannello);
