@@ -2,7 +2,7 @@
   "id": "hogwarts-legacy",
   "titolo": "Hogwarts Legacy",
   "piattaforma": "PC (Steam)",
-  "versioneGuida": 1,
+  "versioneGuida": 2,
   "verificataIl": "2026-10-04",
   "durata": {
     "storia": "25-30",
@@ -3005,11 +3005,9 @@
           "tipo": "secondaria",
           "titolo": "Solved by the Bell",
           "dove": "Parte dopo Rescuing Rococo, con la Musical Map che trovi a Henrietta's Hideaway.",
-          "descrizione": "Usa la mappa musicale per trovare i tesori. L'enigma è alle rovine di Clagmar Castle.",
+          "descrizione": "Usa la mappa musicale per trovare il tesoro: la X porta alle rovine di Clagmar Castle (Clagmar Coast). Qui c'è un enigma a campane: va suonata una melodia.",
           "nota": "Se non l'hai già ripulito, qui ci sono Silvanus Selwyn e i suoi Ashwinder (vedi Sacking Selwyn).",
-          "soluzione": "Suona le campane come note di un pentagramma: F, B, D, C, B, F, E, C. Se le numeri da 1 (la più bassa) a 9 (la più alta): 2, 5, 7, 6, 5, 9, 8, 6. È la celebre melodia di Harry Potter.",
-          "daVerificare": true,
-          "notaVerifica": "L'ordine delle campane viene da una sola fonte (la wiki)."
+          "soluzione": "1) Ripulisci il castello dai nemici, poi vai a nord-ovest della tenda grande sul lato sud: al centro della struttura sono appese nove campane. 2) Numerale da 1 (la più bassa) a 9 (la più alta). 3) Colpiscile con l'Incantesimo base, una alla volta e in questo ordine: 2, 5, 7, 6, 5, 9, 8, 6 (sono le note della melodia di Harry Potter). 4) Alla fine cade uno scrigno: aprilo per completare la missione e ottenere l'aspetto Treasure-Seeker's Longcoat."
         },
         {
           "id": "c53-m11",

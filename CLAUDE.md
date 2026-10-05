@@ -103,5 +103,5 @@ Dettagli completi in `docs/FORMATO-GUIDA.md`. In breve:
 ## Guide presenti
 | Gioco | File | Piattaforma | Stato |
 |---|---|---|---|
-| Uncharted: Drake's Fortune | `uncharted-drakes-fortune.json` | PS3 originale | v2, 22 capitoli, 60 tesori + Strange Relic, 48 trofei; 2 punti da verificare (Gold Spanish Chalice, punto di vista dell'enigma del pozzo cap. 2) |
-| Hogwarts Legacy | `hogwarts-legacy.json` | PC (Steam) | v1, 54 capitoli (46 missioni principali + 12 compiti, 4 raccolte con contatore, 24 relazioni, 58 secondarie), 45 obiettivi Steam; 9 punti da verificare. Collezionabili solo come contatori (vedi limiti) |
+| Uncharted: Drake's Fortune | `uncharted-drakes-fortune.json` | PS3 originale | v3, 22 capitoli, 60 tesori + Strange Relic, 48 trofei; 3 punti da verificare (Gold Spanish Chalice, ordine dei pannelli del pozzo cap. 2, percorso delle due leve cap. 15). Soluzioni degli enigmi riscritte passo per passo |
+| Hogwarts Legacy | `hogwarts-legacy.json` | PC (Steam) | v1, 54 capitoli (46 missioni principali + 12 compiti, 4 raccolte con contatore, 24 relazioni, 58 secondarie), 45 obiettivi Steam; v2, 8 punti da verificare. Collezionabili solo come contatori (vedi limiti) |

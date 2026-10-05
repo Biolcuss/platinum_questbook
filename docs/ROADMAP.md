@@ -61,7 +61,7 @@ Stato del progetto. Aggiornare a ogni sessione di lavoro.
 - [x] Uncharted: Drake's Fortune — ricerca, verifica incrociata, salvataggio, validazione
 - [ ] Revisione dell'utente su struttura e contenuti
 - [ ] 1 punto da verificare: Gold Spanish Chalice (cap. 13), le fonti non concordano sul lato della piazza
-- [ ] Rivedere le soluzioni degli altri enigmi (cap. 5, 6, 13, 14, 15) con la regola "specifiche e passo per passo"; enigma del pozzo (cap. 2) riscritto, resta da verificare il punto di vista destra/sinistra
+- [x] Soluzioni degli enigmi riscritte passo per passo (Uncharted cap. 2, 5, 6, 13, 14, 15 e Hogwarts "Solved by the Bell"); da verificare l'ordine dei pannelli del cap. 2 e il percorso delle leve del cap. 15
 
 ## Fase 5b — Seconda guida: Hogwarts Legacy (Steam) ✅ (in attesa di revisione dell'utente)
 - [x] 46 missioni principali + 12 compiti (6 obbligatori), 24 missioni di relazione, 58 secondarie

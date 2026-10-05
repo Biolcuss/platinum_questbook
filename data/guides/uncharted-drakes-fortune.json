@@ -2,7 +2,7 @@
   "id": "uncharted-drakes-fortune",
   "titolo": "Uncharted: Drake's Fortune",
   "piattaforma": "PS3 (versione originale)",
-  "versioneGuida": 2,
+  "versioneGuida": 3,
   "verificataIl": "2026-10-04",
   "durata": {
     "storia": "8-9",
@@ -128,10 +128,10 @@
         { "id": "c02-p05", "tipo": "storia", "titolo": "Accendi il braciere e attraversa la stanza del calendario",
           "descrizione": "Consulta il diario (Select) vicino al braciere: il compagno lo accende. Spara alla lampada più vicina alle macerie per liberare il passaggio. Nella stanza del calendario attento ai blocchi che cedono; scendi con la liana a destra e spara ai barili per liberare la scala." },
         { "id": "c02-p06", "tipo": "storia", "titolo": "Risolvi l'enigma dei simboli nel pozzo",
-          "descrizione": "Nella stanza dal pavimento circolare ci sono quattro blocchi di pietra con dei simboli, due in alto e due in basso sulle pareti. Vanno spinti dentro il muro in un ordine preciso, indicato nel diario di Drake.",
-          "soluzione": "1) Apri il diario di Drake: mostra i simboli nell'ordine giusto. 2) Arrampicati fino a ciascun blocco e spingilo nel muro, uno alla volta, in questa sequenza: 1° blocco in alto a destra, 2° blocco in basso a sinistra, 3° blocco in alto a sinistra, 4° blocco in basso a destra. 3) Dopo il quarto blocco il pavimento circolare si apre e al suo posto compare un pozzo con una scala scavata nella parete: scendi da lì.",
+          "descrizione": "Nella grande sala con quattro simboli quadrati sul pavimento attorno a un foro circolare, quattro pannelli nei muri vanno spinti in un ordine preciso, indicato nel diario di Drake. I pannelli sono sui cornicioni in alto, raggiungibili arrampicandosi.",
+          "soluzione": "1) Mettiti al centro, tra i quattro simboli sul pavimento, e apri il diario di Drake (Select): ogni simbolo ha un numero accanto, ed è l'ordine in cui spingere il pannello corrispondente. 2) Ogni pannello è sui cornicioni alti delle pareti: arrampicati sui cornicioni stretti spostandoti di lato, usa il pilastro rotto per passare da un cornicione all'altro, poi premi Triangolo davanti al pannello per spingerlo nel muro. 3) Spingi i pannelli in quest'ordine: 1° in alto a destra, 2° in basso a sinistra, 3° in alto a sinistra, 4° in basso a destra. 4) Dopo il quarto pannello il pavimento circolare si apre: scendi nel foro con la scala a pioli sul bordo.",
           "daVerificare": true,
-          "notaVerifica": "Le fonti non dicono da quale punto di vista vanno intese destra e sinistra. Se la sequenza non funziona, segui l'ordine dei simboli mostrato dal diario in gioco." },
+          "notaVerifica": "La sequenza (alto a destra, basso a sinistra, alto a sinistra, basso a destra) viene da una sola fonte e non dice da quale punto di vista si guarda. Conta l'ordine dei numeri accanto ai simboli nel diario: se non coincide, segui il diario." },
         { "id": "c02-p07", "tipo": "storia", "titolo": "Scendi nel pozzo e tuffati in acqua",
           "descrizione": "Scendi la scala, vai a sinistra, spingi il blocco di pietra nella fossa (Triangolo + L3) e lasciati cadere in acqua." },
         { "id": "c02-t04", "tipo": "collezionabile", "categoria": "tesori", "titolo": "Silver Llama",
@@ -241,7 +241,7 @@
           "dove": "Nel corridoio d'acqua sotterraneo prima della seconda mitragliatrice: nelle stanze laterali che usi come copertura, scavalca i gradini tra la prima e la seconda stanza. Il tesoro è nell'angolo sinistro, sopra delle casse di munizioni." },
         { "id": "c05-p06", "tipo": "storia", "titolo": "Alza il livello dell'acqua nella camera allagata",
           "descrizione": "Tre pirati attaccano dall'alto: non correre al centro della stanza o arrivano altre ondate. Poi due pirati con Moss - 12 scendono dall'ingresso. Sali sul pilastro centrale e usa gli argani per alzare l'acqua due volte.",
-          "soluzione": "Attiva prima l'argano di sinistra, poi quello di destra. Con la camera piena d'acqua nuota fino alla sporgenza." }
+          "soluzione": "In tutto ci sono tre argani (ruote a catena, Triangolo). 1) Nella grande sala vai all'estremità sinistra, sali sul muretto basso e sulla piattaforma di legno sopra, poi fai il giro del pilastro fino a una sporgenza: lì il primo argano apre il cancello. 2) Passa il cancello e tuffati nell'acqua: nuota fino al muro a sinistra della scala rotta. 3) Sali sui cornicioni stretti del muro spostandoti sempre a sinistra fino a una sporgenza: il secondo argano fa salire l'acqua (prima volta). 4) Torna in acqua, nuota all'estremità sinistra della sala e salta da blocco a blocco fino a un'altra sporgenza: il terzo argano la fa salire ancora (seconda volta). 5) Con l'acqua alta, tuffati, sali sulla scala rotta e poi sulla scala a destra." }
       ]
     },
     {
@@ -253,8 +253,8 @@
         { "id": "c06-t01", "tipo": "collezionabile", "categoria": "tesori", "titolo": "Silver Inca Mask",
           "dove": "Dopo il primo scontro del capitolo: sali le scale fino a due grandi alberi bianchi. Il tesoro è dietro il secondo albero, sul bordo dei bastioni." },
         { "id": "c06-p02", "tipo": "storia", "titolo": "Recupera le chiavi per la porta con lo stemma",
-          "descrizione": "Nel secondo cortile c'è una porta chiusa con lo stemma di due chiavi (consulta il diario). Le chiavi sono in cima a una torre.",
-          "soluzione": "Torna al primo cortile e sali sui pilastri di pietra fino a una corda. Premi Triangolo per afferrarla e subito Cerchio per schivare i detriti. Sali verso la torre saltando in fretta prima che le piattaforme crollino. Prendi le chiavi dallo scheletro in cima, poi scendi con la corda fino alla porta." },
+          "descrizione": "Nel secondo cortile c'è una porta chiusa con lo stemma di due chiavi (consulta il diario). Le chiavi sono in mano a uno scheletro in cima a una torre.",
+          "soluzione": "1) Sulla passerella sopra il cortile usa l'argano a sinistra della torre per alzare un cancello, scendi dal bordo ed entra. 2) Sali sul piccolo pilastro rotto a destra, poi sul pilastro più alto, salta sul cornicione e arriva al suo bordo sinistro. 3) Salta sul cornicione stretto del pilastro a sinistra, spostati tutto a destra, salta sul pilastro dietro di te e poi sul cornicione sopra la porta. 4) Premi Triangolo sulla corda: crolla un pilastro. Premi subito il pulsante che compare in basso a sinistra dello schermo per non farti schiacciare. 5) Sali sul pilastro caduto e arrampicati sui cornicioni verso la torre (alcune piattaforme cedono: non fermarti). 6) Entra nella finestra in cima e premi Triangolo sullo scheletro per prendere le chiavi. 7) Scendi con la corda fino a terra, torna al cancello aperto, entra in un arco a sinistra e in fondo al corridoio usa la porta con lo stemma." },
         { "id": "c06-t02", "tipo": "collezionabile", "categoria": "tesori", "titolo": "Spanish Silver Coin",
           "dove": "Nel cortile principale dopo aver usato le chiavi: a sinistra del grande cancello, sui resti di una scalinata di pietra invasa da un albero bianco (arrampicati sulle macerie a sinistra del cancello)." },
         { "id": "c06-p03", "tipo": "storia", "titolo": "Supera il cortile con la mitragliatrice",
@@ -405,13 +405,13 @@
         { "id": "c13-p06", "tipo": "storia", "titolo": "Ripulisci la biblioteca",
           "descrizione": "Entra dal lato sinistro. Elimina prima i mercenari al piano terra (attento a quello con M79), poi i tre sulla passerella: prima quello in fondo con la Desert - 5. Munizioni e granate in due depositi sotto la passerella." },
         { "id": "c13-p07", "tipo": "storia", "titolo": "Risolvi l'enigma delle quattro statue",
-          "descrizione": "Consulta il diario: indica i nomi delle quattro statue e i punti cardinali. Usa la bussola incisa sul pavimento.",
-          "soluzione": "Ruota le statue così: Matthew verso Nord, Luke verso Sud, John verso Est, Mark verso Ovest. Una libreria si sposta e apre la strada verso la biblioteca inferiore." },
+          "descrizione": "Nella biblioteca, dopo aver eliminato i nemici, il diario mostra quattro statue con un nome scritto sotto ciascuna e i punti cardinali. Al centro della stanza c'è una bussola dipinta sul pavimento.",
+          "soluzione": "1) Vai al centro della sala, sulla bussola dipinta sul pavimento, e apri il diario (Select): ogni statua ha un nome sotto, e ogni nome sta su un punto cardinale. 2) Ogni punta della bussola indica uno scaffale con una statua: arrampicati sullo scaffale e ruota la statua verso la direzione del diario. 3) Direzioni: statua dell'angelo (Matthew) a Nord; statua dell'angelo con la capra (Luke) a Sud; statua dell'angelo con l'uccello (John) a Est; statua dell'angelo con il leone (Mark) a Ovest. 4) Dopo la quarta statua si apre un passaggio segreto: entraci." },
         { "id": "c13-t07", "tipo": "collezionabile", "categoria": "tesori", "titolo": "Golden Cup and Cover",
           "dove": "Nella stanza segreta alla fine del capitolo (quella con i quadri): contro il muro opposto all'ingresso, a destra di un grande dipinto." },
         { "id": "c13-p08", "tipo": "storia", "titolo": "Risolvi l'enigma delle torce",
-          "descrizione": "Nella seconda biblioteca esamina il muro di destra e segui l'indizio del diario.",
-          "soluzione": "Interagisci con le due torce sui muri per capovolgerle: si apre il passaggio finale." }
+          "descrizione": "Nella stanza sotto il passaggio segreto c'è un quadro al centro del muro di destra e due torce sul tratto di muro sporgente, ai suoi lati.",
+          "soluzione": "1) Entra nella porta in fondo alla scala e vai al quadro al centro del muro di destra. 2) Apri il diario: mostra come devono essere le torce. 3) Vai a ciascuna delle due torce (una a sinistra e una a destra del quadro) e ruotala con Triangolo finché non è capovolta, a testa in giù. 4) Quando entrambe sono capovolte si apre il passaggio finale." }
       ]
     },
     {
@@ -431,8 +431,8 @@
         { "id": "c14-p03", "tipo": "storia", "titolo": "Ripulisci la chiesa",
           "descrizione": "Mettiti subito dietro la prima panca. Ci sono mercenari che pattugliano e cecchini con Desert - 5 in fondo. Granate Mk-NDI nelle vicinanze." },
         { "id": "c14-p04", "tipo": "storia", "titolo": "Risolvi l'enigma delle campane",
-          "descrizione": "Avvicinati a una delle due grandi campane e apri il diario.",
-          "soluzione": "Le due campane devono suonare insieme: premi Triangolo per suonarne una e spara subito all'altra, oppure spara a entrambe in rapida successione. Si apre una porta segreta a sinistra." },
+          "descrizione": "Nella chiesa, dopo aver eliminato i nemici, ci sono due grandi campane: una a ciascun lato dell'edificio.",
+          "soluzione": "1) Vai all'estremità destra o sinistra della chiesa, dove c'è una campana. 2) Avvicinati e apri il diario: l'indizio dice che le due campane devono suonare insieme. 3) Spara a una campana e poi all'altra in rapida successione, così che suonino nello stesso momento. 4) Si apre una porta: entra e scendi la scala a pioli verso le catacombe." },
         { "id": "c14-t04", "tipo": "collezionabile", "categoria": "tesori", "titolo": "Silver Spanish Goblet",
           "dove": "Uscendo dalla chiesa, dopo essere sceso dalla scala a pioli: dietro un grande sarcofago (squadrato) nelle catacombe." },
         { "id": "c14-p05", "tipo": "storia", "titolo": "Attraversa le catacombe",
@@ -462,8 +462,10 @@
         { "id": "c15-t03", "tipo": "collezionabile", "categoria": "tesori", "titolo": "Golden Spanish Goblet",
           "dove": "Appena rientrato nella cattedrale, prima di iniziare l'arrampicata: in una stanzetta buia nell'angolo in fondo a destra." },
         { "id": "c15-p04", "tipo": "storia", "titolo": "Abbassa le due leve ai lati del grande finestrone",
-          "descrizione": "Arrampicata tra assi di legno, pilastri (alcuni appigli cedono) e lampadari.",
-          "soluzione": "Prima la leva di destra: salta sul lampadario e poi sulla passerella di legno, appenditi alla leva per abbassarla e torna al lampadario. Poi quella di sinistra: usa gli appigli sul muro fino alla passerella (attento ai buchi nel pavimento). Dopo la seconda leva sali sul pilastro accanto, giraci intorno e usa la catena per arrivare alla finestra inclinata e alla galleria segreta." },
+          "descrizione": "Arrampicata tra assi di legno, pilastri (alcuni appigli cedono) e lampadari. Le due leve sono grandi chiavi appese al muro del salone: ti aggrappi e le abbassi con il peso.",
+          "soluzione": "Direzioni riferite a Nathan, con la camera dietro di lui. 1) Dal balcone con i nemici vai alla piccola sporgenza di legno all'estremità sinistra, controlla il diario e salta sulla sporgenza davanti. 2) Salta di cornicione stretto in cornicione stretto lungo le colonne verso sinistra fino a una sporgenza di legno; sali, gira l'angolo e salta sul lampadario. 3) Passa sulle sporgenze di legno a destra e sulle colonne, fino a una sporgenza con una grande chiave appesa al muro a sinistra: saltaci su e aggrappati per abbassarla (prima leva). 4) Torna indietro per lo stesso percorso fino al lampadario, poi salta sulle sporgenze di legno a sinistra: dietro l'angolo c'è la seconda grande chiave, abbassala allo stesso modo. 5) Sposta a sinistra sulla chiave, salta sul cornicione della colonna e sulla catena, corri sul muro: arrivi alla sporgenza con il disegno del cuore e puoi entrare nella porta.",
+          "daVerificare": true,
+          "notaVerifica": "Il percorso è descritto da una sola fonte, con direzioni relative a Nathan: può servire qualche tentativo." },
         { "id": "c15-t04", "tipo": "collezionabile", "categoria": "tesori", "titolo": "Jeweled Golden Cross",
           "dove": "Alla fine del passaggio a destra della prima finestra segreta (sul lato destro dopo l'enigma delle leve)." },
         { "id": "c15-p05", "tipo": "storia", "titolo": "Esamina la vetrata e scendi",
@@ -475,8 +477,8 @@
         { "id": "c15-t06", "tipo": "collezionabile", "categoria": "tesori", "titolo": "Golden Inca Mask",
           "dove": "Nel cimitero, dietro una lapide tra l'edificio da cui sono usciti i nemici e il mausoleo più grande alla sua sinistra." },
         { "id": "c15-p07", "tipo": "storia", "titolo": "Risolvi l'enigma dei simboli",
-          "descrizione": "Entra nell'edificio e allinea i simboli come nel disegno del diario.",
-          "soluzione": "Vanno cambiati solo tre simboli: ruota la conchiglia due volte, le frecce due volte e il serpente finché guarda a sinistra. Si apre il passaggio segreto." }
+          "descrizione": "Nel cimitero, dopo aver eliminato i nemici, entra nella costruzione con il disegno di un cuore/chiave sul tetto: dentro, sette emblemi sono sotto i resti degli scheletri e vanno messi come nel diario.",
+          "soluzione": "1) Entra nell'edificio con il cuore/chiave sul tetto, vai al centro della stanza e apri il diario (Select): mostra i sette emblemi (ancora, frecce, libro, coppa, corona, serpente, conchiglia) nella posizione giusta. 2) Ruota gli emblemi con Triangolo: ne vanno cambiati solo tre. 3) Frecce: con le punte verso l'alto. Serpente: rivolto a sinistra. Conchiglia: capovolta (a testa in giù). 4) Gli altri quattro emblemi sono già giusti. 5) Quando sono tutti uguali al diario si apre il passaggio segreto." }
       ]
     },
     {
