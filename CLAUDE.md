@@ -65,6 +65,7 @@ Un passo `tipo: "trofeo"` è salvato con l'id del **trofeo** (`passo.trofeo`), n
 Dopo ogni spunta si aggiornano solo classi e testi (`aggiornaVista()`), senza ricostruire la pagina. Il testo delle guide si inserisce sempre come testo semplice, mai come HTML.
 "Sono qui" (a destra del passo di storia) è un'azione una tantum, non un interruttore: spunta tutti i passi di storia fino a quel passo compreso (con conferma se sono più di uno), senza toccare collezionabili e trofei. Il "punto in cui sei" è calcolato (`passoCorrente()`): il primo passo di storia non completato; è evidenziato e il suo capitolo ha il bordo ambra.
 Il pulsante "Menu" (solo icona, accanto ad "Apri tutti/Chiudi tutti"; si chiude con la X in alto a destra) apre una finestra `<dialog>` per azzerare Storia, Collezionabili, Trofei o Tutto (con conferma; "Tutto" mantiene le scelte come la casa).
+Filtri della scheda Guida: Tutto/Solo storia/Solo opzionali + categoria di collezionabili (`filtri.categoria`; mostra solo i collezionabili di quella categoria e nasconde i capitoli senza). Barre di progressione Storia e Totale (`barraProgresso()`) nella barra del gioco e nelle schede dell'elenco.
 Banner "mancabili": mostra i collezionabili `mancabile` non spuntati prima del punto a cui sei arrivato o nel capitolo corrente.
 
 ## Procedura "crea la guida per un gioco"

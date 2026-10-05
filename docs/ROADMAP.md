@@ -72,7 +72,8 @@ Stato del progetto. Aggiornare a ogni sessione di lavoro.
 
 ## Fase 6 — Rifinitura
 - [x] Filtri: tutto / solo storia / solo opzionali / nascondi completati
-- [ ] Filtro per categoria di collezionabile (utile con più giochi/categorie)
+- [x] Filtro per categoria di collezionabile (pulsanti accanto a Tutto/Solo storia/Solo opzionali; apre i capitoli e nasconde quelli senza risultati)
+- [x] Barre di progressione (Storia e Totale) nella barra della pagina del gioco e nelle schede dell'elenco
 - [x] Banner avviso mancabili
 - [x] Contatori per categoria e trofei
 - [ ] Esporta / importa progressi (backup)
@@ -80,9 +81,8 @@ Stato del progetto. Aggiornare a ogni sessione di lavoro.
 - [x] Restyling retrò/pixel in stile Hyprland (font locali, icone pixel, barra waybar, finestre a gradini)
 
 ## Idee future (non ancora decise)
-- **Barre di progressione** dentro la pagina del gioco: una per gli obiettivi principali (storia) e una per il completismo (tutto). *(richiesta dell'utente: da ignorare per ora; nella fase 3 si mostrano solo i contatori numerici)*
-- **HowLongToBeat**: controllare o integrare i dati per sapere quante ore servono per finire un gioco (storia, storia + extra, completismo). *(richiesta dell'utente: da ignorare per ora; da verificare se esiste un'API ufficiale o un modo lecito di leggere i dati)*
-- Filtri nell'indirizzo (oggi restano in memoria) e filtro per categoria
+- **HowLongToBeat**: verificato, NON esiste un'API ufficiale (solo librerie non ufficiali che leggono il sito, es. npm `howlongtobeat`). Soluzione consigliata: salvare le ore a mano (o con Claude) nel campo `durata` della guida, senza chiamate dal vivo. In attesa di decisione dell'utente.
+- Filtri nell'indirizzo (oggi restano in memoria)
 - Più partite per lo stesso gioco
 - Note personali su ogni passo
 - Immagini o link a video per le posizioni dei collezionabili

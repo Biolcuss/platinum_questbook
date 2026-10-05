@@ -164,6 +164,18 @@ function finestra(...contenuto) {
   return el('div', { class: 'finestra' }, el('div', { class: 'finestra-in' }, contenuto));
 }
 
+// Barra di progressione. "percentuale" è un numero da 0 a 100, "testo" la scritta a destra (es. 12/60).
+// "classe" sceglie il colore (b-storia, b-totale). Ha il ruolo "progressbar" per i lettori di schermo.
+function barraProgresso(nome, classe, percentuale, testo) {
+  return el('div', { class: 'progresso ' + classe + (percentuale >= 100 ? ' completo' : '') },
+    el('span', { class: 'progresso-nome' }, nome),
+    el('div', {
+      class: 'progresso-barra', role: 'progressbar', 'aria-label': nome,
+      'aria-valuemin': '0', 'aria-valuemax': '100', 'aria-valuenow': String(percentuale),
+    }, el('div', { class: 'progresso-riempi', style: `width: ${percentuale}%` })),
+    el('span', { class: 'progresso-valore' }, testo));
+}
+
 // Mostra per qualche secondo un messaggio in basso (usato per gli errori)
 let timerAvviso = null;
 function mostraAvviso(testo) {
@@ -187,7 +199,7 @@ async function chiediAlServer(indirizzo) {
 let guida = null;        // la guida completa del gioco
 let progressi = null;    // { completati: { idPasso: data }, scelte: {...}, contatori: {...} } (sonoQui non si usa più)
 let scheda = 'guida';    // scheda aperta: 'guida' | 'trofei' | 'info'
-const filtri = { tipo: 'tutto', nascondiCompletati: false }; // tipo: 'tutto' | 'storia' | 'opzionali'
+const filtri = { tipo: 'tutto', categoria: null, nascondiCompletati: false }; // tipo: 'tutto' | 'storia' | 'opzionali'; categoria: id di una categoria di collezionabili (o null = tutte)
 
 // Riferimenti agli elementi creati, così possiamo aggiornarli senza ricostruire tutta la pagina
 let righePassi = [];     // { passo, capitolo, riga, casella, campo }
@@ -195,6 +207,7 @@ let capitoliVista = [];  // { capitolo, sezione, stato }
 let righeTrofei = [];    // { trofeo, riga, casella, avanzamento }
 let barreScelte = [];    // { scelta, bottoni, aiuto }
 let contenitoreRiepilogo = null;
+let contenitoreBarre = null;
 let contenitoreAvviso = null;
 
 // Tutti i passi della guida in ordine di timeline, con la loro posizione
@@ -429,9 +442,9 @@ async function mostraElenco() {
           finestra(
             el('h2', {}, gioco.titolo),
             el('p', {}, gioco.piattaforma),
-            el('div', { class: 'moduli' },
-              el('span', { class: 'modulo m-storia' }, icona('stella'), 'Storia ', el('b', {}, gioco.completamento.storia + '%')),
-              el('span', { class: 'modulo m-oro' }, icona('gemma'), 'Totale ', el('b', {}, gioco.completamento.totale + '%')))))));
+            el('div', { class: 'barre' },
+              barraProgresso('Storia', 'b-storia', gioco.completamento.storia, gioco.completamento.storia + '%'),
+              barraProgresso('Totale', 'b-totale', gioco.completamento.totale, gioco.completamento.totale + '%'))))));
 
   radice.replaceChildren(el('main', { class: 'pagina', id: 'contenuto' },
     el('h1', { class: 'titolo-app' }, 'Game Tracker'),
@@ -477,6 +490,7 @@ const SCHEDE = [
 // Costruisce la struttura della pagina del gioco: barra (titolo, schede, contatori) + scheda attiva
 function disegnaGioco() {
   contenitoreRiepilogo = el('div', { class: 'moduli' });
+  contenitoreBarre = el('div', { class: 'barre' });
 
   // Barra a tutta larghezza su due sezioni:
   //   in alto  → a sinistra "torna ai giochi", al centro titolo + versione e le schede
@@ -493,7 +507,7 @@ function disegnaGioco() {
               href: `#/gioco/${guida.id}/${nome}`,
               'aria-current': nome === scheda ? 'page' : false,
             }, etichetta))))),
-    el('div', { class: 'barra-riga barra-sotto' }, contenitoreRiepilogo));
+    el('div', { class: 'barra-riga barra-sotto' }, contenitoreRiepilogo, contenitoreBarre));
 
   let corpo;
   if (scheda === 'guida') corpo = costruisciTimeline();
@@ -564,6 +578,24 @@ function costruisciTimeline() {
       },
     }, etichetta));
   }
+  // Filtro per categoria di collezionabili (solo se la guida ne ha): mostra solo quelli della categoria scelta
+  let gruppoCategoria = null;
+  if ((guida.categorie || []).length > 0) {
+    gruppoCategoria = el('div', { class: 'gruppo', role: 'group', 'aria-label': 'Categoria di collezionabili' });
+    const voci = [[null, 'Tutte le categorie'], ...guida.categorie.map((c) => [c.id, c.nome])];
+    for (const [valore, etichetta] of voci) {
+      gruppoCategoria.append(el('button', {
+        class: 'btn',
+        'aria-pressed': String(filtri.categoria === valore),
+        onclick: (e) => {
+          filtri.categoria = valore;
+          for (const b of gruppoCategoria.children) b.setAttribute('aria-pressed', String(b === e.currentTarget));
+          if (valore) impostaCapitoliAperti(true); // con una categoria scelta apro i capitoli, così si vedono i risultati
+          aggiornaVista();
+        },
+      }, etichetta));
+    }
+  }
   const casellaNascondi = el('input', {
     type: 'checkbox',
     class: 'spunta',
@@ -573,6 +605,7 @@ function costruisciTimeline() {
 
   const barraStrumenti = el('div', { class: 'strumenti' },
     gruppoTipo,
+    gruppoCategoria,
     el('label', {}, casellaNascondi, 'Nascondi completati'),
     el('div', { class: 'spazio-flex' },
       el('button', { class: 'btn', onclick: () => impostaCapitoliAperti(true) }, 'Apri tutti'),
@@ -793,13 +826,17 @@ function aggiornaVista() {
       !applicabile(passo) || !applicabile(capitolo) ||
       (filtri.tipo === 'storia' && passo.tipo !== 'storia') ||
       (filtri.tipo === 'opzionali' && passo.tipo === 'storia') ||
+      (filtri.categoria && !(['collezionabile', 'raccolta'].includes(passo.tipo) && passo.categoria === filtri.categoria)) ||
       (filtri.nascondiCompletati && completato);
     riga.classList.toggle('nascosto', nascosto);
   }
 
   // Capitoli: contatori e segno "corrente/finito"
   for (const { capitolo, sezione, stato, ticks } of capitoliVista) {
-    sezione.classList.toggle('nascosto', !applicabile(capitolo));
+    // Con una categoria scelta, i capitoli senza collezionabili di quella categoria spariscono
+    const senzaRisultati = Boolean(filtri.categoria) && !capitolo.passi.some((p) =>
+      ['collezionabile', 'raccolta'].includes(p.tipo) && p.categoria === filtri.categoria && applicabile(p));
+    sezione.classList.toggle('nascosto', !applicabile(capitolo) || senzaRisultati);
     const storia = contaInCapitolo(capitolo, (p) => p.tipo === 'storia');
     const extra = contaInCapitolo(capitolo, (p) => p.tipo !== 'storia');
     const moduli = [];
@@ -866,6 +903,14 @@ function aggiornaRiepilogo() {
     aggiungi('Trofei', 'coppa', 'm-trofeo', { ok: validi.filter((t) => fatto(t.id)).length, tot: validi.length });
   }
   contenitoreRiepilogo.replaceChildren(...voci);
+
+  // Barre di progressione: storia e completismo (tutto: storia + extra + trofei)
+  const percentuale = ({ ok, tot }) => (tot === 0 ? 0 : Math.round((ok / tot) * 100));
+  const storia = conta((p) => p.tipo === 'storia');
+  const totale = conta(() => true);
+  contenitoreBarre.replaceChildren(
+    barraProgresso('Storia', 'b-storia', percentuale(storia), `${percentuale(storia)}% (${storia.ok}/${storia.tot})`),
+    barraProgresso('Totale', 'b-totale', percentuale(totale), `${percentuale(totale)}% (${totale.ok}/${totale.tot})`));
 }
 
 // Avviso: collezionabili "mancabili" non ancora spuntati, rispetto al punto a cui sei arrivato
