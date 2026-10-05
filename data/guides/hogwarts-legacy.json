@@ -4,6 +4,14 @@
   "piattaforma": "PC (Steam)",
   "versioneGuida": 1,
   "verificataIl": "2026-10-04",
+  "durata": {
+    "storia": "25-30",
+    "storiaExtra": "35-40",
+    "completista": "70-90",
+    "daVerificare": true,
+    "nota": "Stime ricavate da siti di terze parti, non letti direttamente da HowLongToBeat. Confronta con la sua pagina.",
+    "fonte": { "nome": "HowLongToBeat (da controllare)", "url": "https://howlongtobeat.com/?q=Hogwarts+Legacy" }
+  },
   "fonti": [
     {
       "nome": "Hogwarts Legacy Wiki – elenco delle missioni e pagine di ogni missione",

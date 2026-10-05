@@ -156,6 +156,7 @@ function apiElencoGiochi(res) {
       id: guida.id,
       titolo: guida.titolo,
       piattaforma: guida.piattaforma,
+      durata: guida.durata || null,
       completamento: calcolaCompletamento(guida, leggiProgressi(guida.id)),
     };
   });

@@ -46,6 +46,16 @@ richiedi(guida, ['id', 'titolo', 'piattaforma', 'versioneGuida', 'verificataIl',
 if (guida.id !== id) errore(`Gioco: l'id "${guida.id}" è diverso dal nome del file "${id}"`);
 if (!Array.isArray(guida.fonti) || guida.fonti.length < 2) errore('Gioco: servono almeno 2 fonti');
 
+// --- Durata (ore per finire il gioco, campo facoltativo) ---------------------
+if (guida.durata) {
+  for (const campo of ['storia', 'storiaExtra', 'completista']) {
+    // ore come numero ("12") oppure intervallo ("8-9")
+    if (!/^\d+(-\d+)?$/.test(String(guida.durata[campo] ?? ''))) errore(`Durata: "${campo}" deve essere un numero di ore o un intervallo (es. "8-9")`);
+  }
+  if (!guida.durata.fonte || !guida.durata.fonte.url) errore('Durata: manca la fonte (campo "fonte" con "nome" e "url")');
+  if (guida.durata.daVerificare && !guida.durata.nota) errore('Durata: con "daVerificare" serve anche "nota"');
+}
+
 // Tutti gli id usati nei progressi devono essere unici (passi e trofei insieme)
 const idUsati = new Set();
 function registraId(idNuovo, dove) {

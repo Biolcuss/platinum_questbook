@@ -80,8 +80,13 @@ Stato del progetto. Aggiornare a ogni sessione di lavoro.
 - [x] `data/progress/` escluso da Git (decisione dell'utente)
 - [x] Restyling retrò/pixel in stile Hyprland (font locali, icone pixel, barra waybar, finestre a gradini)
 
+## Fase 6b — Durata e barre ✅
+- [x] HowLongToBeat non ha API ufficiale: scelta (utente) di salvare le ore nel campo `durata` della guida, senza chiamate dal vivo
+- [x] `durata` mostrata nell'elenco giochi e nella scheda Info; controllata dal validatore
+- [ ] Le ore di Uncharted e Hogwarts Legacy sono stime di siti terzi (`daVerificare`): da confrontare con HowLongToBeat
+- [x] Barre rinominate "Storia Principale" e "Completismo"; nell'elenco solo icone (stella, coppa)
+
 ## Idee future (non ancora decise)
-- **HowLongToBeat**: verificato, NON esiste un'API ufficiale (solo librerie non ufficiali che leggono il sito, es. npm `howlongtobeat`). Soluzione consigliata: salvare le ore a mano (o con Claude) nel campo `durata` della guida, senza chiamate dal vivo. In attesa di decisione dell'utente.
 - Filtri nell'indirizzo (oggi restano in memoria)
 - Più partite per lo stesso gioco
 - Note personali su ogni passo

@@ -25,6 +25,7 @@ App web **locale** per seguire i progressi nei videogiochi:
 | Lingua | Testi in **italiano**; nomi di capitoli, collezionabili e trofei in **inglese originale**, con eventuale traduzione tra parentesi. |
 | Contenuti tracciati | Storia, collezionabili, trofei/obiettivi, missioni secondarie, avvisi "mancabili". |
 | Piattaforma | Indicata **per ogni gioco** (chiederla sempre prima di creare una guida). |
+| Ore di gioco | Campo `durata` nella guida, riempito da Claude in chat (HowLongToBeat non ha API ufficiale; niente chiamate dal vivo). |
 | Partite | **Una partita per gioco** (più partite = possibile estensione futura). |
 
 ## Ambiente
@@ -65,7 +66,7 @@ Un passo `tipo: "trofeo"` è salvato con l'id del **trofeo** (`passo.trofeo`), n
 Dopo ogni spunta si aggiornano solo classi e testi (`aggiornaVista()`), senza ricostruire la pagina. Il testo delle guide si inserisce sempre come testo semplice, mai come HTML.
 "Sono qui" (a destra del passo di storia) è un'azione una tantum, non un interruttore: spunta tutti i passi di storia fino a quel passo compreso (con conferma se sono più di uno), senza toccare collezionabili e trofei. Il "punto in cui sei" è calcolato (`passoCorrente()`): il primo passo di storia non completato; è evidenziato e il suo capitolo ha il bordo ambra.
 Il pulsante "Menu" (solo icona, accanto ad "Apri tutti/Chiudi tutti"; si chiude con la X in alto a destra) apre una finestra `<dialog>` per azzerare Storia, Collezionabili, Trofei o Tutto (con conferma; "Tutto" mantiene le scelte come la casa).
-Filtri della scheda Guida: Tutto/Solo storia/Solo opzionali + categoria di collezionabili (`filtri.categoria`; mostra solo i collezionabili di quella categoria e nasconde i capitoli senza). Barre di progressione Storia e Totale (`barraProgresso()`) nella barra del gioco e nelle schede dell'elenco.
+Filtri della scheda Guida: Tutto/Solo storia/Solo opzionali + categoria di collezionabili (`filtri.categoria`; mostra solo i collezionabili di quella categoria e nasconde i capitoli senza). Barre di progressione "Storia Principale" e "Completismo" (`barraProgresso()`) nella barra del gioco; nelle schede dell'elenco solo icone (stella, coppa). Campo facoltativo `durata` (ore da HowLongToBeat, che non ha API: si cercano in chat e si salvano nella guida), mostrato in elenco e nella scheda Info.
 Banner "mancabili": mostra i collezionabili `mancabile` non spuntati prima del punto a cui sei arrivato o nel capitolo corrente.
 
 ## Procedura "crea la guida per un gioco"

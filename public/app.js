@@ -166,9 +166,10 @@ function finestra(...contenuto) {
 
 // Barra di progressione. "percentuale" è un numero da 0 a 100, "testo" la scritta a destra (es. 12/60).
 // "classe" sceglie il colore (b-storia, b-totale). Ha il ruolo "progressbar" per i lettori di schermo.
-function barraProgresso(nome, classe, percentuale, testo) {
-  return el('div', { class: 'progresso ' + classe + (percentuale >= 100 ? ' completo' : '') },
-    el('span', { class: 'progresso-nome' }, nome),
+// Se "nomeIcona" è indicato, al posto del nome scritto compare l'icona (il nome resta per i lettori di schermo).
+function barraProgresso(nome, classe, percentuale, testo, nomeIcona = null) {
+  return el('div', { class: 'progresso ' + classe + (nomeIcona ? ' solo-icona' : '') + (percentuale >= 100 ? ' completo' : '') },
+    nomeIcona ? el('span', { class: 'progresso-nome', title: nome }, icona(nomeIcona, 3)) : el('span', { class: 'progresso-nome' }, nome),
     el('div', {
       class: 'progresso-barra', role: 'progressbar', 'aria-label': nome,
       'aria-valuemin': '0', 'aria-valuemax': '100', 'aria-valuenow': String(percentuale),
@@ -419,6 +420,15 @@ function apriMenu() {
   dialogo.showModal();
 }
 
+// Riga con le ore per finire il gioco (dal campo "durata" della guida). Null se la guida non lo ha.
+function testoDurata(durata) {
+  if (!durata) return null;
+  const voce = (nome, ore) => el('span', { class: 'modulo' }, nome + ' ', el('b', {}, ore + ' h'));
+  return el('div', { class: 'moduli durata', title: 'Ore stimate per finire il gioco' },
+    icona('clessidra'),
+    voce('Storia', durata.storia), voce('+ extra', durata.storiaExtra), voce('100%', durata.completista));
+}
+
 // -----------------------------------------------------------------------------
 // Pagina iniziale: elenco dei giochi
 // -----------------------------------------------------------------------------
@@ -443,8 +453,9 @@ async function mostraElenco() {
             el('h2', {}, gioco.titolo),
             el('p', {}, gioco.piattaforma),
             el('div', { class: 'barre' },
-              barraProgresso('Storia', 'b-storia', gioco.completamento.storia, gioco.completamento.storia + '%'),
-              barraProgresso('Totale', 'b-totale', gioco.completamento.totale, gioco.completamento.totale + '%'))))));
+              barraProgresso('Storia Principale', 'b-storia', gioco.completamento.storia, gioco.completamento.storia + '%', 'stella'),
+              barraProgresso('Completismo', 'b-totale', gioco.completamento.totale, gioco.completamento.totale + '%', 'coppa')),
+            testoDurata(gioco.durata)))));
 
   radice.replaceChildren(el('main', { class: 'pagina', id: 'contenuto' },
     el('h1', { class: 'titolo-app' }, 'Game Tracker'),
@@ -793,6 +804,13 @@ function costruisciInfo() {
   return el('div', { class: 'capitolo' }, finestra(el('div', { class: 'info-testo' },
     guida.introduzione ? [el('h2', {}, 'Da sapere prima di iniziare'), el('ul', {}, guida.introduzione.map((t) => el('li', {}, t)))] : null,
     guida.percorsoConsigliato ? [el('h2', {}, 'Percorso consigliato'), el('ol', {}, guida.percorsoConsigliato.map((t) => el('li', {}, t)))] : null,
+    guida.durata ? [
+      el('h2', {}, 'Quanto dura'),
+      testoDurata(guida.durata),
+      el('p', { class: 'nota' }, 'Ore stimate: storia / storia + extra / completismo. ',
+        guida.durata.nota ? guida.durata.nota + ' ' : '',
+        el('a', { href: guida.durata.fonte.url, target: '_blank', rel: 'noopener noreferrer' }, guida.durata.fonte.nome)),
+    ] : null,
     el('h2', {}, 'Fonti della guida'),
     el('ul', {}, guida.fonti.map((f) => el('li', {}, el('a', { href: f.url, target: '_blank', rel: 'noopener noreferrer' }, f.nome)))),
     el('p', { class: 'nota' }, `Guida versione ${guida.versioneGuida}, verificata il ${guida.verificataIl}.`))));
@@ -909,8 +927,8 @@ function aggiornaRiepilogo() {
   const storia = conta((p) => p.tipo === 'storia');
   const totale = conta(() => true);
   contenitoreBarre.replaceChildren(
-    barraProgresso('Storia', 'b-storia', percentuale(storia), `${percentuale(storia)}% (${storia.ok}/${storia.tot})`),
-    barraProgresso('Totale', 'b-totale', percentuale(totale), `${percentuale(totale)}% (${totale.ok}/${totale.tot})`));
+    barraProgresso('Storia Principale', 'b-storia', percentuale(storia), `${percentuale(storia)}% (${storia.ok}/${storia.tot})`),
+    barraProgresso('Completismo', 'b-totale', percentuale(totale), `${percentuale(totale)}% (${totale.ok}/${totale.tot})`));
 }
 
 // Avviso: collezionabili "mancabili" non ancora spuntati, rispetto al punto a cui sei arrivato

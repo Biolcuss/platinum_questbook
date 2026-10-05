@@ -44,6 +44,7 @@ Esempio reale completo: `data/guides/uncharted-drakes-fortune.json`.
 | `versioneGuida` | sì | Numero che aumenta a ogni correzione |
 | `verificataIl` | sì | Data dell'ultima verifica (AAAA-MM-GG) |
 | `fonti` | sì | Fonti usate (almeno 2): `{ "nome", "url" }` |
+| `durata` | no | Ore per finire il gioco, prese da HowLongToBeat (non ha API: si cercano in chat e si salvano qui): `{ "storia": "8-9", "storiaExtra": "10-12", "completista": "18-20", "fonte": { "nome", "url" }, "daVerificare"?, "nota"? }`. Ore come numero o intervallo |
 | `introduzione` | no | Consigli generali da leggere prima di iniziare (frasi brevi) |
 | `percorsoConsigliato` | no | Ordine suggerito delle partite per completare tutto (es. per il Platino) |
 | `scelte` | no | Scelte del giocatore che cambiano cosa vale per lui (es. la casa): `{ "id", "nome", "descrizione"?, "opzioni": [ { "id", "nome" } ] }`. Vedi sotto |

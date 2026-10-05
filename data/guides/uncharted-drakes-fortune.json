@@ -4,6 +4,14 @@
   "piattaforma": "PS3 (versione originale)",
   "versioneGuida": 1,
   "verificataIl": "2026-10-04",
+  "durata": {
+    "storia": "8-9",
+    "storiaExtra": "10-12",
+    "completista": "18-20",
+    "daVerificare": true,
+    "nota": "Stime ricavate da siti di terze parti (le fonti discordano: un altro dà 7-8 / 9-10 / 12-15). Confronta con la pagina di HowLongToBeat.",
+    "fonte": { "nome": "HowLongToBeat (da controllare)", "url": "https://howlongtobeat.com/?q=Uncharted%3A+Drake%27s+Fortune" }
+  },
   "fonti": [
     { "nome": "Uncharted Wiki – Drake's Fortune treasure locations", "url": "https://uncharted.fandom.com/wiki/Drake%27s_Fortune_treasure_locations" },
     { "nome": "Uncharted Wiki – Drake's Fortune medals and trophies", "url": "https://uncharted.fandom.com/wiki/Drake%27s_Fortune_medals_and_trophies" },
