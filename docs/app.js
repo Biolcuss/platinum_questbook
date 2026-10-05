@@ -431,6 +431,19 @@ function completaStoriaFinoA(passo) {
 // -----------------------------------------------------------------------------
 // Menu: azzera i progressi (si spuntano le parti da azzerare: storia, secondarie, collezionabili, trofei)
 // -----------------------------------------------------------------------------
+// Collezionabili e raccolte di una categoria (o di tutte se "categoria" è null): quanti hanno progressi / azzerali
+function elementiCollezionabili(categoria) {
+  return ordine.filter(({ passo }) => (categoria === null || passo.categoria === categoria) &&
+    ((passo.tipo === 'collezionabile' && fatto(chiave(passo))) || (passo.tipo === 'raccolta' && quantiTrovati(passo) > 0))).length;
+}
+function azzeraCollezionabili(categoria) {
+  for (const { passo } of ordine) {
+    if (categoria !== null && passo.categoria !== categoria) continue;
+    if (passo.tipo === 'collezionabile') delete progressi.completati[chiave(passo)];
+    if (passo.tipo === 'raccolta') delete progressi.contatori[passo.id];
+  }
+}
+
 const AZZERAMENTI = [
   {
     id: 'storia', nome: 'Storia',
@@ -443,15 +456,15 @@ const AZZERAMENTI = [
     azzera: () => { for (const { passo } of ordine) if (passo.tipo === 'secondaria') delete progressi.completati[chiave(passo)]; },
   },
   {
+    // I collezionabili si possono azzerare tutti insieme o per categoria (guida.categorie): "sotto" elenca le categorie
     id: 'collezionabili', nome: 'Collezionabili (e contatori)',
-    elementi: () => ordine.filter(({ passo }) =>
-      (passo.tipo === 'collezionabile' && fatto(chiave(passo))) || (passo.tipo === 'raccolta' && quantiTrovati(passo) > 0)).length,
-    azzera: () => {
-      for (const { passo } of ordine) {
-        if (passo.tipo === 'collezionabile') delete progressi.completati[chiave(passo)];
-        if (passo.tipo === 'raccolta') delete progressi.contatori[passo.id];
-      }
-    },
+    elementi: () => elementiCollezionabili(null),
+    azzera: () => azzeraCollezionabili(null),
+    sotto: () => (guida.categorie || []).map((c) => ({
+      id: c.id, nome: c.nome,
+      elementi: () => elementiCollezionabili(c.id),
+      azzera: () => azzeraCollezionabili(c.id),
+    })),
   },
   {
     id: 'trofei', nome: 'Trofei e obiettivi',
@@ -470,21 +483,44 @@ function apriMenu() {
       el('p', { class: 'nota' }, 'Esporta o importa i progressi (per usarli su un altro dispositivo).')),
     el('button', { class: 'btn', onclick: () => { chiudi(); apriSalvataggio(); } }, 'Apri'));
 
-  // Una casella per ogni parte azzerabile (disattivata se non c'è niente da azzerare)
-  const caselle = AZZERAMENTI.map((voce) => {
-    const quanti = voce.elementi();
+  // Una casella per ogni parte azzerabile (disattivata se non c'è niente da azzerare).
+  // Se una parte ha delle categorie ("sotto"), compaiono sotto di lei: spuntando la parte si spuntano tutte,
+  // altrimenti si possono scegliere le singole categorie.
+  const casellaDi = (voce, quanti, classe = '') => {
     const casella = el('input', { type: 'checkbox', disabled: quanti === 0 });
-    casella.addEventListener('change', aggiornaPulsante);
-    return { voce, quanti, casella, riga: el('label', { class: 'opzione' + (quanti === 0 ? ' spenta' : '') },
-      casella, `${voce.nome} — ${quanti === 0 ? 'niente da azzerare' : quanti + ' elementi con progressi'}`) };
+    const riga = el('label', { class: 'opzione' + classe + (quanti === 0 ? ' spenta' : '') },
+      casella, `${voce.nome} — ${quanti === 0 ? 'niente da azzerare' : quanti + ' elementi con progressi'}`);
+    return { voce, quanti, casella, riga };
+  };
+  const gruppi = AZZERAMENTI.map((voce) => {
+    const principale = casellaDi(voce, voce.elementi());
+    const figlie = (voce.sotto ? voce.sotto() : []).length > 1
+      ? voce.sotto().map((sotto) => casellaDi(sotto, sotto.elementi(), ' sotto-opzione')) : [];
+    principale.figlie = figlie;
+    principale.casella.addEventListener('change', () => {
+      for (const f of figlie) if (!f.casella.disabled) f.casella.checked = principale.casella.checked;
+      aggiornaPulsante();
+    });
+    for (const f of figlie) f.casella.addEventListener('change', () => {
+      const attive = figlie.filter((x) => !x.casella.disabled);
+      const spuntate = attive.filter((x) => x.casella.checked).length;
+      principale.casella.checked = attive.length > 0 && spuntate === attive.length;
+      principale.casella.indeterminate = spuntate > 0 && spuntate < attive.length;
+      aggiornaPulsante();
+    });
+    return principale;
   });
+  const tutteLeCaselle = gruppi.flatMap((g) => [g, ...g.figlie]);
   const pulsante = el('button', { class: 'btn pericolo', disabled: true }, 'Azzera selezionati');
-  function aggiornaPulsante() { pulsante.disabled = !caselle.some((c) => c.casella.checked); }
+  function aggiornaPulsante() { pulsante.disabled = !tutteLeCaselle.some((c) => c.casella.checked); }
   pulsante.addEventListener('click', () => {
-    const scelte = caselle.filter((c) => c.casella.checked);
-    const elenco = scelte.map((c) => `- ${c.voce.nome} (${c.quanti})`).join('\n');
+    // Cosa azzerare: la parte intera se spuntata, altrimenti le sue categorie spuntate
+    const azioni = gruppi.flatMap((g) => g.casella.checked
+      ? [{ nome: g.voce.nome, quanti: g.quanti, azzera: g.voce.azzera }]
+      : g.figlie.filter((f) => f.casella.checked).map((f) => ({ nome: `${g.voce.nome}: ${f.voce.nome}`, quanti: f.quanti, azzera: f.voce.azzera })));
+    const elenco = azioni.map((a) => `- ${a.nome} (${a.quanti})`).join('\n');
     if (!window.confirm(`Azzerare questi progressi?\n\n${elenco}\n\nL'operazione non si può annullare.`)) return;
-    for (const { voce } of scelte) voce.azzera();
+    for (const a of azioni) a.azzera();
     aggiornaVista();
     salva();
     chiudi();
@@ -493,7 +529,7 @@ function apriMenu() {
   const voceAzzera = el('div', { class: 'blocco-importa' },
     el('p', { class: 'titolo-voce' }, 'Azzera progressi'),
     el('p', { class: 'nota' }, 'Spunta le parti da azzerare di questa guida. Le altre guide e le scelte (es. la casa) non vengono toccate.'),
-    el('div', { class: 'gruppo-opzioni' }, caselle.map((c) => c.riga)),
+    el('div', { class: 'gruppo-opzioni' }, gruppi.flatMap((g) => [g.riga, ...g.figlie.map((f) => f.riga)])),
     el('div', { class: 'azioni-editor' }, pulsante));
 
   dialogo.append(el('div', { class: 'involucro-menu' }, finestra(
@@ -519,6 +555,17 @@ function copertinaScheda(c) {
   return nodo;
 }
 
+// Su schermi senza mouse (telefono) il pulsante della copertina è nascosto: si tocca la copertina stessa per scegliere l'immagine.
+// (Nell'elenco la copertina sta dentro il link del gioco: preventDefault impedisce di aprirlo.)
+const SENZA_MOUSE = window.matchMedia('(hover: none)');
+function apriSelezioneAlTocco(nodoCopertina, menu) {
+  nodoCopertina.addEventListener('click', (evento) => {
+    if (!SENZA_MOUSE.matches) return;
+    evento.preventDefault();
+    menu.scegliFile();
+  });
+}
+
 // Pulsante-menu che compare passando il mouse sulla copertina: permette di caricare un'immagine da usare come copertina.
 // Il file viene salvato da archivio.js (in covers/ con il server, nel browser online) al posto di quello vecchio. "alCambio(copertina)" aggiorna l'immagine mostrata.
 function creaMenuCopertina(idGioco, titoloGioco, alCambio) {
@@ -532,6 +579,7 @@ function creaMenuCopertina(idGioco, titoloGioco, alCambio) {
     onclick: () => (tendina.classList.contains('nascosto') ? apri() : chiudi()),
   }, icona('menu', 2));
   const contenitore = el('div', { class: 'menu-copertina' }, pulsante, tendina, file);
+  contenitore.scegliFile = () => file.click(); // usato quando si tocca la copertina (vedi apriSelezioneAlTocco)
 
   function apri() {
     tendina.classList.remove('nascosto');
@@ -659,6 +707,8 @@ async function mostraElenco() {
     ? el('p', { class: 'vuoto' }, 'Nessuna guida presente. Chiedi a Claude di crearne una.')
     : el('div', { class: 'elenco-giochi' }, giochi.map((gioco) => {
         const nodoCopertina = copertinaScheda(gioco.copertina);
+        const menuCopertina = creaMenuCopertina(gioco.id, gioco.titolo, (c) => applicaCopertina(nodoCopertina, c));
+        apriSelezioneAlTocco(nodoCopertina, menuCopertina);
         // Il menu della copertina sta accanto al link (un pulsante dentro un link non è valido) e si sovrappone alla copertina
         return el('div', { class: 'scheda-wrap' },
           el('a', { class: 'scheda-gioco', href: '#/gioco/' + gioco.id },
@@ -671,7 +721,7 @@ async function mostraElenco() {
                   barraProgresso('Storia Principale', 'b-storia', gioco.completamento.storia, gioco.completamento.storia + '%', 'stella'),
                   barraProgresso('Completismo', 'b-totale', gioco.completamento.totale, gioco.completamento.totale + '%', 'coppa')),
                 testoDurata(gioco.durata))))),
-          creaMenuCopertina(gioco.id, gioco.titolo, (c) => applicaCopertina(nodoCopertina, c)));
+          menuCopertina);
       }));
 
   radice.replaceChildren(el('main', { class: 'pagina larga', id: 'contenuto' },
@@ -734,15 +784,18 @@ function disegnaGioco() {
   let copertinaTelefono = null;
   copertinaBarra = el('div', { class: 'barra-copertina' });
   if (guida.copertina) applicaCopertina(copertinaBarra, guida.copertina);
-  copertinaBarra.append(creaMenuCopertina(guida.id, guida.titolo, (c) => {
+  const menuCopertina = creaMenuCopertina(guida.id, guida.titolo, (c) => {
     guida.copertina = c;
     applicaCopertina(copertinaBarra, c);
     if (copertinaTelefono) applicaCopertina(copertinaTelefono, c);
-  }));
+  });
+  copertinaBarra.append(menuCopertina);
+  apriSelezioneAlTocco(copertinaBarra, menuCopertina);
   // Su telefono la copertina della barra (assoluta) non c'è: ne uso una in fila, tra "Giochi" e il titolo
   if (guida.copertina) {
     copertinaTelefono = el('div', { class: 'copertina-telefono', 'aria-hidden': 'true' });
     applicaCopertina(copertinaTelefono, guida.copertina);
+    apriSelezioneAlTocco(copertinaTelefono, menuCopertina);
   }
   const barra = el('header', { class: 'barra con-copertina' },
     copertinaBarra,

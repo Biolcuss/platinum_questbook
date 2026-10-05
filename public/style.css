@@ -407,8 +407,8 @@ dialog.menu::backdrop { background: rgba(14, 12, 11, .72); }
 .scheda-wrap:has(.copertina:hover) .menu-copertina,
 .barra-copertina:hover .menu-copertina,
 .menu-copertina:hover, .menu-copertina:focus-within { opacity: 1; }
-/* Su schermi senza mouse (telefono) il pulsante è sempre visibile, ma discreto */
-@media (hover: none) { .menu-copertina { opacity: .85; } }
+/* Su schermi senza mouse (telefono) il pulsante non c'è: si tocca la copertina (vedi apriSelezioneAlTocco in app.js) */
+@media (hover: none) { .menu-copertina > button, .tendina-copertina { display: none; } }
 .btn-mini { padding: 4px 6px; background: rgba(28, 25, 23, .85); }
 .tendina-copertina { position: absolute; top: calc(100% + 4px); left: 0; min-width: 190px; background: var(--superficie); border: 2px solid var(--bordo); filter: var(--ombra); padding: 4px; }
 .voce-tendina { display: block; width: 100%; text-align: left; font: 400 19px/1.2 var(--font-pixel); color: var(--testo); background: none; border: 0; padding: 8px 10px; cursor: pointer; }
@@ -423,6 +423,7 @@ dialog.menu::backdrop { background: rgba(14, 12, 11, .72); }
 .opzione { display: flex; gap: 10px; align-items: flex-start; cursor: pointer; }
 .opzione input { accent-color: var(--ambra); margin-top: 5px; }
 .opzione.spenta { opacity: .5; cursor: default; }
+.opzione.sotto-opzione { margin-left: 28px; }
 .esito { margin: 0; min-height: 1.2em; color: var(--ambra-chiaro); }
 .esito.errore { color: var(--arancio); }
 
