@@ -93,7 +93,7 @@ Dettagli completi in `docs/FORMATO-GUIDA.md`. In breve:
 
 ## Regole importanti
 - `data/progress/` è in `.gitignore`: i progressi dell'utente **non** vanno nei commit (decisione dell'utente). Per spostarli tra dispositivi c'è il **Salvataggio** (esporta/importa un file: `GET /api/salvataggio`, `POST /api/salvataggio?modo=unisci|sostituisci`, funzione `apriSalvataggio()` in app.js). Niente account: ognuno usa la sua copia locale.
-- `covers/` è in `.gitignore` (tranne `covers/README.md`): le copertine sono artwork dei giochi, le mette l'utente a mano. L'app deve funzionare anche senza copertine.
+- `covers/` è in `.gitignore` (tranne `covers/README.md` e `covers/default.*`): le copertine sono artwork dei giochi, le mette l'utente a mano. Se un gioco non ha la sua, il server usa `covers/default.*` (`trovaFileCopertina()`); l'app deve funzionare anche senza nessuna copertina.
 - Il progetto è **pubblico** (licenza MIT, `README.md`): niente dati personali, immagini protette da copyright o percorsi del PC nei file versionati.
 - **Mai cambiare l'`id` di un passo** in una guida già esistente: le spunte dell'utente si perderebbero. Per correggere, modificare i testi; per aggiungere passi, usare nuovi id.
 - I file del progetto possono avere terminazioni di riga Windows (CRLF): negli script di modifica normalizzare `

@@ -90,14 +90,20 @@ function leggiProgressi(id) {
 // Copertine
 // Le immagini stanno in covers/. Il nome del file deve corrispondere all'id del gioco,
 // con i trattini bassi al posto dei trattini (es. uncharted_drakes_fortune.png per
-// l'id "uncharted-drakes-fortune").
+// l'id "uncharted-drakes-fortune"). Se per un gioco non c'è l'immagine si usa covers/default.png (o .jpg, .webp...).
 // -----------------------------------------------------------------------------
-function trovaFileCopertina(id) {
+// Cerca in covers/ un'immagine con quel nome (senza estensione; "_" e "-" sono equivalenti)
+function cercaImmagine(nomeCercato) {
   if (!fs.existsSync(CARTELLA_COPERTINE)) return null;
   return fs.readdirSync(CARTELLA_COPERTINE).find((nome) => {
     const { name, ext } = path.parse(nome);
-    return ['.png', '.jpg', '.jpeg', '.webp'].includes(ext.toLowerCase()) && name.toLowerCase().replace(/_/g, '-') === id;
+    return ['.png', '.jpg', '.jpeg', '.webp'].includes(ext.toLowerCase()) && name.toLowerCase().replace(/_/g, '-') === nomeCercato;
   }) || null;
+}
+
+// Il file di copertina di un gioco; se manca si usa covers/default.* (uguale per tutti i giochi); se manca anche quello, null
+function trovaFileCopertina(id) {
+  return cercaImmagine(id) || cercaImmagine('default');
 }
 
 // Dati della copertina di un gioco (null se non c'è l'immagine)

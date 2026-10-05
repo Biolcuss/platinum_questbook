@@ -13,3 +13,4 @@ data/progress/
 # Si ignora tutto tranne le istruzioni.
 covers/*
 !covers/README.md
+!covers/default.*

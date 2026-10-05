@@ -9,4 +9,8 @@ Come si aggiunge una copertina:
    L'id è il nome del file della guida in `data/guides/`.
    - `data/guides/hogwarts-legacy.json` → `covers/hogwarts_legacy.webp`
    - `data/guides/uncharted-drakes-fortune.json` → `covers/uncharted_drakes_fortune.png`
-3. Ricarica la pagina. Se non c'è un'immagine, l'app funziona lo stesso, senza copertina.
+3. Ricarica la pagina.
+
+**Copertina predefinita**: il file `default.png` (o `.jpg`, `.jpeg`, `.webp`) in questa cartella è la copertina usata per
+tutti i giochi che non ne hanno una propria. È l'unica immagine inclusa nel progetto. Se manca anche quella,
+l'app funziona lo stesso, senza copertina.
