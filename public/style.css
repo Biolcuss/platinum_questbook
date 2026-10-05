@@ -190,7 +190,7 @@ svg.icona.icona-coppa { color: var(--ambra); }
 /* ------------------------------------------------------ Barre di progressione */
 .barre { display: grid; gap: 6px; }
 /* Le due barre stanno una accanto all'altra (su schermi stretti una sotto l'altra) */
-.barra-sotto .barre { margin-top: 10px; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px 28px; }
+.barra-sotto .barre { margin: 10px auto 0; width: 50%; min-width: 420px; max-width: 100%; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px 20px; } /* metà della larghezza, centrate */
 .progresso { --colore-barra: var(--ciano); display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 10px; font: 400 18px/1.2 var(--font-pixel); color: var(--tenue); }
 .progresso.b-totale { --colore-barra: var(--magenta); }
 .progresso-barra { height: 14px; background: var(--sfondo); border: 2px solid var(--bordo); padding: 2px; }
@@ -208,7 +208,7 @@ svg.icona.icona-coppa { color: var(--ambra); }
 .scheda-gioco .durata { margin-top: 12px; align-items: center; color: var(--tenue); }
 .info-testo .durata { align-items: center; }
 @media (max-width: 760px) {
-  .barra-sotto .barre { grid-template-columns: 1fr; }
+  .barra-sotto .barre { grid-template-columns: 1fr; width: 100%; min-width: 0; }
 }
 @media (max-width: 640px) {
   .progresso { grid-template-columns: 9em minmax(0, 1fr); }
