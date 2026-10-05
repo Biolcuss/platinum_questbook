@@ -72,7 +72,7 @@ Stato del progetto. Aggiornare a ogni sessione di lavoro.
 - [ ] Nomi italiani ufficiali delle missioni, se trovabili in modo affidabile
 
 ## Fase 6 — Rifinitura
-- [x] Filtri: tutto / solo storia / solo opzionali / nascondi completati
+- [x] Filtri: pulsanti-toggle nella barra in alto (storia, secondarie, categorie, trofei) + nascondi completati
 - [x] Filtro per categoria di collezionabile: ora sono i contatori della barra in alto, usati come pulsanti toggle (Storia, categorie, Trofei)
 - [x] Barre di progressione (Storia e Totale) nella barra della pagina del gioco e nelle schede dell'elenco
 - [x] Banner avviso mancabili

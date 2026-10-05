@@ -249,9 +249,9 @@ async function chiediAlServer(indirizzo) {
 let guida = null;        // la guida completa del gioco
 let progressi = null;    // { completati: { idPasso: data }, scelte: {...}, contatori: {...} } (sonoQui non si usa più)
 let scheda = 'guida';    // scheda aperta: 'guida' | 'trofei' | 'info'
-// tipo: 'tutto' | 'storia' | 'opzionali'. gruppi: i pulsanti della barra in alto (Storia, categorie di collezionabili, Trofei)
+// gruppi: i pulsanti della barra in alto (Storia, Secondarie, categorie di collezionabili, Trofei)
 // attivi come filtro: se ce n'è almeno uno, nella guida restano solo i passi di quei gruppi (vedi gruppoDi).
-const filtri = { tipo: 'tutto', gruppi: new Set(), nascondiCompletati: false };
+const filtri = { gruppi: new Set(), nascondiCompletati: false };
 
 // Riferimenti agli elementi creati, così possiamo aggiornarli senza ricostruire tutta la pagina
 let righePassi = [];     // { passo, capitolo, riga, casella, campo }
@@ -277,11 +277,12 @@ function chiave(passo) {
   return passo.tipo === 'trofeo' ? passo.trofeo : passo.id;
 }
 
-// Il "gruppo" di un passo = il pulsante della barra in alto a cui appartiene (null: nessuno, es. missioni secondarie)
+// Il "gruppo" di un passo = il pulsante della barra in alto a cui appartiene
 function gruppoDi(passo) {
   if (passo.tipo === 'storia') return 'storia';
   if (passo.tipo === 'collezionabile' || passo.tipo === 'raccolta') return 'cat:' + passo.categoria;
   if (passo.tipo === 'trofeo') return 'trofei';
+  if (passo.tipo === 'secondaria') return 'secondarie';
   return null;
 }
 
@@ -686,18 +687,6 @@ function costruisciTimeline() {
   contenitoreAvviso = el('div');
 
   // Filtri
-  const gruppoTipo = el('div', { class: 'gruppo', role: 'group', 'aria-label': 'Cosa mostrare' });
-  for (const [valore, etichetta] of [['tutto', 'Tutto'], ['storia', 'Solo storia'], ['opzionali', 'Solo opzionali']]) {
-    gruppoTipo.append(el('button', {
-      class: 'btn',
-      'aria-pressed': String(filtri.tipo === valore),
-      onclick: (e) => {
-        filtri.tipo = valore;
-        for (const b of gruppoTipo.children) b.setAttribute('aria-pressed', String(b === e.currentTarget));
-        aggiornaVista();
-      },
-    }, etichetta));
-  }
   // "Nascondi completati": pulsante con solo l'icona; acceso (ambra) quando i completati sono nascosti
   const bottoneNascondi = el('button', {
     class: 'btn btn-icona',
@@ -712,7 +701,6 @@ function costruisciTimeline() {
   }, icona('occhio', 3));
 
   const barraStrumenti = el('div', { class: 'strumenti' },
-    gruppoTipo,
     bottoneNascondi,
     el('div', { class: 'spazio-flex' },
       el('button', { class: 'btn btn-icona', 'aria-label': 'Apri tutti i capitoli', title: 'Apri tutti', onclick: () => impostaCapitoliAperti(true) }, icona('espandi', 2)),
@@ -938,8 +926,6 @@ function aggiornaVista() {
 
     const nascosto =
       !applicabile(passo) || !applicabile(capitolo) ||
-      (filtri.tipo === 'storia' && passo.tipo !== 'storia') ||
-      (filtri.tipo === 'opzionali' && passo.tipo === 'storia') ||
       (filtri.gruppi.size > 0 && !filtri.gruppi.has(gruppoDi(passo))) ||
       (filtri.nascondiCompletati && completato);
     riga.classList.toggle('nascosto', nascosto);
@@ -999,7 +985,7 @@ function contaInCapitolo(capitolo, condizione) {
   return { ok, tot };
 }
 
-// Moduli della barra: storia, una voce per ogni categoria di collezionabili, trofei.
+// Moduli della barra, in quest'ordine: storia, secondarie (se ci sono), una voce per ogni categoria di collezionabili, trofei.
 // Nella scheda Guida sono anche pulsanti-filtro (toggle): attivandone uno, la guida mostra solo quel gruppo.
 function aggiornaRiepilogo() {
   const voci = [];
@@ -1027,6 +1013,8 @@ function aggiornaRiepilogo() {
   };
 
   aggiungi('storia', 'Storia', 'stella', 'm-storia', conta((p) => p.tipo === 'storia'));
+  const secondarie = conta((p) => p.tipo === 'secondaria');
+  if (secondarie.tot > 0) aggiungi('secondarie', 'Secondarie', 'punto', 'm-secondaria', secondarie);
   for (const categoria of guida.categorie || []) {
     const conteggio = conta((p) => (p.tipo === 'collezionabile' || p.tipo === 'raccolta') && p.categoria === categoria.id);
     if (conteggio.tot > 0) aggiungi('cat:' + categoria.id, categoria.nome, 'gemma', 'm-oro', conteggio);

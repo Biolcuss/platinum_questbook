@@ -209,6 +209,7 @@ button.modulo[aria-pressed="true"] b, button.modulo[aria-pressed="true"] .icona 
 .m-storia { --colore-modulo: var(--ciano); }
 .m-oro { --colore-modulo: var(--magenta); }
 .m-trofeo { --colore-modulo: var(--magenta); }
+.m-secondaria { --colore-modulo: var(--viola); }
 
 
 /* ------------------------------------------------------ Barre di progressione */
