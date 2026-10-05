@@ -138,25 +138,30 @@ svg.icona.icona-coppa { color: var(--ambra); }
   border-bottom: 3px solid var(--bordo);
   box-shadow: 0 4px 0 #0e0c0b;       /* ombra dura sotto la barra */
 }
-/* --margine: su schermi larghi il contenuto della barra (copertina compresa) si ferma a 1240px e resta verso il centro */
-.barra { --margine: max(0px, calc((100vw - 1240px) / 2)); }
-.barra-riga {
-  padding: 10px calc(var(--margine) + max(16px, env(safe-area-inset-right))) 10px calc(var(--margine) + max(16px, env(safe-area-inset-left)));
+/* Allineamento con la colonna della guida (940px, centrata): --testo-x è il punto da cui parte il testo della barra,
+   lo stesso dei filtri (Tutto, Solo storia...) sotto. Con la copertina, lei sta subito a sinistra del testo. */
+.barra {
+  --margine: max(0px, calc((100vw - 940px) / 2));
+  --testo-x: calc(var(--margine) + max(16px, env(safe-area-inset-left)));
 }
-/* Con la copertina, il testo parte dopo di lei */
-.barra.con-copertina .barra-riga { padding-left: calc(var(--margine) + 96px + 16px); }
+.barra.con-copertina { --testo-x: max(calc(var(--margine) + 16px), 128px); }  /* 128 = copertina 112 + spazio 16 */
+.barra-riga { padding: 14px max(16px, env(safe-area-inset-right)) 14px var(--testo-x); }
 /* Sezione in alto: indietro a sinistra, titolo e schede al centro */
 .barra-alto {
   display: flex; flex-wrap: wrap; align-items: center;
   gap: 8px 24px;
 }
-.barra-alto .indietro { margin-left: auto; }   /* "Giochi" va a destra, il titolo sta vicino alla copertina */
+/* "Giochi" (indietro): su schermi larghi sta in alto a sinistra, a sinistra della copertina; su quelli stretti prima del titolo */
+.barra-alto { position: relative; }
+@media (min-width: 1400px) {
+  .barra-alto .indietro { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); }
+}
 .barra-centro { display: flex; align-items: center; justify-content: flex-start; flex-wrap: wrap; gap: 6px 24px; }
 .barra-centro h1 { font-size: 34px; line-height: 1; display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
 .barra-centro .versione { font: 400 18px/1 var(--font-pixel); color: var(--tenue); }
 /* Copertina a sinistra: occupa tutta l'altezza della barra (titolo + statistiche) */
 .barra-copertina {
-  position: absolute; top: 0; bottom: 0; left: var(--margine); width: 96px;
+  position: absolute; top: 0; bottom: 0; left: calc(var(--testo-x) - 128px); width: 112px;
   background-color: var(--superficie-2); background-repeat: no-repeat;
   border-right: 3px solid var(--bordo);
 }
@@ -198,7 +203,7 @@ svg.icona.icona-coppa { color: var(--ambra); }
 /* ------------------------------------------------------ Barre di progressione */
 .barre { display: grid; gap: 6px; }
 /* Le due barre stanno una accanto all'altra (su schermi stretti una sotto l'altra) */
-.barra-sotto .barre { margin: 10px 0 0; width: 50%; min-width: 420px; max-width: 100%; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px 20px; } /* metà della larghezza, centrate */
+.barra-sotto .barre { margin: 18px 0 0; width: 50%; min-width: 560px; max-width: 100%; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px 20px; } /* metà della larghezza, centrate */
 .progresso { --colore-barra: var(--ciano); display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 10px; font: 400 18px/1.2 var(--font-pixel); color: var(--tenue); }
 .progresso.b-totale { --colore-barra: var(--magenta); }
 .progresso-barra { height: 14px; background: var(--sfondo); border: 2px solid var(--bordo); padding: 2px; }
@@ -472,7 +477,7 @@ dialog.editor { width: min(92vw, 680px); }
   .strumenti { position: static; }  /* su telefono la barra occupa troppo spazio per restare fissa */
   .barra { position: static; }
   .barra-copertina { display: none; }
-  .barra.con-copertina .barra-riga { padding-left: max(16px, env(safe-area-inset-left)); }   /* su telefono la copertina nella barra non c'è: toglierebbe troppo spazio */  /* su telefono la barra occupa troppo spazio per restare fissa */
+  .barra.con-copertina { --testo-x: calc(var(--margine) + max(16px, env(safe-area-inset-left))); }   /* su telefono la copertina nella barra non c'è: toglierebbe troppo spazio */  /* su telefono la barra occupa troppo spazio per restare fissa */
   .barra-centro h1 { font-size: 30px; }
   .titolo-app { font-size: 44px; }
   .moduli { margin-left: 0; }

@@ -701,6 +701,7 @@ function disegnaGioco() {
     copertinaBarra,
     el('div', { class: 'barra-contenuto' },
       el('div', { class: 'barra-riga barra-alto' },
+        el('a', { href: '#/', class: 'btn indietro', 'aria-label': 'Torna all\'elenco dei giochi' }, icona('sinistra'), 'Giochi'),
         el('div', { class: 'barra-centro' },
           el('h1', {}, guida.titolo, el('span', { class: 'versione' }, guida.piattaforma)),
           el('nav', { class: 'spazi', 'aria-label': 'Sezioni della guida' },
@@ -709,8 +710,7 @@ function disegnaGioco() {
                 class: 'spazio',
                 href: `#/gioco/${guida.id}/${nome}`,
                 'aria-current': nome === scheda ? 'page' : false,
-              }, etichetta)))),
-        el('a', { href: '#/', class: 'btn indietro', 'aria-label': 'Torna all\'elenco dei giochi' }, icona('sinistra'), 'Giochi')),
+              }, etichetta))))),
       el('div', { class: 'barra-riga barra-sotto' }, contenitoreRiepilogo, contenitoreBarre)));
 
   let corpo;
