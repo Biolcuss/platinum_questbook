@@ -408,6 +408,9 @@ dialog.menu::backdrop { background: rgba(14, 12, 11, .72); }
 .box-avviso ul { margin: 4px 0 8px; padding-left: 20px; }
 
 /* ----------------------------------------------------------------------- Trofei */
+.sezione-trofei { margin-top: 28px; }
+.sezione-trofei h2 { font-size: 28px; display: flex; align-items: center; gap: 10px; margin-bottom: 4px; }
+.sezione-trofei > .nota { margin: 0 0 16px; }
 .riga-trofeo { display: grid; grid-template-columns: 22px minmax(0, 1fr); gap: 14px; padding: 14px 16px; }
 .trofeo-card { margin-bottom: 14px; }
 .trofeo-card.fatto .contenuto { opacity: .55; }
@@ -435,6 +438,8 @@ dialog.menu::backdrop { background: rgba(14, 12, 11, .72); }
 .sottotitolo { margin: 0 0 28px; color: var(--tenue); max-width: 60ch; }
 /* Nell'elenco la pagina è più larga (le schede hanno la copertina di lato) */
 .pagina.larga { max-width: 1240px; }
+/* Nella Guida la barra degli strumenti sta subito sotto la barra in alto, senza spazio in mezzo */
+.pagina.con-strumenti { margin-top: 0; }
 .elenco-giochi { display: grid; gap: 18px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 560px), 1fr)); }
 .scheda-gioco { display: block; color: inherit; text-decoration: none; filter: var(--ombra); }
 .scheda-riga { display: flex; align-items: stretch; }

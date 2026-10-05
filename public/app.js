@@ -262,6 +262,7 @@ let contenitoreRiepilogo = null;
 let contenitoreBarre = null;
 let copertinaBarra = null;   // l'immagine di copertina nella barra in alto (null se il gioco non ne ha)
 let contenitoreAvviso = null;
+let sezioneTrofei = null;    // in fondo alla Guida: i trofei che non sono legati a un punto della timeline (visibile col filtro Trofei)
 
 // Tutti i passi della guida in ordine di timeline, con la loro posizione
 let ordine = [];         // [{ passo, capitolo }]
@@ -613,7 +614,7 @@ function disegnaGioco() {
   else if (scheda === 'trofei') corpo = costruisciTrofei();
   else corpo = costruisciInfo();
 
-  radice.replaceChildren(barra, el('div', { class: 'pagina' }, el('main', { id: 'contenuto' }, corpo)));
+  radice.replaceChildren(barra, el('div', { class: 'pagina' + (scheda === 'guida' ? ' con-strumenti' : '') }, el('main', { id: 'contenuto' }, corpo)));
   aggiornaVista();
   osservaElementiFissi();
 }
@@ -646,6 +647,7 @@ function azzeraRiferimenti() {
   righeTrofei = [];
   barreScelte = [];
   contenitoreAvviso = null;
+  sezioneTrofei = null;
 }
 
 // Testo "Solo Grifondoro" per un oggetto con "soloSe" (stringa vuota se vale per tutti)
@@ -701,10 +703,10 @@ function costruisciTimeline() {
   }, icona('occhio', 3));
 
   const barraStrumenti = el('div', { class: 'strumenti' },
-    bottoneNascondi,
     el('div', { class: 'spazio-flex' },
       el('button', { class: 'btn btn-icona', 'aria-label': 'Apri tutti i capitoli', title: 'Apri tutti', onclick: () => impostaCapitoliAperti(true) }, icona('espandi', 2)),
       el('button', { class: 'btn btn-icona', 'aria-label': 'Chiudi tutti i capitoli', title: 'Chiudi tutti', onclick: () => impostaCapitoliAperti(false) }, icona('comprimi', 2)),
+      bottoneNascondi,
       el('button', { class: 'btn btn-icona', 'aria-label': 'Menu', title: 'Menu', 'aria-haspopup': 'dialog', onclick: apriMenu }, icona('menu', 3))));
 
   // Capitoli: apro quello del prossimo passo di storia da fare
@@ -712,7 +714,19 @@ function costruisciTimeline() {
   const idDaAprire = corrente ? ordine[posizione[corrente.id]].capitolo.id : null;
 
   const capitoli = guida.capitoli.map((capitolo) => costruisciCapitolo(capitolo, capitolo.id === idDaAprire));
-  return el('div', {}, costruisciScelte(), barraStrumenti, contenitoreAvviso, capitoli);
+  // Trofei che non compaiono come passi nella timeline (es. tutti quelli di Uncharted): con il filtro Trofei
+  // si vedono qui, in fondo alla guida, spuntabili come nella scheda Trofei
+  const idTrofeiInTimeline = new Set(ordine.filter(({ passo }) => passo.tipo === 'trofeo').map(({ passo }) => passo.trofeo));
+  const trofeiLiberi = (guida.trofei || []).filter((t) => !idTrofeiInTimeline.has(t.id));
+  if (trofeiLiberi.length > 0) {
+    sezioneTrofei = el('section', { class: 'sezione-trofei nascosto', 'aria-label': 'Trofei' },
+      el('h2', {}, icona('coppa'), 'Trofei'),
+      el('p', { class: 'nota' }, idTrofeiInTimeline.size > 0
+        ? 'Questi trofei non sono legati a un punto preciso della guida (gli altri si trovano nei capitoli).'
+        : 'I trofei di questo gioco non sono legati a un punto preciso della storia.'),
+      trofeiLiberi.map(creaCartaTrofeo));
+  }
+  return el('div', {}, barraStrumenti, costruisciScelte(), contenitoreAvviso, capitoli, sezioneTrofei);
 }
 
 function costruisciCapitolo(capitolo, aperto) {
@@ -843,42 +857,43 @@ function impostaCapitoliAperti(aperti) {
 }
 
 // ----------------------------------------------------------- Scheda "Trofei"
+// Scheda di un singolo trofeo (usata nella scheda Trofei e, per quelli senza un punto preciso, in fondo alla Guida)
+function creaCartaTrofeo(trofeo) {
+  const idCasella = 'spunta-' + trofeo.id;
+  const casella = el('input', {
+    type: 'checkbox',
+    class: 'spunta',
+    id: idCasella,
+    onchange: (e) => impostaFatto(trofeo.id, e.target.checked),
+  });
+  const avanzamento = trofeo.obiettivo ? el('p', { class: 'avanzamento' }) : null;
+  const solo = testoSolo(trofeo);
+  const grado = trofeo.grado === 'obiettivo' ? null : el('span', { class: 'grado ' + trofeo.grado }, trofeo.grado);
+  // Se la descrizione contiene anticipazioni sulla storia, resta nascosta finché non la apri
+  const descrizione = trofeo.spoiler
+    ? el('details', { class: 'soluzione' }, el('summary', {}, 'Mostra la descrizione (spoiler)'), el('p', {}, trofeo.descrizione))
+    : el('p', {}, trofeo.descrizione);
+  const riga = el('div', { class: 'trofeo-card' },
+    finestra(el('div', { class: 'riga-trofeo' }, casella,
+      el('div', { class: 'contenuto' },
+        solo ? el('p', { class: 'tipo' }, el('span', { class: 'modulo' }, solo)) : null,
+        el('label', { class: 'titolo-passo', for: idCasella }, trofeo.nome, grado),
+        descrizione,
+        trofeo.suggerimento ? el('p', { class: 'nota' }, el('b', {}, 'Consiglio: '), trofeo.suggerimento) : null,
+        trofeo.mancabile ? el('p', { class: 'avvertenza mancabile' }, icona('clessidra'), el('span', {}, 'Mancabile: ' + trofeo.notaMancabile)) : null,
+        trofeo.daVerificare ? el('p', { class: 'avvertenza verifica' }, icona('attenzione'), el('span', {}, 'Da verificare: ' + trofeo.notaVerifica)) : null,
+        avanzamento))));
+  righeTrofei.push({ trofeo, riga, casella, avanzamento });
+  return riga;
+}
+
 function costruisciTrofei() {
   azzeraRiferimenti();
 
   if (!guida.trofei || guida.trofei.length === 0) {
     return el('p', { class: 'vuoto' }, 'Questa guida non ha trofei.');
   }
-
-  const carte = guida.trofei.map((trofeo) => {
-    const idCasella = 'spunta-' + trofeo.id;
-    const casella = el('input', {
-      type: 'checkbox',
-      class: 'spunta',
-      id: idCasella,
-      onchange: (e) => impostaFatto(trofeo.id, e.target.checked),
-    });
-    const avanzamento = trofeo.obiettivo ? el('p', { class: 'avanzamento' }) : null;
-    const solo = testoSolo(trofeo);
-    const grado = trofeo.grado === 'obiettivo' ? null : el('span', { class: 'grado ' + trofeo.grado }, trofeo.grado);
-    // Se la descrizione contiene anticipazioni sulla storia, resta nascosta finché non la apri
-    const descrizione = trofeo.spoiler
-      ? el('details', { class: 'soluzione' }, el('summary', {}, 'Mostra la descrizione (spoiler)'), el('p', {}, trofeo.descrizione))
-      : el('p', {}, trofeo.descrizione);
-    const riga = el('div', { class: 'trofeo-card' },
-      finestra(el('div', { class: 'riga-trofeo' }, casella,
-        el('div', { class: 'contenuto' },
-          solo ? el('p', { class: 'tipo' }, el('span', { class: 'modulo' }, solo)) : null,
-          el('label', { class: 'titolo-passo', for: idCasella }, trofeo.nome, grado),
-          descrizione,
-          trofeo.suggerimento ? el('p', { class: 'nota' }, el('b', {}, 'Consiglio: '), trofeo.suggerimento) : null,
-          trofeo.mancabile ? el('p', { class: 'avvertenza mancabile' }, icona('clessidra'), el('span', {}, 'Mancabile: ' + trofeo.notaMancabile)) : null,
-          trofeo.daVerificare ? el('p', { class: 'avvertenza verifica' }, icona('attenzione'), el('span', {}, 'Da verificare: ' + trofeo.notaVerifica)) : null,
-          avanzamento))));
-    righeTrofei.push({ trofeo, riga, casella, avanzamento });
-    return riga;
-  });
-  return el('div', {}, costruisciScelte(), carte);
+  return el('div', {}, costruisciScelte(), guida.trofei.map(creaCartaTrofeo));
 }
 
 // ------------------------------------------------------------- Scheda "Info"
@@ -951,12 +966,13 @@ function aggiornaVista() {
     sezione.classList.toggle('corrente', idQui !== null && ordine[indiceQui]?.capitolo.id === capitolo.id);
   }
 
-  // Trofei
+  // Trofei (nella Guida, quelli senza un punto preciso si vedono solo col filtro Trofei)
+  if (sezioneTrofei) sezioneTrofei.classList.toggle('nascosto', !filtri.gruppi.has('trofei'));
   for (const { trofeo, riga, casella, avanzamento } of righeTrofei) {
     const ottenuto = fatto(trofeo.id);
     casella.checked = ottenuto;
     riga.classList.toggle('fatto', ottenuto);
-    riga.classList.toggle('nascosto', !applicabile(trofeo));
+    riga.classList.toggle('nascosto', !applicabile(trofeo) || (scheda === 'guida' && filtri.nascondiCompletati && ottenuto));
     let pronto = false;
     if (avanzamento) {
       const { categoria, quantita } = trofeo.obiettivo;
@@ -991,8 +1007,8 @@ function aggiornaRiepilogo() {
   const voci = [];
   const interattivo = scheda === 'guida';
   const aggiungi = (gruppo, nome, nomeIcona, classe, { ok, tot }) => {
-    // Un gruppo che non ha passi nella timeline (es. i trofei di Uncharted, che stanno solo nella scheda Trofei) non è filtrabile
-    const filtrabile = interattivo && ordine.some(({ passo }) => gruppoDi(passo) === gruppo);
+    // Un gruppo senza passi nella timeline non è filtrabile (tranne i trofei, che compaiono in fondo alla guida)
+    const filtrabile = interattivo && (gruppo === 'trofei' || ordine.some(({ passo }) => gruppoDi(passo) === gruppo));
     const attributi = {
       class: 'modulo ' + classe + (tot > 0 && ok === tot ? ' completo' : '') + (filtrabile ? ' filtro' : ''),
       'data-gruppo': gruppo,
