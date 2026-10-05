@@ -1,5 +1,5 @@
 // =============================================================================
-// Game Tracker — interfaccia
+// Platinum Questbook — interfaccia
 // -----------------------------------------------------------------------------
 // Questo file costruisce la pagina nel browser. Funziona così:
 //   1. guarda l'indirizzo (la parte dopo il "#") per capire quale pagina mostrare:
@@ -640,7 +640,7 @@ function apriSalvataggio() {
         el('a', { class: 'btn', href: '/api/salvataggio', download: '' }, 'Esporta')),
       el('div', { class: 'blocco-importa' },
         el('p', { class: 'titolo-voce' }, 'Importa'),
-        el('label', { for: 'file-salvataggio', class: 'nota' }, 'Scegli un file di salvataggio esportato dal Game Tracker:'),
+        el('label', { for: 'file-salvataggio', class: 'nota' }, 'Scegli un file di salvataggio esportato dal Platinum Questbook:'),
         file,
         el('div', { class: 'gruppo-opzioni', role: 'radiogroup', 'aria-label': 'Come importare' },
           scelta('unisci', 'Unisci: tieni i progressi attuali e aggiungi quelli del file (consigliato)', true),
@@ -663,7 +663,7 @@ async function mostraElenco() {
   guida = null;
   if (osservatore) osservatore.disconnect();
   document.documentElement.style.cssText = '';
-  document.title = 'Game Tracker';
+  document.title = 'Platinum Questbook — Game guides & progress tracker';
   radice.replaceChildren(el('main', { class: 'pagina', id: 'contenuto' }, el('p', { class: 'vuoto' }, 'Caricamento…')));
   let giochi;
   try {
@@ -695,7 +695,9 @@ async function mostraElenco() {
 
   radice.replaceChildren(el('main', { class: 'pagina larga', id: 'contenuto' },
     el('div', { class: 'testata-elenco' },
-      el('h1', { class: 'titolo-app' }, 'Game Tracker'),
+      el('div', {},
+        el('h1', { class: 'titolo-app' }, 'Platinum Questbook'),
+        el('p', { class: 'slogan' }, 'Game guides & progress tracker')),
       el('button', { class: 'btn', onclick: apriSalvataggio, 'aria-haspopup': 'dialog' }, icona('disco', 2), 'Salvataggio')),
     el('p', { class: 'sottotitolo' }, 'Scegli un gioco per aprire la sua guida e spuntare i tuoi progressi.'),
     lista));
@@ -717,7 +719,7 @@ async function mostraGioco(id, nuovaScheda) {
       el('a', { href: '#/' }, 'Torna all\'elenco dei giochi')));
     return;
   }
-  document.title = guida.titolo + ' — Game Tracker';
+  document.title = guida.titolo + ' — Platinum Questbook';
   progressi.scelte = progressi.scelte || {};
   progressi.contatori = progressi.contatori || {};
   preparaOrdine();

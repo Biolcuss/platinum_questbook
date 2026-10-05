@@ -1,4 +1,6 @@
-# Game Tracker — Documento di contesto
+# Platinum Questbook — Documento di contesto
+
+*(Game guides & progress tracker — il progetto si chiamava prima "Game Tracker")*
 
 Questo file viene letto automaticamente da Claude all'inizio di ogni sessione.
 Contiene tutto quello che serve per riprendere il lavoro sul progetto. **Tenerlo aggiornato.**
@@ -33,7 +35,7 @@ App web **locale** per seguire i progressi nei videogiochi:
 - Cartella: quella in cui è clonato il progetto (il percorso cambia da PC a PC)
 
 ## Comandi
-- Avvio: `node server.js` oppure doppio clic su `GameTracker.bat` → http://localhost:3000
+- Avvio: `node server.js` oppure doppio clic su `PlatinumQuestbook.bat` → http://localhost:3000
 - Validare una guida: `node tools/valida-guida.js <id-gioco>`
 
 Per le ricerche: le wiki Fandom si leggono tramite API (dettagli in `docs/FORMATO-GUIDA.md`), molti altri siti bloccano la lettura automatica.
@@ -44,7 +46,7 @@ CLAUDE.md               documento di contesto (questo file)
 docs/ROADMAP.md         fasi del progetto, stato, idee future
 docs/FORMATO-GUIDA.md   schema JSON delle guide + procedura di ricerca dettagliata
 server.js               server Node: serve public/ e le API
-GameTracker.bat               avvio con doppio clic
+PlatinumQuestbook.bat      avvio con doppio clic
 public/                 interfaccia: index.html (guscio vuoto), style.css, app.js (costruisce tutta la pagina)
 data/guides/            una guida per gioco (scritte da Claude)
 data/progress/          progressi dell'utente (scritti dall'app)

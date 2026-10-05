@@ -13,7 +13,7 @@ Stato del progetto. Aggiornare a ogni sessione di lavoro.
 - [x] `server.js`: serve i file di `public/`
 - [x] API `GET /api/giochi`, `GET /api/giochi/:id`
 - [x] API `GET` / `PUT /api/progressi/:id` con scrittura sicura
-- [x] `GameTracker.bat` (avvia il server e apre il browser)
+- [x] `PlatinumQuestbook.bat` (avvia il server e apre il browser)
 - [x] Pagina provvisoria `public/index.html` (elenco guide) in attesa della fase 3
 
 ## Fase 3 — Interfaccia ✅

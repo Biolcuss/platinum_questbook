@@ -1,5 +1,5 @@
 /* =============================================================================
-   Game Tracker — stile "desktop retrò"
+   Platinum Questbook — stile "desktop retrò"
    Idea: un tiling window manager (alla Hyprland) in versione pixel art.
    - la barra in alto è la "waybar": spazi di lavoro a sinistra, contatori a destra
    - ogni capitolo è una finestra con bordo a gradini; quella attiva ha il bordo a gradiente
@@ -473,6 +473,9 @@ dialog.menu::backdrop { background: rgba(14, 12, 11, .72); }
 /* ------------------------------------------------------------------------- Home */
 .titolo-app { font-size: 60px; line-height: 1.05; margin: 40px 0 8px; }
 .titolo-app::before { content: "> "; color: var(--ambra); }
+/* Sottotitolo del progetto, sotto il nome */
+.slogan { margin: 0; font: 400 24px/1.2 var(--font-pixel); color: var(--ambra-chiaro); }
+.testata-elenco .titolo-app { margin-bottom: 0; }
 .sottotitolo { margin: 0 0 28px; color: var(--tenue); max-width: 60ch; }
 /* Nell'elenco la pagina è più larga (le schede hanno la copertina di lato) */
 .pagina.larga { max-width: 1240px; }
@@ -530,7 +533,8 @@ dialog.menu::backdrop { background: rgba(14, 12, 11, .72); }
   }
   .barra-centro h1 { flex-wrap: wrap; gap: 2px 8px; }
   .barra-centro h1 { font-size: 30px; }
-  .titolo-app { font-size: 44px; }
+  .titolo-app { font-size: 36px; }
+  .slogan { font-size: 20px; }
   .moduli { margin-left: 0; }
   .testata .mini { width: 100%; padding-left: 30px; }
   .passo, .riga-trofeo { padding-left: 12px; padding-right: 12px; gap: 10px; }

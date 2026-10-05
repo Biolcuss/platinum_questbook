@@ -1,4 +1,6 @@
-# Game Tracker
+# Platinum Questbook
+
+*Game guides & progress tracker*
 
 Un'app web **locale** per seguire i tuoi progressi nei videogiochi. Scegli un gioco, segui la **guida passo passo
 in ordine cronologico** e spunta ciò che hai fatto: storia, missioni secondarie, collezionabili e trofei, ciascuno
@@ -15,7 +17,7 @@ Serve solo [Node.js](https://nodejs.org) (una versione recente; il progetto è s
 node server.js
 ```
 
-Poi apri **http://localhost:3000**. Su Windows puoi anche fare doppio clic su `GameTracker.bat`
+Poi apri **http://localhost:3000**. Su Windows puoi anche fare doppio clic su `PlatinumQuestbook.bat`
 (avvia il server e apre il browser). Per fermarlo: `Ctrl+C` o chiudi la finestra.
 
 ## Come si usa

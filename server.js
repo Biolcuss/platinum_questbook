@@ -1,5 +1,5 @@
 // =============================================================================
-// Game Tracker — server locale
+// Platinum Questbook — server locale
 // -----------------------------------------------------------------------------
 // Questo programma fa due cose:
 //   1. "serve" i file dell'interfaccia (cartella public/) al browser;
@@ -296,10 +296,10 @@ async function apiSalvaProgressi(req, res, id) {
 // -----------------------------------------------------------------------------
 // Salvataggio: esporta / importa tutti i progressi in un unico file (per spostarli tra dispositivi)
 // Formato del file:
-//   { "formato": "game-tracker-salvataggio", "versione": 1, "esportatoIl": "<data ISO>",
+//   { "formato": "platinum-questbook-salvataggio", "versione": 1, "esportatoIl": "<data ISO>",
 //     "giochi": { "<id-gioco>": { completati, scelte, contatori, ... }, ... } }
 // -----------------------------------------------------------------------------
-const FORMATO_SALVATAGGIO = 'game-tracker-salvataggio';
+const FORMATO_SALVATAGGIO = 'platinum-questbook-salvataggio';
 
 // Elenco delle guide presenti: [{ id, titolo }]
 function elencoGuide() {
@@ -317,7 +317,7 @@ function apiEsportaSalvataggio(res) {
   const oggi = new Date().toISOString().slice(0, 10);
   res.writeHead(200, {
     'Content-Type': TIPI_FILE['.json'],
-    'Content-Disposition': `attachment; filename="game-tracker-salvataggio-${oggi}.json"`,
+    'Content-Disposition': `attachment; filename="platinum-questbook-salvataggio-${oggi}.json"`,
   });
   res.end(JSON.stringify({ formato: FORMATO_SALVATAGGIO, versione: 1, esportatoIl: new Date().toISOString(), giochi }, null, 2));
 }
@@ -346,7 +346,7 @@ async function apiImportaSalvataggio(req, res, url) {
     return rispondiJson(res, 400, { errore: 'Il file non è un JSON valido' });
   }
   if (!eOggetto(dati) || dati.formato !== FORMATO_SALVATAGGIO || !eOggetto(dati.giochi)) {
-    return rispondiJson(res, 400, { errore: 'Questo non sembra un file di salvataggio del Game Tracker' });
+    return rispondiJson(res, 400, { errore: 'Questo non sembra un file di salvataggio del Platinum Questbook' });
   }
   const guide = elencoGuide();
   const importati = [];
@@ -427,7 +427,7 @@ const server = http.createServer(gestisciRichiesta);
 
 server.on('error', (errore) => {
   if (errore.code === 'EADDRINUSE') {
-    console.error(`La porta ${PORTA} è già occupata: forse il Game Tracker è già aperto in un'altra finestra?`);
+    console.error(`La porta ${PORTA} è già occupata: forse il Platinum Questbook è già aperto in un'altra finestra?`);
   } else {
     console.error('Impossibile avviare il server:', errore.message);
   }
@@ -437,7 +437,7 @@ server.on('error', (errore) => {
 // "127.0.0.1" = il server è raggiungibile solo da questo PC, non dalla rete
 server.listen(PORTA, '127.0.0.1', () => {
   const indirizzo = `http://localhost:${PORTA}`;
-  console.log(`Game Tracker avviato: ${indirizzo}`);
+  console.log(`Platinum Questbook avviato: ${indirizzo}`);
   console.log('Per fermarlo premi Ctrl+C (o chiudi questa finestra).');
   if (process.argv.includes('--apri')) exec(`start "" "${indirizzo}"`);
 });
