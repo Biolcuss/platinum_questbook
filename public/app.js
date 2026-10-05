@@ -519,7 +519,7 @@ function copertinaScheda(c) {
 }
 
 // Pulsante-menu che compare passando il mouse sulla copertina: permette di caricare un'immagine da usare come copertina.
-// Il file viene inviato al server, che lo salva in covers/ al posto di quello vecchio. "alCambio(copertina)" aggiorna l'immagine mostrata.
+// Il file viene salvato da archivio.js (in covers/ con il server, nel browser online) al posto di quello vecchio. "alCambio(copertina)" aggiorna l'immagine mostrata.
 function creaMenuCopertina(idGioco, titoloGioco, alCambio) {
   const file = el('input', { type: 'file', accept: 'image/png,image/jpeg,image/webp,.png,.jpg,.jpeg,.webp', class: 'nascosto', tabindex: '-1', 'aria-hidden': 'true' });
   const tendina = el('div', { class: 'tendina-copertina nascosto', role: 'menu' },
@@ -555,10 +555,7 @@ function creaMenuCopertina(idGioco, titoloGioco, alCambio) {
     if (!tipo) return mostraAvviso('Formato non supportato: usa un\'immagine PNG, JPG o WebP.');
     if (scelto.size > 10 * 1024 * 1024) return mostraAvviso('Immagine troppo grande (massimo 10 MB).');
     try {
-      const risposta = await fetch('api/copertine/' + idGioco, { method: 'POST', headers: { 'Content-Type': tipo }, body: scelto });
-      const dati = await risposta.json();
-      if (!risposta.ok) throw new Error(dati.errore || 'errore ' + risposta.status);
-      alCambio(dati.copertina);
+      alCambio(await archivio.salvaCopertina(idGioco, tipo, scelto));
     } catch (errore) {
       mostraAvviso('Impossibile salvare la copertina: ' + errore.message);
     }
@@ -673,7 +670,7 @@ async function mostraElenco() {
                   barraProgresso('Storia Principale', 'b-storia', gioco.completamento.storia, gioco.completamento.storia + '%', 'stella'),
                   barraProgresso('Completismo', 'b-totale', gioco.completamento.totale, gioco.completamento.totale + '%', 'coppa')),
                 testoDurata(gioco.durata))))),
-          archivio.copertineModificabili ? creaMenuCopertina(gioco.id, gioco.titolo, (c) => applicaCopertina(nodoCopertina, c)) : null);
+          creaMenuCopertina(gioco.id, gioco.titolo, (c) => applicaCopertina(nodoCopertina, c)));
       }));
 
   radice.replaceChildren(el('main', { class: 'pagina larga', id: 'contenuto' },
@@ -736,7 +733,7 @@ function disegnaGioco() {
   let copertinaTelefono = null;
   copertinaBarra = el('div', { class: 'barra-copertina' });
   if (guida.copertina) applicaCopertina(copertinaBarra, guida.copertina);
-  if (archivio.copertineModificabili) copertinaBarra.append(creaMenuCopertina(guida.id, guida.titolo, (c) => {
+  copertinaBarra.append(creaMenuCopertina(guida.id, guida.titolo, (c) => {
     guida.copertina = c;
     applicaCopertina(copertinaBarra, c);
     if (copertinaTelefono) applicaCopertina(copertinaTelefono, c);

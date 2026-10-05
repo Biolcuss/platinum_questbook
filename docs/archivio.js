@@ -19,7 +19,7 @@
 //   archivio.esporta(conCopertine) scarica il file di salvataggio (con le copertine, se true)
 //   archivio.importa(testo, modo)  importa un file di salvataggio ('unisci' | 'sostituisci'); le copertine
 //                                  contenute nel file (se ci sono) sostituiscono quelle attuali
-//   archivio.copertineModificabili true solo in modo server (online non si può caricare un'immagine)
+//   archivio.salvaCopertina(id, tipo, file)  imposta la copertina di un gioco; restituisce { url, predefinita }
 // =============================================================================
 
 const FORMATO_SALVATAGGIO = 'platinum-questbook-salvataggio';
@@ -113,7 +113,14 @@ function leggiSalvataggio(testo) {
 // MODO SERVER: tutto passa dalle API del server locale
 // -----------------------------------------------------------------------------
 const archivioServer = {
-  copertineModificabili: true,
+  salvaCopertina(id, tipo, file) {
+    return fetch('api/copertine/' + id, { method: 'POST', headers: { 'Content-Type': tipo }, body: file })
+      .then(async (risposta) => {
+        const dati = await risposta.json().catch(() => ({}));
+        if (!risposta.ok) throw new Error(dati.errore || 'errore ' + risposta.status);
+        return dati.copertina;
+      });
+  },
 
   async chiedi(indirizzo, opzioni) {
     const risposta = await fetch(indirizzo, opzioni);
@@ -142,7 +149,19 @@ const archivioServer = {
 const PREFISSO_PROGRESSI = 'platinum-questbook:progressi:';
 
 const archivioSito = {
-  copertineModificabili: false,
+  // Online la copertina scelta resta nel browser di questo dispositivo (IndexedDB, come quelle importate dal salvataggio)
+  async salvaCopertina(id, tipo, file) {
+    const byte = new Uint8Array(await file.arrayBuffer());
+    if (!formatoImmagineValido(tipo, byte)) throw new Error("il file non è un'immagine valida");
+    try {
+      await this.sulleCopertine('readwrite', (deposito) => deposito.put({ id, immagine: new Blob([byte], { type: tipo }) }));
+    } catch {
+      throw new Error("il browser non permette di salvare l'immagine (navigazione privata?)");
+    }
+    this.indice = null;           // rileggo l'indice: la nuova copertina prende il posto della vecchia
+    this.guideInMemoria = {};
+    return { url: (await this.leggiIndice()).find((g) => g.id === id).copertina.url, predefinita: false };
+  },
   indice: null,          // elenco dei giochi (indice.json), letto una volta
   guideInMemoria: {},    // guide già scaricate
 
