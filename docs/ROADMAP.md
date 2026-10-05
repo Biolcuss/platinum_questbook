@@ -115,6 +115,7 @@ Stato del progetto. Aggiornare a ogni sessione di lavoro.
 - `tools/genera-sito.js` crea `_site/` (interfaccia + guide + `indice.json`, l'elenco dei giochi ricavato dalle guide: ogni nuova guida compare da sola).
 - `.github/workflows/pubblica-sito.yml` pubblica `_site/` ad ogni push su `main`.
 - Online non si caricano copertine e compaiono solo quelle versionate in Git (la predefinita).
+- Il Salvataggio può includere le copertine (checkbox "Includi anche le copertine"): per portarle dal PC al telefono, dove restano nel browser (IndexedDB).
 
 ## Idee future (non ancora decise)
 - Filtri nell'indirizzo (oggi restano in memoria)

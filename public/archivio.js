@@ -16,8 +16,9 @@
 //   archivio.guida(id)             guida completa
 //   archivio.progressi(id)         progressi dell'utente
 //   archivio.salva(id, progressi)  salva i progressi
-//   archivio.esporta()             scarica il file di salvataggio
-//   archivio.importa(testo, modo)  importa un file di salvataggio ('unisci' | 'sostituisci')
+//   archivio.esporta(conCopertine) scarica il file di salvataggio (con le copertine, se true)
+//   archivio.importa(testo, modo)  importa un file di salvataggio ('unisci' | 'sostituisci'); le copertine
+//                                  contenute nel file (se ci sono) sostituiscono quelle attuali
 //   archivio.copertineModificabili true solo in modo server (online non si può caricare un'immagine)
 // =============================================================================
 
@@ -65,6 +66,33 @@ function scaricaFile(nome, testo) {
   setTimeout(() => URL.revokeObjectURL(link.href), 1000);
 }
 
+// Tipi di immagine accettati per le copertine e controllo dei primi byte (come nel server)
+const TIPI_COPERTINA = ['image/png', 'image/jpeg', 'image/webp'];
+const LIMITE_COPERTINA = 10 * 1024 * 1024; // 10 MB
+function formatoImmagineValido(tipo, byte) {
+  const inizia = (...valori) => valori.every((v, i) => byte[i] === v);
+  if (tipo === 'image/png') return inizia(0x89, 0x50, 0x4e, 0x47);
+  if (tipo === 'image/jpeg') return inizia(0xff, 0xd8, 0xff);
+  if (tipo === 'image/webp') return inizia(0x52, 0x49, 0x46, 0x46) && byte[8] === 0x57 && byte[9] === 0x45 && byte[10] === 0x42 && byte[11] === 0x50; // "RIFF" ... "WEBP"
+  return false;
+}
+
+// Conversioni tra immagine (Blob) e testo base64, per metterla nel file di salvataggio
+function blobInBase64(blob) {
+  return new Promise((resolve, reject) => {
+    const lettore = new FileReader();
+    lettore.onload = () => resolve(String(lettore.result).split(',')[1]);
+    lettore.onerror = () => reject(lettore.error);
+    lettore.readAsDataURL(blob);
+  });
+}
+function base64InByte(testo) {
+  const binario = atob(testo);
+  const byte = new Uint8Array(binario.length);
+  for (let i = 0; i < binario.length; i++) byte[i] = binario.charCodeAt(i);
+  return byte;
+}
+
 const nomeFileSalvataggio = () => `platinum-questbook-salvataggio-${new Date().toISOString().slice(0, 10)}.json`;
 
 // Legge e controlla il testo di un file di salvataggio
@@ -99,8 +127,8 @@ const archivioServer = {
   salva(id, progressi) {
     return this.chiedi('api/progressi/' + id, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(progressi) });
   },
-  async esporta() {
-    const risposta = await fetch('api/salvataggio');
+  async esporta(conCopertine) {
+    const risposta = await fetch('api/salvataggio' + (conCopertine ? '?copertine=1' : ''));
     scaricaFile(nomeFileSalvataggio(), await risposta.text());
   },
   importa(testo, modo) {
@@ -124,8 +152,47 @@ const archivioSito = {
     return risposta.json();
   },
   async leggiIndice() {
-    if (!this.indice) this.indice = await this.leggiFile('indice.json');
+    if (!this.indice) {
+      const indice = await this.leggiFile('indice.json');
+      // Le copertine importate dal salvataggio (tenute nel browser) hanno la precedenza su quella predefinita
+      for (const voce of indice) {
+        const salvata = await this.leggiCopertinaSalvata(voce.id);
+        if (salvata) voce.copertina = { url: URL.createObjectURL(salvata.immagine), predefinita: false };
+      }
+      this.indice = indice;
+    }
     return this.indice;
+  },
+
+  // Copertine importate: le tengo in IndexedDB (il localStorage è troppo piccolo per le immagini).
+  // Ogni voce: { id, immagine: Blob }. Se il browser non lo permette, si usa la copertina predefinita.
+  apriDatabase() {
+    return new Promise((resolve, reject) => {
+      const richiesta = indexedDB.open('platinum-questbook', 1);
+      richiesta.onupgradeneeded = () => richiesta.result.createObjectStore('copertine', { keyPath: 'id' });
+      richiesta.onsuccess = () => resolve(richiesta.result);
+      richiesta.onerror = () => reject(richiesta.error);
+    });
+  },
+  // Esegue una operazione sul deposito delle copertine e restituisce il risultato
+  async sulleCopertine(modo, operazione) {
+    const db = await this.apriDatabase();
+    try {
+      return await new Promise((resolve, reject) => {
+        const transazione = db.transaction('copertine', modo);
+        const richiesta = operazione(transazione.objectStore('copertine'));
+        transazione.oncomplete = () => resolve(richiesta.result);
+        transazione.onerror = transazione.onabort = () => reject(transazione.error);
+      });
+    } finally {
+      db.close();
+    }
+  },
+  async leggiCopertinaSalvata(id) {
+    try { return await this.sulleCopertine('readonly', (deposito) => deposito.get(id)); } catch { return null; }
+  },
+  async tutteLeCopertineSalvate() {
+    try { return await this.sulleCopertine('readonly', (deposito) => deposito.getAll()); } catch { return []; }
   },
 
   // Progressi salvati nel browser. Se il browser non permette di salvare (es. navigazione privata) si avvisa
@@ -201,12 +268,19 @@ const archivioSito = {
     return giochi.sort((a, b) => a.titolo.localeCompare(b.titolo));
   },
 
-  async esporta() {
+  async esporta(conCopertine) {
     const giochi = {};
     for (const { id } of await this.leggiIndice()) {
       if (localStorage.getItem(PREFISSO_PROGRESSI + id)) giochi[id] = this.leggiProgressiSalvati(id);
     }
-    scaricaFile(nomeFileSalvataggio(), JSON.stringify({ formato: FORMATO_SALVATAGGIO, versione: 1, esportatoIl: new Date().toISOString(), giochi }, null, 2));
+    const salvataggio = { formato: FORMATO_SALVATAGGIO, versione: 1, esportatoIl: new Date().toISOString(), giochi };
+    if (conCopertine) {
+      salvataggio.copertine = {};
+      for (const { id, immagine } of await this.tutteLeCopertineSalvate()) {
+        salvataggio.copertine[id] = { tipo: immagine.type, dati: await blobInBase64(immagine) };
+      }
+    }
+    scaricaFile(nomeFileSalvataggio(), JSON.stringify(salvataggio, null, 2));
   },
 
   async importa(testo, modo) {
@@ -222,7 +296,25 @@ const archivioSito = {
       this.scriviProgressiSalvati(id, modo === 'sostituisci' ? nuoviNormali : unisciProgressi(this.leggiProgressiSalvati(id), nuoviNormali));
       importati.push(voce.titolo);
     }
-    return { ok: true, modo, importati, ignorati };
+    // Copertine (se il file le contiene): ognuna sostituisce quella attuale dello stesso gioco
+    const copertineImportate = [];
+    for (const [id, copertina] of Object.entries(eOggetto(dati.copertine) ? dati.copertine : {})) {
+      const voce = indice.find((g) => g.id === id);
+      try {
+        if (!voce || !eOggetto(copertina) || !TIPI_COPERTINA.includes(copertina.tipo) || typeof copertina.dati !== 'string') throw new Error('non valida');
+        const byte = base64InByte(copertina.dati);
+        if (byte.length === 0 || byte.length > LIMITE_COPERTINA || !formatoImmagineValido(copertina.tipo, byte)) throw new Error('non valida');
+        const immagine = new Blob([byte], { type: copertina.tipo });
+        await this.sulleCopertine('readwrite', (deposito) => deposito.put({ id, immagine }));
+        copertineImportate.push(voce.titolo);
+      } catch {
+        ignorati.push('copertina ' + id);
+      }
+    }
+    // Rilego indice e guide, così le nuove copertine si vedono subito
+    this.indice = null;
+    this.guideInMemoria = {};
+    return { ok: true, modo, importati, copertineImportate, ignorati };
   },
 };
 

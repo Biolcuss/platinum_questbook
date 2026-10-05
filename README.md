@@ -32,6 +32,7 @@ Poi apri **http://localhost:3000**. Su Windows puoi anche fare doppio clic su `P
 - **Menu** (nella pagina del gioco): azzera storia, collezionabili, trofei o tutto, e apre il Salvataggio.
 - **Salvataggio** (anche nella pagina iniziale): **Esporta** scarica un file con i progressi di tutti i giochi,
   **Importa** lo carica su un altro dispositivo (*Unisci* aggiunge senza perdere nulla, *Sostituisci* usa solo il file).
+  Spuntando "Includi anche le copertine" l'esportazione contiene anche le tue copertine; importandole sostituiscono quelle del dispositivo.
 
 I progressi sono solo tuoi: stanno in `data/progress/` (ignorata da Git). Chi clona il progetto parte da zero.
 

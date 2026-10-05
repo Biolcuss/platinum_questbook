@@ -47,6 +47,7 @@ Per le ricerche: le wiki Fandom si leggono tramite API (dettagli in `docs/FORMAT
 - L'elenco dei giochi online è `indice.json`, creato dallo script a partire da `data/guides/`: dopo aver aggiunto una guida basta committare e fare push.
 - La logica di completamento/unione dei progressi esiste sia in `server.js` che in `archivio.js` (modo sito): se si cambia una, **cambiare anche l'altra**.
 - Online le copertine caricate dall'utente (non versionate) non ci sono: si vede `covers/default.*`. Il caricamento copertine è nascosto (`archivio.copertineModificabili`).
+- **Salvataggio con copertine**: l'esportazione può includere le copertine (`copertine: { id: { tipo, dati base64 } }`; `GET /api/salvataggio?copertine=1` in modo server). L'importazione le scrive in `covers/` (server, `scriviCopertina()`) oppure in IndexedDB (modo sito, deposito `copertine`, hanno la precedenza sulla predefinita). Il server accetta file di salvataggio fino a 100 MB.
 - Per provare il sito in locale: `node tools/genera-sito.js` e servire `_site/` con un server statico (es. `python -m http.server`).
 
 ## Architettura

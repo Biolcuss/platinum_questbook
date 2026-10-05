@@ -589,6 +589,7 @@ function apriSalvataggio() {
   const file = el('input', { type: 'file', accept: 'application/json,.json', id: 'file-salvataggio', class: 'campo-file' });
   const scelta = (valore, etichetta, selezionato) => el('label', { class: 'opzione' },
     el('input', { type: 'radio', name: 'modo-importazione', value: valore, checked: selezionato }), etichetta);
+  const conCopertine = el('input', { type: 'checkbox' });
   const importa = el('button', { class: 'btn', disabled: true }, 'Importa');
   file.addEventListener('change', () => { importa.disabled = !file.files.length; mostraEsito(''); });
 
@@ -600,9 +601,8 @@ function apriSalvataggio() {
       const dati = await archivio.importa(await file.files[0].text(), modo);
       importato = true;
       const ignorati = dati.ignorati.length ? ` Ignorati (guida non presente o dati non validi): ${dati.ignorati.join(', ')}.` : '';
-      mostraEsito(dati.importati.length
-        ? `Fatto: ${dati.importati.join(', ')}.${ignorati}`
-        : `Nessun gioco importato.${ignorati}`);
+      const copertine = dati.copertineImportate.length ? ` Copertine importate: ${dati.copertineImportate.join(', ')}.` : '';
+      mostraEsito((dati.importati.length ? `Fatto: ${dati.importati.join(', ')}.` : 'Nessun gioco importato.') + copertine + ignorati);
     } catch (errore) {
       mostraEsito('Importazione non riuscita: ' + errore.message, true);
     }
@@ -618,11 +618,12 @@ function apriSalvataggio() {
       el('div', { class: 'voce-menu' },
         el('div', {},
           el('p', { class: 'titolo-voce' }, 'Esporta'),
-          el('p', { class: 'nota' }, 'Scarica un file con i progressi di tutti i giochi.')),
-        el('button', { class: 'btn', onclick: () => archivio.esporta().catch((errore) => mostraEsito('Esportazione non riuscita: ' + errore.message, true)) }, 'Esporta')),
+          el('p', { class: 'nota' }, 'Scarica un file con i progressi di tutti i giochi.'),
+          el('label', { class: 'opzione' }, conCopertine, 'Includi anche le copertine (il file diventa più grande)')),
+        el('button', { class: 'btn', onclick: () => archivio.esporta(conCopertine.checked).catch((errore) => mostraEsito('Esportazione non riuscita: ' + errore.message, true)) }, 'Esporta')),
       el('div', { class: 'blocco-importa' },
         el('p', { class: 'titolo-voce' }, 'Importa'),
-        el('label', { for: 'file-salvataggio', class: 'nota' }, 'Scegli un file di salvataggio esportato dal Platinum Questbook:'),
+        el('label', { for: 'file-salvataggio', class: 'nota' }, 'Scegli un file di salvataggio esportato dal Platinum Questbook (se contiene le copertine, vengono importate e sostituiscono quelle attuali):'),
         file,
         el('div', { class: 'gruppo-opzioni', role: 'radiogroup', 'aria-label': 'Come importare' },
           scelta('unisci', 'Unisci: tieni i progressi attuali e aggiungi quelli del file (consigliato)', true),

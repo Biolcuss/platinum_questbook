@@ -155,6 +155,12 @@ async function apiSalvaCopertina(req, res, id) {
   if (byte.length === 0 || !formatoImmagineValido(tipo, byte)) {
     return rispondiJson(res, 400, { errore: 'Il file non è un\'immagine valida' });
   }
+  scriviCopertina(id, tipo, byte);
+  rispondiJson(res, 200, { ok: true, copertina: infoCopertina(id) });
+}
+
+// Scrive l'immagine come copertina del gioco (tipo e contenuto devono essere già stati controllati)
+function scriviCopertina(id, tipo, byte) {
   // Prima scrivo il nuovo file, poi tolgo i vecchi di questo gioco (anche con un'altra estensione): se qualcosa va storto non si perde niente
   const nomeFile = id.replace(/-/g, '_') + IMMAGINI_COPERTINA[tipo];
   fs.mkdirSync(CARTELLA_COPERTINE, { recursive: true });
@@ -167,7 +173,6 @@ async function apiSalvaCopertina(req, res, id) {
       fs.unlinkSync(path.join(CARTELLA_COPERTINE, altro));
     }
   }
-  rispondiJson(res, 200, { ok: true, copertina: infoCopertina(id) });
 }
 
 // Un passo (o capitolo) con "soloSe" vale solo per chi ha fatto quella scelta.
@@ -214,13 +219,13 @@ function calcolaCompletamento(guida, progressi) {
 }
 
 // Legge tutto il "corpo" di una richiesta (i dati inviati dal browser)
-function leggiCorpo(req) {
+function leggiCorpo(req, limite = 5 * 1024 * 1024) {
   return new Promise((resolve, reject) => {
     let corpo = '';
     req.on('data', (pezzo) => {
       corpo += pezzo;
-      // Limite di sicurezza: 5 MB sono molto più del necessario
-      if (corpo.length > 5 * 1024 * 1024) {
+      // Limite di sicurezza (5 MB bastano per i progressi; l'importazione con copertine ne ammette di più)
+      if (corpo.length > limite) {
         reject(new Error('Dati troppo grandi'));
         req.destroy();
       }
@@ -297,9 +302,11 @@ async function apiSalvaProgressi(req, res, id) {
 // Salvataggio: esporta / importa tutti i progressi in un unico file (per spostarli tra dispositivi)
 // Formato del file:
 //   { "formato": "platinum-questbook-salvataggio", "versione": 1, "esportatoIl": "<data ISO>",
-//     "giochi": { "<id-gioco>": { completati, scelte, contatori, ... }, ... } }
+//     "giochi": { "<id-gioco>": { completati, scelte, contatori, ... }, ... },
+//     "copertine": { "<id-gioco>": { "tipo": "image/png", "dati": "<immagine in base64>" }, ... } }   ← solo se richieste
 // -----------------------------------------------------------------------------
 const FORMATO_SALVATAGGIO = 'platinum-questbook-salvataggio';
+const LIMITE_IMPORTAZIONE = 100 * 1024 * 1024; // 100 MB: un file con le copertine è molto più grande dei soli progressi
 
 // Elenco delle guide presenti: [{ id, titolo }]
 function elencoGuide() {
@@ -309,17 +316,28 @@ function elencoGuide() {
 }
 
 // GET /api/salvataggio → scarica il file di salvataggio
-function apiEsportaSalvataggio(res) {
+// Con ?copertine=1 il file contiene anche le copertine dei giochi (non quella predefinita)
+function apiEsportaSalvataggio(res, url) {
   const giochi = {};
+  const copertine = {};
+  const conCopertine = url.searchParams.get('copertine') === '1';
   for (const { id } of elencoGuide()) {
     if (fs.existsSync(path.join(CARTELLA_PROGRESSI, id + '.json'))) giochi[id] = leggiProgressi(id);
+    const file = conCopertine ? cercaImmagine(id) : null;
+    if (file) {
+      const estensione = path.extname(file).toLowerCase().replace('.jpeg', '.jpg');
+      const tipo = Object.keys(IMMAGINI_COPERTINA).find((t) => IMMAGINI_COPERTINA[t] === estensione);
+      if (tipo) copertine[id] = { tipo, dati: fs.readFileSync(path.join(CARTELLA_COPERTINE, file)).toString('base64') };
+    }
   }
   const oggi = new Date().toISOString().slice(0, 10);
   res.writeHead(200, {
     'Content-Type': TIPI_FILE['.json'],
     'Content-Disposition': `attachment; filename="platinum-questbook-salvataggio-${oggi}.json"`,
   });
-  res.end(JSON.stringify({ formato: FORMATO_SALVATAGGIO, versione: 1, esportatoIl: new Date().toISOString(), giochi }, null, 2));
+  const salvataggio = { formato: FORMATO_SALVATAGGIO, versione: 1, esportatoIl: new Date().toISOString(), giochi };
+  if (conCopertine) salvataggio.copertine = copertine;
+  res.end(JSON.stringify(salvataggio, null, 2));
 }
 
 // Unisce due progressi dello stesso gioco senza perdere niente:
@@ -341,9 +359,9 @@ async function apiImportaSalvataggio(req, res, url) {
   const modo = url.searchParams.get('modo') === 'sostituisci' ? 'sostituisci' : 'unisci';
   let dati;
   try {
-    dati = JSON.parse(await leggiCorpo(req));
+    dati = JSON.parse(await leggiCorpo(req, LIMITE_IMPORTAZIONE));
   } catch {
-    return rispondiJson(res, 400, { errore: 'Il file non è un JSON valido' });
+    return rispondiJson(res, 400, { errore: 'Il file non è un JSON valido (o è troppo grande)' });
   }
   if (!eOggetto(dati) || dati.formato !== FORMATO_SALVATAGGIO || !eOggetto(dati.giochi)) {
     return rispondiJson(res, 400, { errore: 'Questo non sembra un file di salvataggio del Platinum Questbook' });
@@ -360,7 +378,17 @@ async function apiImportaSalvataggio(req, res, url) {
     scriviJsonSicuro(path.join(CARTELLA_PROGRESSI, id + '.json'), risultato);
     importati.push(guida.titolo);
   }
-  rispondiJson(res, 200, { ok: true, modo, importati, ignorati });
+  // Copertine (se il file le contiene): ognuna sostituisce quella attuale dello stesso gioco
+  const copertineImportate = [];
+  for (const [id, copertina] of Object.entries(eOggetto(dati.copertine) ? dati.copertine : {})) {
+    const guida = guide.find((g) => g.id === id);
+    if (!idValido(id) || !guida || !eOggetto(copertina) || !IMMAGINI_COPERTINA[copertina.tipo] || typeof copertina.dati !== 'string') { ignorati.push('copertina ' + id); continue; }
+    const byte = Buffer.from(copertina.dati, 'base64');
+    if (byte.length === 0 || byte.length > LIMITE_COPERTINA || !formatoImmagineValido(copertina.tipo, byte)) { ignorati.push('copertina ' + id); continue; }
+    scriviCopertina(id, copertina.tipo, byte);
+    copertineImportate.push(guida.titolo);
+  }
+  rispondiJson(res, 200, { ok: true, modo, importati, copertineImportate, ignorati });
 }
 
 // -----------------------------------------------------------------------------
@@ -397,7 +425,7 @@ async function gestisciRichiesta(req, res) {
 
       if (risorsa === 'giochi' && !id && req.method === 'GET') return apiElencoGiochi(res);
       if (risorsa === 'giochi' && id && req.method === 'GET') return apiGuida(res, id);
-      if (risorsa === 'salvataggio' && !id && req.method === 'GET') return apiEsportaSalvataggio(res);
+      if (risorsa === 'salvataggio' && !id && req.method === 'GET') return apiEsportaSalvataggio(res, url);
       if (risorsa === 'salvataggio' && !id && req.method === 'POST') return await apiImportaSalvataggio(req, res, url);
       if (risorsa === 'progressi' && id && req.method === 'GET') return apiLeggiProgressi(res, id);
       if (risorsa === 'progressi' && id && req.method === 'PUT') return await apiSalvaProgressi(req, res, id);
