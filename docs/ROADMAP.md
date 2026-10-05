@@ -91,13 +91,18 @@ Stato del progetto. Aggiornare a ogni sessione di lavoro.
 - [x] Scorrimento a scatti: tolto `drop-shadow` dai capitoli (ombra con pseudo-elemento)
 - [x] Titolo del capitolo e barra degli strumenti fissi in alto mentre si scorre
 
+## Fase 6d — Copertine ✅
+- [x] Immagini in `covers/`, ritaglio 16:9 nelle schede dell'elenco
+- [x] Editor (Menu → Copertina): trascinamento, zoom, reimposta; posizione salvata in `data/copertine.json`
+- [ ] Eventuale banner con la copertina anche nella pagina del gioco
+- [ ] Copertine automatiche da un'API (IGDB/RAWG): opzionale, userebbe un'API esterna
+
 ## Idee future (non ancora decise)
 - Filtri nell'indirizzo (oggi restano in memoria)
 - **Opzionali (idee valutate con l'utente):**
   - Statistiche e cronologia (grafici dai dati delle spunte, ritmo di gioco)
   - Ricerca di testo nella guida
   - Uso dal telefono (stessa rete Wi-Fi; attenzione alla sicurezza)
-  - Copertine dei giochi (es. IGDB o RAWG: userebbero un'API esterna)
 - Più partite per lo stesso gioco
 - Note personali su ogni passo
 - Immagini o link a video per le posizioni dei collezionabili

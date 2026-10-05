@@ -48,6 +48,8 @@ avvia.bat               avvio con doppio clic
 public/                 interfaccia: index.html (guscio vuoto), style.css, app.js (costruisce tutta la pagina)
 data/guides/            una guida per gioco (scritte da Claude)
 data/progress/          progressi dell'utente (scritti dall'app)
+data/copertine.json     posizione del ritaglio di ogni copertina (scritto dall'app)
+covers/                 immagini di copertina messe dall'utente (nome = id del gioco con `_` al posto di `-`)
 tools/valida-guida.js   controllo automatico delle guide
 ```
 
@@ -56,6 +58,7 @@ tools/valida-guida.js   controllo automatico delle guide
 - `GET /api/giochi/:id` → guida completa
 - `GET /api/progressi/:id` → progressi `{ "completati": { "<idPasso>": "<data ISO>" }, "scelte": { "<idScelta>": "<idOpzione>" }, "contatori": { "<idPasso>": <numero> }, "sonoQui": null }` (`sonoQui` non è più usato: la posizione è calcolata come primo passo di storia non completato)
 - `PUT /api/progressi/:id` → salva i progressi (scrittura sicura: file temporaneo + rinomina)
+- `PUT /api/copertine/:id` → salva il ritaglio `{x, y, zoom, ar}` della copertina; `GET /covers/<file>` serve le immagini. Elenco e guida includono `copertina: { url, x, y, zoom, ar? }` (o null)
 
 Guide e progressi sono **separati**: i progressi fanno riferimento agli `id` dei passi.
 Un passo `tipo: "trofeo"` è salvato con l'id del **trofeo** (`passo.trofeo`), non con l'id del passo: così spuntarlo nella timeline o nella scheda Trofei è la stessa cosa.
@@ -69,6 +72,7 @@ Nella barra degli strumenti "Apri tutti", "Chiudi tutti" e "Nascondi completati"
 Il pulsante "Menu" (solo icona, accanto ad "Apri tutti/Chiudi tutti"; si chiude con la X in alto a destra) apre una finestra `<dialog>` per azzerare Storia, Collezionabili, Trofei o Tutto (con conferma; "Tutto" mantiene le scelte come la casa).
 Filtri della scheda Guida: Tutto/Solo storia/Solo opzionali + categoria di collezionabili (`filtri.categoria`; mostra solo i collezionabili di quella categoria e nasconde i capitoli senza). Barre di progressione "Storia Principale" e "Completismo" (`barraProgresso()`) nella barra del gioco; nelle schede dell'elenco solo icone (stella, coppa). Campo facoltativo `durata` (ore da HowLongToBeat, che non ha API: si cercano in chat e si salvano nella guida), mostrato in elenco e nella scheda Info.
 Gli elementi fissi in alto (barra, strumenti con filtri/pulsanti, titolo del capitolo aperto) sono `position: sticky` e le loro altezze sono misurate da `misuraElementiFissi()` e passate al CSS (`--alt-barra`, `--alt-strumenti`, `--alt-testata`). Le ombre dei capitoli e dei trofei sono pseudo-elementi, NON `filter: drop-shadow` (rallentava lo scorrimento). Su telefono barra e strumenti non sono fissi.
+Copertine: ritaglio 16:9 in cima alle schede dell'elenco (stile RAWG). Si riposizionano da Menu → Copertina → Modifica (trascina l'immagine o frecce della tastiera, cursore dello zoom). Per aggiungerne una: file in `covers/` col nome del gioco.
 Banner "mancabili": mostra solo i collezionabili `mancabile` non spuntati nel capitolo corrente; superato il capitolo non compare più (non sono più recuperabili).
 
 ## Procedura "crea la guida per un gioco"
