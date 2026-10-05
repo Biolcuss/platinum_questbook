@@ -73,7 +73,7 @@ Stato del progetto. Aggiornare a ogni sessione di lavoro.
 
 ## Fase 6 — Rifinitura
 - [x] Filtri: tutto / solo storia / solo opzionali / nascondi completati
-- [x] Filtro per categoria di collezionabile (pulsanti accanto a Tutto/Solo storia/Solo opzionali; apre i capitoli e nasconde quelli senza risultati)
+- [x] Filtro per categoria di collezionabile: ora sono i contatori della barra in alto, usati come pulsanti toggle (Storia, categorie, Trofei)
 - [x] Barre di progressione (Storia e Totale) nella barra della pagina del gioco e nelle schede dell'elenco
 - [x] Banner avviso mancabili
 - [x] Contatori per categoria e trofei

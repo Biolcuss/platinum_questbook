@@ -249,7 +249,9 @@ async function chiediAlServer(indirizzo) {
 let guida = null;        // la guida completa del gioco
 let progressi = null;    // { completati: { idPasso: data }, scelte: {...}, contatori: {...} } (sonoQui non si usa più)
 let scheda = 'guida';    // scheda aperta: 'guida' | 'trofei' | 'info'
-const filtri = { tipo: 'tutto', categoria: null, nascondiCompletati: false }; // tipo: 'tutto' | 'storia' | 'opzionali'; categoria: id di una categoria di collezionabili (o null = tutte)
+// tipo: 'tutto' | 'storia' | 'opzionali'. gruppi: i pulsanti della barra in alto (Storia, categorie di collezionabili, Trofei)
+// attivi come filtro: se ce n'è almeno uno, nella guida restano solo i passi di quei gruppi (vedi gruppoDi).
+const filtri = { tipo: 'tutto', gruppi: new Set(), nascondiCompletati: false };
 
 // Riferimenti agli elementi creati, così possiamo aggiornarli senza ricostruire tutta la pagina
 let righePassi = [];     // { passo, capitolo, riga, casella, campo }
@@ -273,6 +275,14 @@ let posizione = {};      // idPasso → numero d'ordine
 // Un passo di tipo "trofeo" usa l'id del trofeo (così è la stessa cosa spuntarlo lì o nell'elenco trofei).
 function chiave(passo) {
   return passo.tipo === 'trofeo' ? passo.trofeo : passo.id;
+}
+
+// Il "gruppo" di un passo = il pulsante della barra in alto a cui appartiene (null: nessuno, es. missioni secondarie)
+function gruppoDi(passo) {
+  if (passo.tipo === 'storia') return 'storia';
+  if (passo.tipo === 'collezionabile' || passo.tipo === 'raccolta') return 'cat:' + passo.categoria;
+  if (passo.tipo === 'trofeo') return 'trofei';
+  return null;
 }
 
 function fatto(chiaveOId) {
@@ -544,6 +554,7 @@ async function mostraGioco(id, nuovaScheda) {
   progressi.scelte = progressi.scelte || {};
   progressi.contatori = progressi.contatori || {};
   preparaOrdine();
+  filtri.gruppi.clear(); // i pulsanti-filtro di un altro gioco non valgono qui
   disegnaGioco();
   // All'apertura vado al prossimo passo da fare (solo se hai già completato qualcosa)
   const prossimo = passoCorrente();
@@ -687,24 +698,6 @@ function costruisciTimeline() {
       },
     }, etichetta));
   }
-  // Filtro per categoria di collezionabili (solo se la guida ne ha): mostra solo quelli della categoria scelta
-  let gruppoCategoria = null;
-  if ((guida.categorie || []).length > 0) {
-    gruppoCategoria = el('div', { class: 'gruppo', role: 'group', 'aria-label': 'Categoria di collezionabili' });
-    const voci = [[null, 'Tutte le categorie'], ...guida.categorie.map((c) => [c.id, c.nome])];
-    for (const [valore, etichetta] of voci) {
-      gruppoCategoria.append(el('button', {
-        class: 'btn',
-        'aria-pressed': String(filtri.categoria === valore),
-        onclick: (e) => {
-          filtri.categoria = valore;
-          for (const b of gruppoCategoria.children) b.setAttribute('aria-pressed', String(b === e.currentTarget));
-          if (valore) impostaCapitoliAperti(true); // con una categoria scelta apro i capitoli, così si vedono i risultati
-          aggiornaVista();
-        },
-      }, etichetta));
-    }
-  }
   // "Nascondi completati": pulsante con solo l'icona; acceso (ambra) quando i completati sono nascosti
   const bottoneNascondi = el('button', {
     class: 'btn btn-icona',
@@ -720,7 +713,6 @@ function costruisciTimeline() {
 
   const barraStrumenti = el('div', { class: 'strumenti' },
     gruppoTipo,
-    gruppoCategoria,
     bottoneNascondi,
     el('div', { class: 'spazio-flex' },
       el('button', { class: 'btn btn-icona', 'aria-label': 'Apri tutti i capitoli', title: 'Apri tutti', onclick: () => impostaCapitoliAperti(true) }, icona('espandi', 2)),
@@ -948,16 +940,15 @@ function aggiornaVista() {
       !applicabile(passo) || !applicabile(capitolo) ||
       (filtri.tipo === 'storia' && passo.tipo !== 'storia') ||
       (filtri.tipo === 'opzionali' && passo.tipo === 'storia') ||
-      (filtri.categoria && !(['collezionabile', 'raccolta'].includes(passo.tipo) && passo.categoria === filtri.categoria)) ||
+      (filtri.gruppi.size > 0 && !filtri.gruppi.has(gruppoDi(passo))) ||
       (filtri.nascondiCompletati && completato);
     riga.classList.toggle('nascosto', nascosto);
   }
 
   // Capitoli: contatori e segno "corrente/finito"
   for (const { capitolo, sezione, stato, ticks } of capitoliVista) {
-    // Con una categoria scelta, i capitoli senza collezionabili di quella categoria spariscono
-    const senzaRisultati = Boolean(filtri.categoria) && !capitolo.passi.some((p) =>
-      ['collezionabile', 'raccolta'].includes(p.tipo) && p.categoria === filtri.categoria && applicabile(p));
+    // Con dei pulsanti-filtro attivi, i capitoli senza passi di quei gruppi spariscono
+    const senzaRisultati = filtri.gruppi.size > 0 && !capitolo.passi.some((p) => filtri.gruppi.has(gruppoDi(p)) && applicabile(p));
     sezione.classList.toggle('nascosto', !applicabile(capitolo) || senzaRisultati);
     const storia = contaInCapitolo(capitolo, (p) => p.tipo === 'storia');
     const extra = contaInCapitolo(capitolo, (p) => p.tipo !== 'storia');
@@ -1008,23 +999,46 @@ function contaInCapitolo(capitolo, condizione) {
   return { ok, tot };
 }
 
-// Moduli della barra: storia, una voce per ogni categoria di collezionabili, trofei
+// Moduli della barra: storia, una voce per ogni categoria di collezionabili, trofei.
+// Nella scheda Guida sono anche pulsanti-filtro (toggle): attivandone uno, la guida mostra solo quel gruppo.
 function aggiornaRiepilogo() {
   const voci = [];
-  const aggiungi = (nome, nomeIcona, classe, { ok, tot }) => voci.push(
-    el('span', { class: 'modulo ' + classe + (tot > 0 && ok === tot ? ' completo' : '') },
-      icona(nomeIcona), nome + ' ', el('b', {}, `${ok}/${tot}`)));
+  const interattivo = scheda === 'guida';
+  const aggiungi = (gruppo, nome, nomeIcona, classe, { ok, tot }) => {
+    // Un gruppo che non ha passi nella timeline (es. i trofei di Uncharted, che stanno solo nella scheda Trofei) non è filtrabile
+    const filtrabile = interattivo && ordine.some(({ passo }) => gruppoDi(passo) === gruppo);
+    const attributi = {
+      class: 'modulo ' + classe + (tot > 0 && ok === tot ? ' completo' : '') + (filtrabile ? ' filtro' : ''),
+      'data-gruppo': gruppo,
+    };
+    if (filtrabile) {
+      attributi.type = 'button';
+      attributi['aria-pressed'] = String(filtri.gruppi.has(gruppo));
+      attributi.title = 'Mostra solo: ' + nome;
+      attributi.onclick = () => {
+        if (!filtri.gruppi.delete(gruppo)) {
+          filtri.gruppi.add(gruppo);
+          impostaCapitoliAperti(true); // apro i capitoli, così si vedono i risultati
+        }
+        aggiornaVista();
+      };
+    }
+    voci.push(el(filtrabile ? 'button' : 'span', attributi, icona(nomeIcona), nome + ' ', el('b', {}, `${ok}/${tot}`)));
+  };
 
-  aggiungi('Storia', 'stella', 'm-storia', conta((p) => p.tipo === 'storia'));
+  aggiungi('storia', 'Storia', 'stella', 'm-storia', conta((p) => p.tipo === 'storia'));
   for (const categoria of guida.categorie || []) {
     const conteggio = conta((p) => (p.tipo === 'collezionabile' || p.tipo === 'raccolta') && p.categoria === categoria.id);
-    if (conteggio.tot > 0) aggiungi(categoria.nome, 'gemma', 'm-oro', conteggio);
+    if (conteggio.tot > 0) aggiungi('cat:' + categoria.id, categoria.nome, 'gemma', 'm-oro', conteggio);
   }
   if (guida.trofei && guida.trofei.length > 0) {
     const validi = guida.trofei.filter(applicabile);
-    aggiungi('Trofei', 'coppa', 'm-trofeo', { ok: validi.filter((t) => fatto(t.id)).length, tot: validi.length });
+    aggiungi('trofei', 'Trofei', 'coppa', 'm-trofeo', { ok: validi.filter((t) => fatto(t.id)).length, tot: validi.length });
   }
+  // I pulsanti vengono ricreati a ogni aggiornamento: rimetto il focus su quello che l'aveva (tastiera)
+  const gruppoConFocus = document.activeElement?.dataset?.gruppo;
   contenitoreRiepilogo.replaceChildren(...voci);
+  if (gruppoConFocus) contenitoreRiepilogo.querySelector(`button[data-gruppo="${gruppoConFocus}"]`)?.focus();
 
   // Barre di progressione: storia e completismo (tutto: storia + extra + trofei)
   const percentuale = ({ ok, tot }) => (tot === 0 ? 0 : Math.round((ok / tot) * 100));

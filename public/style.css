@@ -200,6 +200,12 @@ svg.icona.icona-coppa { color: var(--ambra); }
 .modulo b { color: var(--testo); font-variant-numeric: tabular-nums; font-weight: 600; }
 .modulo.completo b { color: var(--ok); }
 .modulo .icona { color: var(--colore-modulo, var(--tenue)); }
+/* Contatore usato come pulsante-filtro (toggle) */
+button.modulo { border: 0; cursor: pointer; font-family: var(--font-pixel); font-size: 18px; line-height: 1.2; }
+button.modulo:hover { background: var(--superficie-3); color: var(--testo); }
+button.modulo:focus-visible { outline-offset: -4px; }
+button.modulo[aria-pressed="true"] { background: var(--gradiente); color: var(--inchiostro); }
+button.modulo[aria-pressed="true"] b, button.modulo[aria-pressed="true"] .icona { color: var(--inchiostro); }
 .m-storia { --colore-modulo: var(--ciano); }
 .m-oro { --colore-modulo: var(--magenta); }
 .m-trofeo { --colore-modulo: var(--magenta); }
