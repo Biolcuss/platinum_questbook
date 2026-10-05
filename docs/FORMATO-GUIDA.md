@@ -42,6 +42,13 @@ Esempio reale completo: `data/guides/uncharted-drakes-fortune.json`.
 }
 ```
 
+## Sottocategorie di storia e secondarie (facoltative)
+Se un gioco ha tipi diversi di missioni (es. Hogwarts Legacy: missioni principali / compiti; secondarie / relazioni / compiti facoltativi), si definiscono in `sottocategorie` e si assegnano con il campo `sotto`:
+- su un **passo** (`storia` o `secondaria`): `"sotto": "<id>"`;
+- su un **capitolo** (vale per i suoi passi di storia che non hanno un `sotto` proprio): `"sotto": "<id>"`;
+- senza `sotto` vale la **prima** voce dell'elenco.
+Nell'app il pulsante Storia (o Secondarie) diventa un pulsante con freccia e un pannello per scegliere le sottocategorie, come per i collezionabili. Per classificare si usano le categorie delle wiki (es. le categorie Assignments, Relationship quests, Side quests della wiki di Hogwarts Legacy su Fandom). Il validatore controlla che gli `id` esistano.
+
 ## Campi del gioco
 | Campo | Obbligatorio | Significato |
 |---|---|---|
@@ -55,6 +62,7 @@ Esempio reale completo: `data/guides/uncharted-drakes-fortune.json`.
 | `introduzione` | no | Consigli generali da leggere prima di iniziare (frasi brevi) |
 | `percorsoConsigliato` | no | Ordine suggerito delle partite per completare tutto (es. per il Platino) |
 | `scelte` | no | Scelte del giocatore che cambiano cosa vale per lui (es. la casa): `{ "id", "nome", "descrizione"?, "opzioni": [ { "id", "nome" } ] }`. Vedi sotto |
+| `sottocategorie` | no | Divide in gruppi le missioni di storia e/o le secondarie, per i pulsanti-filtro con pannello nella barra in alto: `{ "storia": [ { "id", "nome" } ], "secondarie": [ { "id", "nome" } ] }` (almeno 2 voci per tipo; la prima è quella predefinita). Vedi sotto |
 | `categorie` | no | Tipi di collezionabili: `{ "id", "nome", "totale", "descrizione"? }` |
 | `trofei` | no | Elenco completo di trofei/obiettivi (vedi sotto) |
 | `capitoli` | sì | I capitoli in ordine |

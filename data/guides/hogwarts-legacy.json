@@ -2,7 +2,7 @@
   "id": "hogwarts-legacy",
   "titolo": "Hogwarts Legacy",
   "piattaforma": "PC (Steam)",
-  "versioneGuida": 2,
+  "versioneGuida": 3,
   "verificataIl": "2026-10-04",
   "durata": {
     "storia": "25-30",
@@ -119,6 +119,17 @@
       "descrizione": "Statue con una luna, da prendere di notte."
     }
   ],
+  "sottocategorie": {
+    "storia": [
+      { "id": "principali", "nome": "Missioni principali" },
+      { "id": "compiti", "nome": "Compiti" }
+    ],
+    "secondarie": [
+      { "id": "altre", "nome": "Missioni secondarie" },
+      { "id": "relazioni", "nome": "Relazioni" },
+      { "id": "compiti", "nome": "Compiti facoltativi" }
+    ]
+  },
   "trofei": [
     {
       "id": "tr-sort",
@@ -700,6 +711,7 @@
     },
     {
       "id": "c06",
+      "sotto": "compiti",
       "nome": "Professor Ronen's Assignment",
       "numero": 6,
       "livello": 2,
@@ -874,6 +886,7 @@
     },
     {
       "id": "c09",
+      "sotto": "compiti",
       "nome": "Professor Hecat's Assignment 1",
       "numero": 9,
       "livello": 2,
@@ -996,6 +1009,7 @@
     },
     {
       "id": "c12",
+      "sotto": "compiti",
       "nome": "Professor Hecat's Assignment 2",
       "numero": 12,
       "livello": 3,
@@ -1496,6 +1510,7 @@
     },
     {
       "id": "c23",
+      "sotto": "compiti",
       "nome": "Professor Sharp's Assignment 1",
       "numero": 23,
       "livello": 5,
@@ -1525,6 +1540,7 @@
         },
         {
           "id": "c23-m01",
+          "sotto": "compiti",
           "tipo": "secondaria",
           "titolo": "Professor Sharp's Assignment 2",
           "dove": "Owl post di Professor Sharp, dopo il primo compito.",
@@ -1621,6 +1637,7 @@
     },
     {
       "id": "c26",
+      "sotto": "compiti",
       "nome": "Professor Garlick's Assignment 1",
       "numero": 26,
       "livello": 8,
@@ -1673,6 +1690,7 @@
         },
         {
           "id": "c27-m01",
+          "sotto": "compiti",
           "tipo": "secondaria",
           "titolo": "Professor Garlick's Assignment 2",
           "dove": "Owl post di Professor Garlick.",
@@ -1689,6 +1707,7 @@
         },
         {
           "id": "c27-m02",
+          "sotto": "compiti",
           "tipo": "secondaria",
           "titolo": "Madam Kogawa's Assignment 1",
           "dove": "Owl post di Madam Kogawa.",
@@ -1698,6 +1717,7 @@
         },
         {
           "id": "c27-m03",
+          "sotto": "compiti",
           "tipo": "secondaria",
           "titolo": "Madam Kogawa's Assignment 2",
           "dove": "Owl post di Madam Kogawa, dopo il primo compito.",
@@ -1771,6 +1791,7 @@
         },
         {
           "id": "c28-m01",
+          "sotto": "compiti",
           "tipo": "secondaria",
           "titolo": "Professor Onai's Assignment",
           "dove": "Owl post di Professor Onai.",
@@ -1994,6 +2015,7 @@
         },
         {
           "id": "c32-m01",
+          "sotto": "relazioni",
           "tipo": "secondaria",
           "titolo": "In the Shadow of the Bloodline",
           "dove": "Sebastian Sallow, dietro l'angolo vicino al Floo Flame della Great Hall.",
@@ -2142,6 +2164,7 @@
         },
         {
           "id": "c35-m01",
+          "sotto": "relazioni",
           "tipo": "secondaria",
           "titolo": "The Lost Child",
           "dove": "Natsai Onai (owl post), vicino al Floo Flame di Lower Hogsfield.",
@@ -2150,6 +2173,7 @@
         },
         {
           "id": "c35-m02",
+          "sotto": "relazioni",
           "tipo": "secondaria",
           "titolo": "In the Shadow of the Study",
           "dove": "Sebastian Sallow (owl post), di fronte all'ingresso della sua sala comune.",
@@ -2264,6 +2288,7 @@
         },
         {
           "id": "c37-m04",
+          "sotto": "relazioni",
           "tipo": "secondaria",
           "titolo": "In the Shadow of Discovery",
           "dove": "Sebastian Sallow (owl post), nella parte sinistra dell'Undercroft.",
@@ -2322,6 +2347,7 @@
         },
         {
           "id": "c38-m01",
+          "sotto": "relazioni",
           "tipo": "secondaria",
           "titolo": "A Dragon Debrief",
           "dove": "Poppy Sweeting (owl post), dentro le Three Broomsticks, contro la parete in fondo a destra.",
@@ -2330,6 +2356,7 @@
         },
         {
           "id": "c38-m02",
+          "sotto": "relazioni",
           "tipo": "secondaria",
           "titolo": "Poached Egg",
           "dove": "Poppy Sweeting (owl post), nella piazza di Hogsmeade.",
@@ -2339,6 +2366,7 @@
         },
         {
           "id": "c38-m03",
+          "sotto": "relazioni",
           "tipo": "secondaria",
           "titolo": "The Poachers' House Call",
           "dove": "Poppy Sweeting.",
@@ -2348,6 +2376,7 @@
         },
         {
           "id": "c38-m04",
+          "sotto": "relazioni",
           "tipo": "secondaria",
           "titolo": "Mum's the Word",
           "dove": "Natsai Onai (owl post), accanto alla scala sotto l'aula di Divination.",
@@ -2356,6 +2385,7 @@
         },
         {
           "id": "c38-m05",
+          "sotto": "compiti",
           "tipo": "secondaria",
           "titolo": "Professor Weasley's Assignment",
           "dove": "Owl post di Professor Weasley (richiede livello 20).",
@@ -2365,6 +2395,7 @@
         },
         {
           "id": "c38-m06",
+          "sotto": "relazioni",
           "tipo": "secondaria",
           "titolo": "In the Shadow of Time",
           "dove": "Sebastian Sallow (owl post), a sinistra dell'ingresso della catacomba di Feldcroft.",
@@ -2374,6 +2405,7 @@
         },
         {
           "id": "c38-m07",
+          "sotto": "relazioni",
           "tipo": "secondaria",
           "titolo": "In the Shadow of Distance",
           "dove": "Sebastian Sallow, appena entri nell'Undercroft, vicino alla parete destra.",
@@ -2393,6 +2425,7 @@
     },
     {
       "id": "c39",
+      "sotto": "compiti",
       "nome": "Professor Howin's Assignment",
       "numero": 39,
       "livello": 18,
@@ -2489,6 +2522,7 @@
         },
         {
           "id": "c41-m02",
+          "sotto": "relazioni",
           "tipo": "secondaria",
           "titolo": "A Basis for Blackmail",
           "dove": "Natsai Onai (owl post): ti aspetta fuori da Hogsmeade.",
@@ -2496,6 +2530,7 @@
         },
         {
           "id": "c41-m03",
+          "sotto": "relazioni",
           "tipo": "secondaria",
           "titolo": "Grief and Vengeance",
           "dove": "Natsai Onai, nella Great Hall.",
@@ -2504,6 +2539,7 @@
         },
         {
           "id": "c41-m04",
+          "sotto": "relazioni",
           "tipo": "secondaria",
           "titolo": "Surprise Meeting",
           "dove": "Poppy Sweeting, nella Forbidden Forest.",
@@ -2595,6 +2631,7 @@
         },
         {
           "id": "c44-m01",
+          "sotto": "relazioni",
           "tipo": "secondaria",
           "titolo": "In the Shadow of Hope",
           "dove": "Sebastian Sallow, a Feldcroft.",
@@ -2635,6 +2672,7 @@
         },
         {
           "id": "c45-m01",
+          "sotto": "relazioni",
           "tipo": "secondaria",
           "titolo": "Finding Focus",
           "dove": "Natsai Onai (owl post), nella Great Hall.",
@@ -2643,6 +2681,7 @@
         },
         {
           "id": "c45-m02",
+          "sotto": "relazioni",
           "tipo": "secondaria",
           "titolo": "The Centaur and the Stone",
           "dove": "Poppy Sweeting (owl post), vicino a Irondale, in una grotta.",
@@ -2675,6 +2714,7 @@
         },
         {
           "id": "c46-m01",
+          "sotto": "relazioni",
           "tipo": "secondaria",
           "titolo": "In the Shadow of the Relic",
           "dove": "Sebastian Sallow (owl post): ti manda a chiamare Ominis alla catacomba.",
@@ -2684,6 +2724,7 @@
         },
         {
           "id": "c46-m02",
+          "sotto": "relazioni",
           "tipo": "secondaria",
           "titolo": "In the Shadow of Fate",
           "dove": "Sebastian Sallow, nell'Undercroft.",
@@ -2736,6 +2777,7 @@
         },
         {
           "id": "c47-m01",
+          "sotto": "relazioni",
           "tipo": "secondaria",
           "titolo": "It's in the Stars",
           "dove": "Poppy Sweeting, nella Forbidden Forest.",
@@ -2745,6 +2787,7 @@
         },
         {
           "id": "c47-m02",
+          "sotto": "relazioni",
           "tipo": "secondaria",
           "titolo": "A Bird in the Hand",
           "dove": "Poppy Sweeting (owl post), a sud-ovest di Brocburrow.",
@@ -2754,6 +2797,7 @@
         },
         {
           "id": "c47-m03",
+          "sotto": "relazioni",
           "tipo": "secondaria",
           "titolo": "Poppy Blooms",
           "dove": "Poppy Sweeting, nella Great Hall.",
@@ -2792,6 +2836,7 @@
         },
         {
           "id": "c48-m01",
+          "sotto": "relazioni",
           "tipo": "secondaria",
           "titolo": "Harlow's Last Stand",
           "dove": "Natsai Onai (owl post): vuole incontrarti vicino a Manor Cape.",
@@ -2801,6 +2846,7 @@
         },
         {
           "id": "c48-m02",
+          "sotto": "relazioni",
           "tipo": "secondaria",
           "titolo": "Acting on Instinct",
           "dove": "Natsai Onai, nell'Hospital Wing.",
@@ -2848,6 +2894,7 @@
         },
         {
           "id": "c49-m01",
+          "sotto": "relazioni",
           "tipo": "secondaria",
           "titolo": "In the Shadow of Friendship",
           "dove": "Sebastian Sallow o Ominis Gaunt (dipende dalla scelta fatta in In the Shadow of Fate).",

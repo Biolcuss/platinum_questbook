@@ -268,7 +268,7 @@ let contenitoreRiepilogo = null;
 let contenitoreBarre = null;
 let copertinaBarra = null;   // l'immagine di copertina nella barra in alto (null se il gioco non ne ha)
 let contenitoreAvviso = null;
-let pannelloCollezionabiliAperto = false; // il pannello delle sottocategorie dei collezionabili (nella barra in alto)
+let pannelloAperto = null;   // id del pannello delle sottocategorie aperto nella barra in alto (storia, secondarie, collezionabili) o null
 let sezioneTrofei = null;    // in fondo alla Guida: i trofei che non sono legati a un punto della timeline (visibile col filtro Trofei)
 
 // Tutti i passi della guida in ordine di timeline, con la loro posizione
@@ -285,13 +285,27 @@ function chiave(passo) {
   return passo.tipo === 'trofeo' ? passo.trofeo : passo.id;
 }
 
-// Il "gruppo" di un passo = il pulsante della barra in alto a cui appartiene
-function gruppoDi(passo) {
-  if (passo.tipo === 'storia') return 'storia';
+// Il "gruppo" di un passo = il pulsante (o la voce del suo pannello) della barra in alto a cui appartiene.
+// Storia e secondarie hanno un solo gruppo ('storia', 'secondarie'), oppure uno per sottocategoria
+// ('storia:compiti') se la guida definisce guida.sottocategorie.<tipo> (vedi docs/FORMATO-GUIDA.md).
+// Il gruppo è calcolato in preparaOrdine() e salvato in gruppiPassi.
+let gruppiPassi = {};
+function calcolaGruppo(passo, capitolo) {
+  const sottocategorie = (tipo) => (guida.sottocategorie || {})[tipo] || [];
+  if (passo.tipo === 'storia' || passo.tipo === 'secondaria') {
+    const base = passo.tipo === 'storia' ? 'storia' : 'secondarie';
+    const elenco = sottocategorie(base);
+    if (elenco.length === 0) return base;
+    // Senza indicazioni vale la prima sottocategoria; per la storia può essere indicata anche sul capitolo
+    const sotto = passo.sotto ?? (passo.tipo === 'storia' ? capitolo.sotto : undefined) ?? elenco[0].id;
+    return base + ':' + sotto;
+  }
   if (passo.tipo === 'collezionabile' || passo.tipo === 'raccolta') return 'cat:' + passo.categoria;
   if (passo.tipo === 'trofeo') return 'trofei';
-  if (passo.tipo === 'secondaria') return 'secondarie';
   return null;
+}
+function gruppoDi(passo) {
+  return gruppiPassi[passo.id] ?? null;
 }
 
 function fatto(chiaveOId) {
@@ -321,9 +335,11 @@ function passoFatto(passo) {
 function preparaOrdine() {
   ordine = [];
   posizione = {};
+  gruppiPassi = {};
   for (const capitolo of guida.capitoli) {
     for (const passo of capitolo.passi) {
       posizione[passo.id] = ordine.length;
+      gruppiPassi[passo.id] = calcolaGruppo(passo, capitolo);
       ordine.push({ passo, capitolo });
     }
   }
@@ -564,7 +580,7 @@ async function mostraGioco(id, nuovaScheda) {
   progressi.contatori = progressi.contatori || {};
   preparaOrdine();
   filtri.gruppi.clear(); // i pulsanti-filtro di un altro gioco non valgono qui
-  pannelloCollezionabiliAperto = false;
+  pannelloAperto = null;
   disegnaGioco();
   // All'apertura vado al prossimo passo da fare (solo se hai già completato qualcosa)
   const prossimo = passoCorrente();
@@ -582,7 +598,7 @@ const SCHEDE = [
 
 // Costruisce la struttura della pagina del gioco: barra (titolo, schede, contatori) + scheda attiva
 function disegnaGioco() {
-  pannelloCollezionabiliAperto = false;
+  pannelloAperto = null;
   contenitoreRiepilogo = el('div', { class: 'moduli' });
   contenitoreBarre = el('div', { class: 'barre' });
 
@@ -1038,10 +1054,22 @@ function aggiornaRiepilogo() {
     voci.push(el(filtrabile ? 'button' : 'span', attributi, icona(nomeIcona), nome + ' ', el('b', {}, `${ok}/${tot}`)));
   };
 
-  aggiungi('storia', 'Storia', 'stella', 'm-storia', conta((p) => p.tipo === 'storia'));
-  const secondarie = conta((p) => p.tipo === 'secondaria');
-  if (secondarie.tot > 0) aggiungi('secondarie', 'Secondarie', 'punto', 'm-secondaria', secondarie);
-  const voceCollezionabili = creaVoceCollezionabili(interattivo);
+  const sottocategorie = guida.sottocategorie || {};
+  const senzaSotto = (gruppo, nome) => [{ gruppo, nome }]; // nessuna sottocategoria: un solo gruppo
+  const voceStoria = creaVoceConPannello({
+    id: 'storia', nome: 'Storia', nomeIcona: 'stella', classe: 'm-storia', interattivo, testoPannello: 'Scegli quali parti della storia mostrare nella guida:',
+    elenco: sottocategorie.storia ? sottocategorie.storia.map((c) => ({ gruppo: 'storia:' + c.id, nome: c.nome })) : senzaSotto('storia', 'Storia'),
+  });
+  if (voceStoria) voci.push(voceStoria);
+  const voceSecondarie = creaVoceConPannello({
+    id: 'secondarie', nome: 'Secondarie', nomeIcona: 'punto', classe: 'm-secondaria', interattivo, testoPannello: 'Scegli quali missioni secondarie mostrare nella guida:',
+    elenco: sottocategorie.secondarie ? sottocategorie.secondarie.map((c) => ({ gruppo: 'secondarie:' + c.id, nome: c.nome })) : senzaSotto('secondarie', 'Secondarie'),
+  });
+  if (voceSecondarie) voci.push(voceSecondarie);
+  const voceCollezionabili = creaVoceConPannello({
+    id: 'collezionabili', nome: 'Collezionabili', nomeIcona: 'gemma', classe: 'm-oro', interattivo, testoPannello: 'Scegli quali collezionabili mostrare nella guida:',
+    elenco: (guida.categorie || []).map((c) => ({ gruppo: 'cat:' + c.id, nome: c.nome })),
+  });
   if (voceCollezionabili) voci.push(voceCollezionabili);
   if (guida.trofei && guida.trofei.length > 0) {
     const validi = guida.trofei.filter(applicabile);
@@ -1061,90 +1089,92 @@ function aggiornaRiepilogo() {
     barraProgresso('Completismo', 'b-totale', percentuale(totale), `${percentuale(totale)}% (${totale.ok}/${totale.tot})`));
 }
 
-// Voce "Collezionabili": un solo contatore (somma di tutte le categorie) che fa da pulsante-filtro, più una freccia che apre
-// un pannello per scegliere le sottocategorie (le categorie della guida, es. Treasures / Strange Relic).
-// Il filtro è l'insieme dei gruppi 'cat:<id>' in filtri.gruppi. Restituisce null se la guida non ha collezionabili.
-function creaVoceCollezionabili(interattivo) {
-  const categorie = (guida.categorie || [])
-    .map((categoria) => ({ categoria, gruppo: 'cat:' + categoria.id, conteggio: conta((p) => gruppoDi(p) === 'cat:' + categoria.id) }))
+// Voce della barra in alto con un solo contatore (somma dei suoi gruppi) che fa da pulsante-filtro, e, se i gruppi sono
+// più di uno, una freccia che apre un pannello per sceglierli (es. Treasures / Strange Relic, oppure Missioni principali / Compiti).
+// Il filtro è l'insieme dei gruppi presenti in filtri.gruppi. Restituisce null se non c'è nessun passo.
+//   elenco: [{ gruppo, nome }]   id: serve per il focus e per il pannello
+function creaVoceConPannello({ id, nome, nomeIcona, classe, interattivo, testoPannello, elenco }) {
+  const gruppi = elenco
+    .map((voce) => ({ ...voce, conteggio: conta((p) => gruppoDi(p) === voce.gruppo) }))
     .filter(({ conteggio }) => conteggio.tot > 0);
-  if (categorie.length === 0) return null;
+  if (gruppi.length === 0) return null;
 
-  const totale = categorie.reduce((somma, { conteggio }) => ({ ok: somma.ok + conteggio.ok, tot: somma.tot + conteggio.tot }), { ok: 0, tot: 0 });
-  const attive = categorie.filter(({ gruppo }) => filtri.gruppi.has(gruppo));
+  const totale = gruppi.reduce((somma, { conteggio }) => ({ ok: somma.ok + conteggio.ok, tot: somma.tot + conteggio.tot }), { ok: 0, tot: 0 });
+  const attivi = gruppi.filter(({ gruppo }) => filtri.gruppi.has(gruppo));
   const aggiornaDopo = (apriCapitoli) => {
     if (apriCapitoli) impostaCapitoliAperti(true);
     aggiornaVista();
   };
 
   const principale = el(interattivo ? 'button' : 'span', {
-    class: 'modulo m-oro' + (totale.ok === totale.tot ? ' completo' : '') + (interattivo ? ' filtro' : ''),
-    'data-focus': 'collezionabili',
+    class: 'modulo ' + classe + (totale.ok === totale.tot ? ' completo' : '') + (interattivo ? ' filtro' : ''),
+    'data-focus': id,
     ...(interattivo ? {
       type: 'button',
-      'aria-pressed': String(attive.length > 0),
-      title: 'Mostra solo i collezionabili',
-      // Se c'è già qualche categoria attiva le spegne tutte, altrimenti le accende tutte
+      'aria-pressed': String(attivi.length > 0),
+      title: 'Mostra solo: ' + nome,
+      // Se c'è già qualche gruppo attivo li spegne tutti, altrimenti li accende tutti
       onclick: () => {
-        for (const { gruppo } of categorie) filtri.gruppi.delete(gruppo);
-        if (attive.length === 0) for (const { gruppo } of categorie) filtri.gruppi.add(gruppo);
-        aggiornaDopo(attive.length === 0);
+        for (const { gruppo } of gruppi) filtri.gruppi.delete(gruppo);
+        if (attivi.length === 0) for (const { gruppo } of gruppi) filtri.gruppi.add(gruppo);
+        aggiornaDopo(attivi.length === 0);
       },
     } : {}),
-  }, icona('gemma'), 'Collezionabili ', el('b', {}, `${totale.ok}/${totale.tot}`),
-    // Se è attiva solo una parte delle categorie lo dico accanto al contatore
-    attive.length > 0 && attive.length < categorie.length ? el('span', { class: 'parziale' }, ` (${attive.length}/${categorie.length})`) : null);
+  }, icona(nomeIcona), nome + ' ', el('b', {}, `${totale.ok}/${totale.tot}`),
+    // Se è attiva solo una parte dei gruppi lo dico accanto al contatore
+    attivi.length > 0 && attivi.length < gruppi.length ? el('span', { class: 'parziale' }, ` (${attivi.length}/${gruppi.length})`) : null);
 
-  // Senza la scheda Guida o con una sola categoria non serve il pannello
-  if (!interattivo || categorie.length < 2) return principale;
+  // Fuori dalla scheda Guida, o con un solo gruppo, non serve il pannello
+  if (!interattivo || gruppi.length < 2) return principale;
 
+  const idPannello = 'pannello-' + id;
   const freccia = el('button', {
     type: 'button',
     class: 'modulo filtro freccia-filtro',
-    'data-focus': 'freccia-collezionabili',
-    'aria-expanded': String(pannelloCollezionabiliAperto),
-    'aria-controls': 'pannello-collezionabili',
-    'aria-label': 'Scegli le categorie di collezionabili',
-    title: 'Scegli le categorie',
+    'data-focus': 'freccia-' + id,
+    'aria-expanded': String(pannelloAperto === id),
+    'aria-controls': idPannello,
+    'aria-label': 'Scegli le sottocategorie: ' + nome,
+    title: 'Scegli le sottocategorie',
     'aria-pressed': 'false',
-    onclick: () => { pannelloCollezionabiliAperto = !pannelloCollezionabiliAperto; aggiornaVista(); },
+    onclick: () => { pannelloAperto = pannelloAperto === id ? null : id; aggiornaVista(); },
   }, icona('giu', 2));
 
   const pannello = el('div', {
-    class: 'pannello-categorie' + (pannelloCollezionabiliAperto ? '' : ' nascosto'),
-    id: 'pannello-collezionabili', role: 'group', 'aria-label': 'Categorie di collezionabili',
+    class: 'pannello-categorie' + (pannelloAperto === id ? '' : ' nascosto'),
+    id: idPannello, role: 'group', 'aria-label': 'Sottocategorie: ' + nome,
   }, finestra(el('div', { class: 'contenuto-pannello' },
-    el('p', { class: 'nota' }, 'Scegli quali collezionabili mostrare nella guida:'),
-    categorie.map(({ categoria, gruppo, conteggio }) => {
-      const id = 'cat-' + categoria.id;
+    el('p', { class: 'nota' }, testoPannello),
+    gruppi.map(({ gruppo, nome: nomeGruppo, conteggio }) => {
+      const idCasella = 'chk-' + id + '-' + gruppo.replace(/[^a-z0-9]/gi, '-');
       const casella = el('input', {
-        type: 'checkbox', class: 'spunta', id, 'data-focus': 'cat-' + categoria.id,
+        type: 'checkbox', class: 'spunta', id: idCasella, 'data-focus': idCasella,
         onchange: (e) => {
           if (e.target.checked) filtri.gruppi.add(gruppo); else filtri.gruppi.delete(gruppo);
-          aggiornaDopo(e.target.checked && attive.length === 0);
+          aggiornaDopo(e.target.checked && attivi.length === 0);
         },
       });
       casella.checked = filtri.gruppi.has(gruppo);
-      return el('label', { class: 'riga-categoria', for: id }, casella, el('span', { class: 'nome-categoria' }, categoria.nome),
+      return el('label', { class: 'riga-categoria', for: idCasella }, casella, el('span', { class: 'nome-categoria' }, nomeGruppo),
         el('b', {}, `${conteggio.ok}/${conteggio.tot}`));
-    })
-  )));
+    }))));
 
-  return el('div', { class: 'gruppo-collezionabili' }, principale, freccia, pannello);
+  return el('div', { class: 'gruppo-pannello' }, principale, freccia, pannello);
 }
 
-// Il pannello delle categorie si chiude cliccando fuori o con Esc
+// Il pannello aperto si chiude cliccando fuori o con Esc
 document.addEventListener('click', (e) => {
-  if (pannelloCollezionabiliAperto && !e.target.closest('.gruppo-collezionabili')) {
-    pannelloCollezionabiliAperto = false;
+  if (pannelloAperto && !e.target.closest('.gruppo-pannello')) {
+    pannelloAperto = null;
     if (guida) aggiornaVista();
   }
 });
 document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape' && pannelloCollezionabiliAperto) {
-    pannelloCollezionabiliAperto = false;
+  if (e.key === 'Escape' && pannelloAperto) {
+    const id = pannelloAperto;
+    pannelloAperto = null;
     aggiornaVista();
-    document.querySelector('[data-focus="freccia-collezionabili"]')?.focus();
+    document.querySelector(`[data-focus="freccia-${id}"]`)?.focus();
   }
 });
 

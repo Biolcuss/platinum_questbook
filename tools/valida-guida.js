@@ -56,6 +56,21 @@ if (guida.durata) {
   if (guida.durata.daVerificare && !guida.durata.nota) errore('Durata: con "daVerificare" serve anche "nota"');
 }
 
+// --- Sottocategorie di storia e secondarie (facoltative) --------------------
+// guida.sottocategorie = { storia: [{ id, nome }], secondarie: [{ id, nome }] }; passi (e capitoli di storia) hanno "sotto"
+const sottocategorie = guida.sottocategorie || {};
+for (const tipo of Object.keys(sottocategorie)) {
+  if (!['storia', 'secondarie'].includes(tipo)) errore(`Sottocategorie: tipo sconosciuto "${tipo}" (valgono "storia" e "secondarie")`);
+  const elenco = sottocategorie[tipo];
+  if (!Array.isArray(elenco) || elenco.length < 2) errore(`Sottocategorie "${tipo}": servono almeno 2 voci (altrimenti non servono)`);
+  else for (const voce of elenco) richiedi(voce, ['id', 'nome'], `Sottocategorie "${tipo}", voce`);
+}
+const idSotto = (tipo) => new Set((sottocategorie[tipo] || []).map((v) => v.id));
+function controllaSotto(oggetto, tipo, dove) {
+  if (oggetto.sotto === undefined) return;
+  if (!idSotto(tipo).has(oggetto.sotto)) errore(`${dove}: sotto "${oggetto.sotto}" non esiste tra le sottocategorie "${tipo}"`);
+}
+
 // Tutti gli id usati nei progressi devono essere unici (passi e trofei insieme)
 const idUsati = new Set();
 function registraId(idNuovo, dove) {
@@ -120,6 +135,7 @@ let daVerificare = 0;
   const doveCap = `Capitolo ${capitolo.numero ?? indice + 1} (${capitolo.id})`;
   richiedi(capitolo, ['id', 'nome', 'passi'], doveCap);
   controllaSoloSe(capitolo, doveCap);
+  controllaSotto(capitolo, 'storia', doveCap);
   if (capitolo.ordinato !== undefined && typeof capitolo.ordinato !== 'boolean') errore(`${doveCap}: "ordinato" deve essere true o false`);
   registraId(capitolo.id, doveCap);
   if (!Array.isArray(capitolo.passi) || capitolo.passi.length === 0) errore(`${doveCap}: nessun passo`);
@@ -134,6 +150,8 @@ let daVerificare = 0;
 
     if (passo.tipo !== 'storia' && !passo.dove) errore(`${dove}: i passi opzionali devono avere "dove"`);
     controllaSoloSe(passo, dove);
+    if (passo.tipo === 'storia' || passo.tipo === 'secondaria') controllaSotto(passo, passo.tipo === 'storia' ? 'storia' : 'secondarie', dove);
+    else if (passo.sotto !== undefined) errore(`${dove}: "sotto" vale solo per i passi di storia e secondarie`);
     if (passo.tipo === 'collezionabile' || passo.tipo === 'raccolta') {
       if (!categorie.has(passo.categoria)) errore(`${dove}: categoria "${passo.categoria}" inesistente`);
       let quanti = 1;

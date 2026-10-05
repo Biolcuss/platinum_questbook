@@ -97,6 +97,10 @@ Stato del progetto. Aggiornare a ogni sessione di lavoro.
 - [x] Copertina anche nella barra della pagina del gioco (a tutta altezza, a sinistra)
 - [ ] Copertine automatiche da un'API (IGDB/RAWG): opzionale, userebbe un'API esterna
 
+## Fase 6e — Sottocategorie di missioni ✅
+- [x] Pannello a casella per Storia e Secondarie, come per i collezionabili (`sottocategorie` nella guida)
+- [x] Hogwarts Legacy: storia = missioni principali / compiti; secondarie = secondarie / relazioni / compiti facoltativi (classificate con le categorie della wiki)
+
 ## Idee future (non ancora decise)
 - Filtri nell'indirizzo (oggi restano in memoria)
 - **Opzionali (idee valutate con l'utente):**

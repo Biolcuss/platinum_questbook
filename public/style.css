@@ -200,8 +200,8 @@ svg.icona.icona-coppa { color: var(--ambra); }
 .modulo b { color: var(--testo); font-variant-numeric: tabular-nums; font-weight: 600; }
 .modulo.completo b { color: var(--ok); }
 .modulo .icona { color: var(--colore-modulo, var(--tenue)); }
-/* Voce "Collezionabili": contatore + freccia + pannello delle sottocategorie */
-.gruppo-collezionabili { position: relative; display: inline-flex; gap: 2px; }
+/* Voce con sottocategorie (Storia, Secondarie, Collezionabili): contatore + freccia + pannello */
+.gruppo-pannello { position: relative; display: inline-flex; gap: 2px; }
 button.modulo.freccia-filtro { padding: 5px 8px; }
 button.modulo.freccia-filtro[aria-expanded="true"] { background: var(--superficie-3); color: var(--ambra-chiaro); }
 .modulo .parziale { color: inherit; opacity: .8; }
