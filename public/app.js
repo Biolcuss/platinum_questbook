@@ -210,9 +210,10 @@ function barraProgresso(nome, classe, percentuale, testo, nomeIcona = null) {
 // Copertine
 // Una copertina è { url, x, y, zoom, ar }: x e y (0-100) dicono quale parte dell'immagine resta al centro
 // del ritaglio, zoom (1-4) quanto è ingrandita, ar il rapporto larghezza/altezza dell'immagine.
-// Il ritaglio è sempre largo 16:9 (stesso rapporto nell'elenco e nell'editor).
+// La cornice è verticale 2:3, come le copertine (poster) che si trovano di solito: così non vengono tagliate.
+// Se un'immagine ha un'altra forma, il pezzo che avanza si sceglie dall'editor.
 // -----------------------------------------------------------------------------
-const RAPPORTO_RITAGLIO = 16 / 9;
+const RAPPORTO_RITAGLIO = 2 / 3;
 
 // Larghezza dell'immagine in rapporto a quella del ritaglio, a zoom 1 (come "cover" del CSS)
 function frazioneCover(ar) {
@@ -259,6 +260,7 @@ let righeTrofei = [];    // { trofeo, riga, casella, avanzamento }
 let barreScelte = [];    // { scelta, bottoni, aiuto }
 let contenitoreRiepilogo = null;
 let contenitoreBarre = null;
+let copertinaBarra = null;   // l'immagine di copertina nella barra in alto (null se il gioco non ne ha)
 let contenitoreAvviso = null;
 
 // Tutti i passi della guida in ordine di timeline, con la loro posizione
@@ -571,6 +573,7 @@ function apriEditorCopertina() {
       });
       if (!risposta.ok) throw new Error('errore ' + risposta.status);
       guida.copertina = { ...guida.copertina, ...c };
+      if (copertinaBarra) applicaCopertina(copertinaBarra, guida.copertina); // aggiorna anche l'immagine nella barra
       chiudi();
     } catch (errore) {
       mostraAvviso('Impossibile salvare la copertina (' + errore.message + ').');
@@ -629,7 +632,7 @@ async function mostraElenco() {
     ? el('p', { class: 'vuoto' }, 'Nessuna guida presente. Chiedi a Claude di crearne una.')
     : el('div', { class: 'elenco-giochi' }, giochi.map((gioco) =>
         el('a', { class: 'scheda-gioco', href: '#/gioco/' + gioco.id },
-          finestra(
+          finestra(el('div', { class: 'scheda-riga' },
             gioco.copertina ? copertinaScheda(gioco.copertina) : null,
             el('div', { class: 'scheda-corpo' },
               el('h2', {}, gioco.titolo),
@@ -637,9 +640,9 @@ async function mostraElenco() {
               el('div', { class: 'barre' },
                 barraProgresso('Storia Principale', 'b-storia', gioco.completamento.storia, gioco.completamento.storia + '%', 'stella'),
                 barraProgresso('Completismo', 'b-totale', gioco.completamento.totale, gioco.completamento.totale + '%', 'coppa')),
-              testoDurata(gioco.durata))))));
+              testoDurata(gioco.durata)))))));
 
-  radice.replaceChildren(el('main', { class: 'pagina', id: 'contenuto' },
+  radice.replaceChildren(el('main', { class: 'pagina larga', id: 'contenuto' },
     el('h1', { class: 'titolo-app' }, 'Game Tracker'),
     el('p', { class: 'sottotitolo' }, 'Scegli un gioco per aprire la sua guida e spuntare i tuoi progressi.'),
     lista));
@@ -688,19 +691,27 @@ function disegnaGioco() {
   // Barra a tutta larghezza su due sezioni:
   //   in alto  → a sinistra "torna ai giochi", al centro titolo + versione e le schede
   //   sotto    → i contatori (storia, collezionabili, trofei…)
+  // La copertina sta a sinistra e occupa tutta l'altezza della barra (le due sezioni insieme)
+  copertinaBarra = null;
+  if (guida.copertina) {
+    copertinaBarra = el('div', { class: 'barra-copertina', 'aria-hidden': 'true' });
+    applicaCopertina(copertinaBarra, guida.copertina);
+  }
   const barra = el('header', { class: 'barra' },
-    el('div', { class: 'barra-riga barra-alto' },
-      el('a', { href: '#/', class: 'btn indietro', 'aria-label': 'Torna all\'elenco dei giochi' }, icona('sinistra'), 'Giochi'),
-      el('div', { class: 'barra-centro' },
-        el('h1', {}, guida.titolo, el('span', { class: 'versione' }, guida.piattaforma)),
-        el('nav', { class: 'spazi', 'aria-label': 'Sezioni della guida' },
-          SCHEDE.map(([nome, etichetta]) =>
-            el('a', {
-              class: 'spazio',
-              href: `#/gioco/${guida.id}/${nome}`,
-              'aria-current': nome === scheda ? 'page' : false,
-            }, etichetta))))),
-    el('div', { class: 'barra-riga barra-sotto' }, contenitoreRiepilogo, contenitoreBarre));
+    copertinaBarra,
+    el('div', { class: 'barra-contenuto' },
+      el('div', { class: 'barra-riga barra-alto' },
+        el('div', { class: 'barra-centro' },
+          el('h1', {}, guida.titolo, el('span', { class: 'versione' }, guida.piattaforma)),
+          el('nav', { class: 'spazi', 'aria-label': 'Sezioni della guida' },
+            SCHEDE.map(([nome, etichetta]) =>
+              el('a', {
+                class: 'spazio',
+                href: `#/gioco/${guida.id}/${nome}`,
+                'aria-current': nome === scheda ? 'page' : false,
+              }, etichetta)))),
+        el('a', { href: '#/', class: 'btn indietro', 'aria-label': 'Torna all\'elenco dei giochi' }, icona('sinistra'), 'Giochi')),
+      el('div', { class: 'barra-riga barra-sotto' }, contenitoreRiepilogo, contenitoreBarre)));
 
   let corpo;
   if (scheda === 'guida') corpo = costruisciTimeline();

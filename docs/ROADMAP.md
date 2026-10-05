@@ -92,9 +92,9 @@ Stato del progetto. Aggiornare a ogni sessione di lavoro.
 - [x] Titolo del capitolo e barra degli strumenti fissi in alto mentre si scorre
 
 ## Fase 6d — Copertine ✅
-- [x] Immagini in `covers/`, ritaglio 16:9 nelle schede dell'elenco
+- [x] Immagini in `covers/`, cornice verticale 2:3 a sinistra nelle schede dell'elenco
 - [x] Editor (Menu → Copertina): trascinamento, zoom, reimposta; posizione salvata in `data/copertine.json`
-- [ ] Eventuale banner con la copertina anche nella pagina del gioco
+- [x] Copertina anche nella barra della pagina del gioco (a tutta altezza, a sinistra)
 - [ ] Copertine automatiche da un'API (IGDB/RAWG): opzionale, userebbe un'API esterna
 
 ## Idee future (non ancora decise)
