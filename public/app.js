@@ -136,6 +136,16 @@ const ICONE = {
     '..#.#..',
     '...#...',
   ],
+  disco: [ // dischetto, per il salvataggio
+    '########',
+    '#.####.#',
+    '#.####.#',
+    '#......#',
+    '#.####.#',
+    '#.#..#.#',
+    '#.####.#',
+    '########',
+  ],
   indietro: [ // freccia verso sinistra, per tornare all'elenco dei giochi
     '...#....',
     '..##....',
@@ -470,6 +480,12 @@ function apriMenu() {
   const dialogo = el('dialog', { class: 'menu', 'aria-labelledby': 'titolo-menu' });
   const chiudi = () => dialogo.close();
 
+  const voceSalvataggio = el('div', { class: 'voce-menu' },
+    el('div', {},
+      el('p', { class: 'titolo-voce' }, 'Salvataggio'),
+      el('p', { class: 'nota' }, 'Esporta o importa i progressi (per usarli su un altro dispositivo).')),
+    el('button', { class: 'btn', onclick: () => { chiudi(); apriSalvataggio(); } }, 'Apri'));
+
   const righe = AZZERAMENTI.map((voce) => {
     const quanti = voce.elementi();
     return el('div', { class: 'voce-menu' },
@@ -495,6 +511,7 @@ function apriMenu() {
       el('div', { class: 'testata-menu' },
         el('h2', { id: 'titolo-menu' }, 'Menu'),
         el('button', { class: 'btn btn-icona', 'aria-label': 'Chiudi il menu', title: 'Chiudi', onclick: chiudi }, icona('chiudi', 2))),
+      voceSalvataggio,
       el('p', {}, 'Azzera i progressi di questa guida. Le altre guide non vengono toccate.'),
       righe))));
 
@@ -519,6 +536,75 @@ function testoDurata(durata) {
   return el('div', { class: 'moduli durata', title: 'Ore stimate per finire il gioco' },
     icona('clessidra'),
     voce('Storia', durata.storia), voce('+ extra', durata.storiaExtra), voce('100%', durata.completista));
+}
+
+// -----------------------------------------------------------------------------
+// Finestra "Salvataggio": esporta tutti i progressi in un file / importa un file (per usarli su un altro dispositivo)
+// -----------------------------------------------------------------------------
+function apriSalvataggio() {
+  const dialogo = el('dialog', { class: 'menu', 'aria-labelledby': 'titolo-salvataggio' });
+  let importato = false; // dopo un'importazione riuscita, alla chiusura ricarico la pagina con i nuovi progressi
+  const chiudi = () => dialogo.close();
+
+  const esito = el('p', { class: 'esito', role: 'status' });
+  const mostraEsito = (testo, errore = false) => { esito.textContent = testo; esito.classList.toggle('errore', errore); };
+
+  const file = el('input', { type: 'file', accept: 'application/json,.json', id: 'file-salvataggio', class: 'campo-file' });
+  const scelta = (valore, etichetta, selezionato) => el('label', { class: 'opzione' },
+    el('input', { type: 'radio', name: 'modo-importazione', value: valore, checked: selezionato }), etichetta);
+  const importa = el('button', { class: 'btn', disabled: true }, 'Importa');
+  file.addEventListener('change', () => { importa.disabled = !file.files.length; mostraEsito(''); });
+
+  importa.addEventListener('click', async () => {
+    const modo = dialogo.querySelector('input[name="modo-importazione"]:checked').value;
+    if (modo === 'sostituisci' && !window.confirm('Sostituire i progressi attuali con quelli del file? I giochi presenti nel file perdono i progressi attuali.')) return;
+    importa.disabled = true;
+    try {
+      const risposta = await fetch('/api/salvataggio?modo=' + modo, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: await file.files[0].text(),
+      });
+      const dati = await risposta.json();
+      if (!risposta.ok) throw new Error(dati.errore || 'errore ' + risposta.status);
+      importato = true;
+      const ignorati = dati.ignorati.length ? ` Ignorati (guida non presente o dati non validi): ${dati.ignorati.join(', ')}.` : '';
+      mostraEsito(dati.importati.length
+        ? `Fatto: ${dati.importati.join(', ')}.${ignorati}`
+        : `Nessun gioco importato.${ignorati}`);
+    } catch (errore) {
+      mostraEsito('Importazione non riuscita: ' + errore.message, true);
+    }
+    importa.disabled = !file.files.length;
+  });
+
+  dialogo.append(el('div', { class: 'involucro-menu' }, finestra(
+    el('div', { class: 'corpo-menu' },
+      el('div', { class: 'testata-menu' },
+        el('h2', { id: 'titolo-salvataggio' }, 'Salvataggio'),
+        el('button', { class: 'btn btn-icona', 'aria-label': 'Chiudi', title: 'Chiudi', onclick: chiudi }, icona('chiudi', 2))),
+      el('p', {}, 'I progressi stanno su questo dispositivo. Per usarli su un altro, esportali in un file e importalo là.'),
+      el('div', { class: 'voce-menu' },
+        el('div', {},
+          el('p', { class: 'titolo-voce' }, 'Esporta'),
+          el('p', { class: 'nota' }, 'Scarica un file con i progressi di tutti i giochi.')),
+        el('a', { class: 'btn', href: '/api/salvataggio', download: '' }, 'Esporta')),
+      el('div', { class: 'blocco-importa' },
+        el('p', { class: 'titolo-voce' }, 'Importa'),
+        el('label', { for: 'file-salvataggio', class: 'nota' }, 'Scegli un file di salvataggio esportato dal Game Tracker:'),
+        file,
+        el('div', { class: 'gruppo-opzioni', role: 'radiogroup', 'aria-label': 'Come importare' },
+          scelta('unisci', 'Unisci: tieni i progressi attuali e aggiungi quelli del file (consigliato)', true),
+          scelta('sostituisci', 'Sostituisci: usa solo i progressi del file', false)),
+        el('div', { class: 'azioni-editor' }, importa),
+        esito)))));
+  dialogo.addEventListener('click', (e) => { if (e.target === dialogo) chiudi(); });
+  dialogo.addEventListener('close', () => {
+    dialogo.remove();
+    if (importato) { guida = null; instrada(); } // ricarico la pagina corrente con i progressi importati
+  });
+  document.body.append(dialogo);
+  dialogo.showModal();
 }
 
 // -----------------------------------------------------------------------------
@@ -554,7 +640,9 @@ async function mostraElenco() {
               testoDurata(gioco.durata)))))));
 
   radice.replaceChildren(el('main', { class: 'pagina larga', id: 'contenuto' },
-    el('h1', { class: 'titolo-app' }, 'Game Tracker'),
+    el('div', { class: 'testata-elenco' },
+      el('h1', { class: 'titolo-app' }, 'Game Tracker'),
+      el('button', { class: 'btn', onclick: apriSalvataggio, 'aria-haspopup': 'dialog' }, icona('disco', 2), 'Salvataggio')),
     el('p', { class: 'sottotitolo' }, 'Scegli un gioco per aprire la sua guida e spuntare i tuoi progressi.'),
     lista));
 }

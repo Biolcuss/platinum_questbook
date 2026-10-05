@@ -200,6 +200,18 @@ function apiLeggiProgressi(res, id) {
   rispondiJson(res, 200, leggiProgressi(id));
 }
 
+// Controlla che dei progressi (dal browser o da un file importato) abbiano la forma giusta prima di salvarli
+const eOggetto = (x) => typeof x === 'object' && x !== null && !Array.isArray(x);
+function progressiValidi(dati) {
+  return eOggetto(dati) && eOggetto(dati.completati) &&
+    (dati.sonoQui === undefined || dati.sonoQui === null || typeof dati.sonoQui === 'string') &&
+    (dati.scelte === undefined || (eOggetto(dati.scelte) && Object.values(dati.scelte).every((v) => typeof v === 'string'))) &&
+    (dati.contatori === undefined || (eOggetto(dati.contatori) && Object.values(dati.contatori).every((v) => Number.isInteger(v) && v >= 0)));
+}
+function normalizzaProgressi(dati) {
+  return { completati: dati.completati, sonoQui: dati.sonoQui ?? null, scelte: dati.scelte || {}, contatori: dati.contatori || {} };
+}
+
 // PUT /api/progressi/:id → salva i progressi inviati dal browser
 async function apiSalvaProgressi(req, res, id) {
   if (!fs.existsSync(path.join(CARTELLA_GUIDE, id + '.json'))) {
@@ -211,23 +223,80 @@ async function apiSalvaProgressi(req, res, id) {
   } catch {
     return rispondiJson(res, 400, { errore: 'Dati non validi' });
   }
-  // Controllo che i dati abbiano la forma giusta prima di salvarli
-  const eOggetto = (x) => typeof x === 'object' && x !== null && !Array.isArray(x);
-  const formaGiusta =
-    eOggetto(dati) && eOggetto(dati.completati) &&
-    (dati.sonoQui === null || typeof dati.sonoQui === 'string') &&
-    (dati.scelte === undefined || (eOggetto(dati.scelte) && Object.values(dati.scelte).every((v) => typeof v === 'string'))) &&
-    (dati.contatori === undefined || (eOggetto(dati.contatori) && Object.values(dati.contatori).every((v) => Number.isInteger(v) && v >= 0)));
-  if (!formaGiusta) return rispondiJson(res, 400, { errore: 'Formato dei progressi non valido' });
-
-  const daSalvare = {
-    completati: dati.completati,
-    sonoQui: dati.sonoQui,
-    scelte: dati.scelte || {},
-    contatori: dati.contatori || {},
-  };
+  if (!progressiValidi(dati)) return rispondiJson(res, 400, { errore: 'Formato dei progressi non valido' });
+  const daSalvare = normalizzaProgressi(dati);
   scriviJsonSicuro(path.join(CARTELLA_PROGRESSI, id + '.json'), daSalvare);
   rispondiJson(res, 200, { ok: true });
+}
+
+// -----------------------------------------------------------------------------
+// Salvataggio: esporta / importa tutti i progressi in un unico file (per spostarli tra dispositivi)
+// Formato del file:
+//   { "formato": "game-tracker-salvataggio", "versione": 1, "esportatoIl": "<data ISO>",
+//     "giochi": { "<id-gioco>": { completati, scelte, contatori, ... }, ... } }
+// -----------------------------------------------------------------------------
+const FORMATO_SALVATAGGIO = 'game-tracker-salvataggio';
+
+// Elenco delle guide presenti: [{ id, titolo }]
+function elencoGuide() {
+  return fs.readdirSync(CARTELLA_GUIDE).filter((f) => f.endsWith('.json'))
+    .map((nomeFile) => leggiJson(path.join(CARTELLA_GUIDE, nomeFile)))
+    .map((guida) => ({ id: guida.id, titolo: guida.titolo }));
+}
+
+// GET /api/salvataggio → scarica il file di salvataggio
+function apiEsportaSalvataggio(res) {
+  const giochi = {};
+  for (const { id } of elencoGuide()) {
+    if (fs.existsSync(path.join(CARTELLA_PROGRESSI, id + '.json'))) giochi[id] = leggiProgressi(id);
+  }
+  const oggi = new Date().toISOString().slice(0, 10);
+  res.writeHead(200, {
+    'Content-Type': TIPI_FILE['.json'],
+    'Content-Disposition': `attachment; filename="game-tracker-salvataggio-${oggi}.json"`,
+  });
+  res.end(JSON.stringify({ formato: FORMATO_SALVATAGGIO, versione: 1, esportatoIl: new Date().toISOString(), giochi }, null, 2));
+}
+
+// Unisce due progressi dello stesso gioco senza perdere niente:
+// - passi completati: quelli di entrambi (resta la data del progresso attuale se c'è in entrambi);
+// - contatori: il valore più alto; scelte: quelle attuali, con quelle importate solo dove mancano
+function unisciProgressi(attuali, nuovi) {
+  const contatori = { ...attuali.contatori };
+  for (const [idPasso, numero] of Object.entries(nuovi.contatori)) contatori[idPasso] = Math.max(contatori[idPasso] || 0, numero);
+  return {
+    completati: { ...nuovi.completati, ...attuali.completati },
+    sonoQui: null,
+    scelte: { ...nuovi.scelte, ...attuali.scelte },
+    contatori,
+  };
+}
+
+// POST /api/salvataggio?modo=unisci|sostituisci → importa un file di salvataggio
+async function apiImportaSalvataggio(req, res, url) {
+  const modo = url.searchParams.get('modo') === 'sostituisci' ? 'sostituisci' : 'unisci';
+  let dati;
+  try {
+    dati = JSON.parse(await leggiCorpo(req));
+  } catch {
+    return rispondiJson(res, 400, { errore: 'Il file non è un JSON valido' });
+  }
+  if (!eOggetto(dati) || dati.formato !== FORMATO_SALVATAGGIO || !eOggetto(dati.giochi)) {
+    return rispondiJson(res, 400, { errore: 'Questo non sembra un file di salvataggio del Game Tracker' });
+  }
+  const guide = elencoGuide();
+  const importati = [];
+  const ignorati = [];
+  for (const [id, nuovi] of Object.entries(dati.giochi)) {
+    const guida = guide.find((g) => g.id === id);
+    // Ignoro i giochi senza guida in questa installazione e i dati malformati (nessun file viene scritto)
+    if (!idValido(id) || !guida || !progressiValidi(nuovi)) { ignorati.push(id); continue; }
+    const nuoviNormali = normalizzaProgressi(nuovi);
+    const risultato = modo === 'sostituisci' ? nuoviNormali : unisciProgressi(leggiProgressi(id), nuoviNormali);
+    scriviJsonSicuro(path.join(CARTELLA_PROGRESSI, id + '.json'), risultato);
+    importati.push(guida.titolo);
+  }
+  rispondiJson(res, 200, { ok: true, modo, importati, ignorati });
 }
 
 // -----------------------------------------------------------------------------
@@ -264,6 +333,8 @@ async function gestisciRichiesta(req, res) {
 
       if (risorsa === 'giochi' && !id && req.method === 'GET') return apiElencoGiochi(res);
       if (risorsa === 'giochi' && id && req.method === 'GET') return apiGuida(res, id);
+      if (risorsa === 'salvataggio' && !id && req.method === 'GET') return apiEsportaSalvataggio(res);
+      if (risorsa === 'salvataggio' && !id && req.method === 'POST') return await apiImportaSalvataggio(req, res, url);
       if (risorsa === 'progressi' && id && req.method === 'GET') return apiLeggiProgressi(res, id);
       if (risorsa === 'progressi' && id && req.method === 'PUT') return await apiSalvaProgressi(req, res, id);
       return rispondiJson(res, 404, { errore: 'API non trovata' });
