@@ -156,14 +156,17 @@ svg.icona.icona-coppa { color: var(--ambra); }
 @media (min-width: 1400px) {
   .barra-alto .indietro { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); }
 }
-.barra-centro { display: flex; align-items: center; justify-content: flex-start; flex-wrap: wrap; gap: 6px 24px; }
+/* Titolo a sinistra, schede (Guida, Trofei, Info) a destra: finiscono dove finiscono i pulsanti dei filtri sotto (colonna da 940px) */
+.barra-centro { flex: 1; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 6px 24px; }
+.barra-alto { padding-right: calc(var(--margine) + max(16px, env(safe-area-inset-right))); }
 .barra-centro h1 { font-size: 34px; line-height: 1; display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
 .barra-centro .versione { font: 400 18px/1 var(--font-pixel); color: var(--tenue); }
-/* Copertina a sinistra: occupa tutta l'altezza della barra (titolo + statistiche) */
+/* Copertina a sinistra del testo, centrata in verticale con un margine sopra e sotto; la larghezza segue l'altezza (2:3) */
 .barra-copertina {
-  position: absolute; top: 0; bottom: 0; left: calc(var(--testo-x) - 128px); width: 112px;
+  position: absolute; top: 14px; bottom: 14px; right: calc(100% - var(--testo-x) + 16px);
+  aspect-ratio: 2 / 3;
   background-color: var(--superficie-2); background-repeat: no-repeat;
-  border-right: 3px solid var(--bordo);
+  border: 2px solid var(--bordo);
 }
 /* Sezione sotto: i contatori */
 .barra-sotto { border-top: 2px dotted var(--bordo); background: var(--sfondo); }
